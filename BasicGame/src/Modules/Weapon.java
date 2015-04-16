@@ -5,7 +5,6 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import mygame.BasicShip;
 
 /**
  *
@@ -14,7 +13,7 @@ import mygame.BasicShip;
 public class Weapon extends InteractiveModule {
 
     public Weapon() {
-        name = "Weapon";
+        moduleName = "Weapon";
         color = ColorRGBA.Red;
     }
     

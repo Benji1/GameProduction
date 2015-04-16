@@ -5,7 +5,6 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import mygame.BasicShip;
 
 /**
  *
@@ -14,7 +13,9 @@ import mygame.BasicShip;
 public class Armor extends BasicModule {
 
     public Armor() {
-        name = "Armor";
+        moduleName = "Armor";
         color = ColorRGBA.Gray;
+        maxHealth = 500;
+        health = 500;
     }
 }

@@ -7,13 +7,9 @@ import Modules.Cockpit;
 import Modules.Shield;
 import Modules.Thruster;
 import com.jme3.app.SimpleApplication;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.shape.Box;
+import java.awt.Point;
+
 
 /**
  * test
@@ -22,7 +18,7 @@ import com.jme3.scene.shape.Box;
  */
 public class Main extends SimpleApplication {
 
-    BasicShip s;
+    private BasicShip s;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -34,19 +30,19 @@ public class Main extends SimpleApplication {
         s = new BasicShip(assetManager);
         rootNode.attachChild(s);
 
-        s.addModule(new Cockpit(), s.modules.length / 2, s.modules.length / 2);
-        s.addModule(new Armor(), s.modules.length / 2, s.modules.length / 2 - 1);
-        s.addModule(new Armor(), s.modules.length / 2, s.modules.length / 2 + 1);
+        s.addModule(new Cockpit(), new Point(s.modules.length / 2, s.modules.length / 2));
+        s.addModule(new Armor(), new Point(s.modules.length / 2, s.modules.length / 2 - 1));
+        s.addModule(new Armor(), new Point(s.modules.length / 2, s.modules.length / 2 + 1));
 
-        s.addModule(new Weapon(), s.modules.length / 2 - 2, s.modules.length / 2);
-        s.addModule(new Thruster(), s.modules.length / 2 + 2, s.modules.length / 2);
-        s.addModule(new Shield(), s.modules.length / 2 - 1, s.modules.length / 2);
+        s.addModule(new Weapon(), new Point(s.modules.length / 2 - 2, s.modules.length / 2));
+        s.addModule(new Thruster(), new Point(s.modules.length / 2 + 2, s.modules.length / 2));
+        s.addModule(new Shield(), new Point(s.modules.length / 2 - 1, s.modules.length / 2));
 
         EnergyGenerator eg = new EnergyGenerator();
-        s.addModule(eg, s.modules.length / 2 + 1, s.modules.length / 2);
+        s.addModule(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
 
         EnergyGenerator eg2 = new EnergyGenerator();
-        s.addModule(eg2, s.modules.length / 2, s.modules.length / 2 + 2);
+        s.addModule(eg2, new Point(s.modules.length / 2, s.modules.length / 2 + 2));
 
         s.print();
 

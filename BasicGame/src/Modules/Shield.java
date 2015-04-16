@@ -5,7 +5,6 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import mygame.BasicShip;
 
 /**
  *
@@ -13,9 +12,21 @@ import mygame.BasicShip;
  */
 public class Shield extends InteractiveModule {
 
+    protected float maxShieldPower = 700;
+    protected float shieldPower = maxShieldPower;
+    protected float shieldRegenRate = 40;
+    
     public Shield() {
-        name = "Shield";
+        moduleName = "Shield";
         energyConsumptionPerSecond = 50;
         color = ColorRGBA.Blue;
+    }
+    
+    @Override
+    public void update() {
+        super.update();
+        if(energyAvailableInPercent >= 100) {
+            shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate, maxShieldPower);
+        }
     }
 }

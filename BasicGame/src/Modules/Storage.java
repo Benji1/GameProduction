@@ -5,8 +5,6 @@
 package Modules;
 
 import java.util.ArrayList;
-import java.util.List;
-import mygame.BasicShip;
 import mygame.Item;
 
 /**
@@ -18,6 +16,6 @@ public class Storage extends BasicModule {
     protected ArrayList<Item> itemsInStorage = new ArrayList<Item>();
 
     public Storage() {
-        name = "Storage";
+        moduleName = "Storage";
     }
 }

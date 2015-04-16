@@ -5,7 +5,6 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import mygame.BasicShip;
 
 /**
  *
@@ -13,8 +12,12 @@ import mygame.BasicShip;
  */
 public class Thruster extends InteractiveModule {
 
+    protected float maxThrust;
+    protected float thrust;
+    
+    
     public Thruster() {
-        name = "Thruster";
+        moduleName = "Thruster";
         energyConsumptionPerSecond = 10;
         color = ColorRGBA.Orange;
     }

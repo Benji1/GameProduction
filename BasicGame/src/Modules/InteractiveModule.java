@@ -4,19 +4,17 @@
  */
 package Modules;
 
-import mygame.BasicShip;
-
 /**
  *
  * @author 1337
  */
 public abstract class InteractiveModule extends BasicModule {
 
-    protected double energyConsumptionPerSecond = 0;
-    protected double energyConsumptionPerAction = 0;
-    protected double energyReceived = 0;
-    protected double energyConsumptionTotal = 0;
-    protected double energyAvailableInPercent = 0;
+    protected float energyConsumptionPerSecond = 0;
+    protected float energyConsumptionPerAction = 0;
+    protected float energyReceived = 0;
+    protected float energyConsumptionTotal = 0;
+    protected float energyAvailableInPercent = 0;
     protected boolean active = true;
 
     public InteractiveModule() {
@@ -30,28 +28,35 @@ public abstract class InteractiveModule extends BasicModule {
     public void deactivate() {
         active = false;
     }
+    
+    public boolean isActive() {
+        return active;
+    }
 
+    @Override
     public void update() {
         if (active) {
             energyConsumptionTotal = energyConsumptionPerSecond + energyConsumptionPerAction;
 
             if (energyConsumptionTotal > 0) {
                 energyAvailableInPercent = (energyReceived / energyConsumptionTotal) * 100;
-                System.out.println(this.name + " receiving " + energyAvailableInPercent + "% of needed energy");
+                System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
             }
             energyReceived = 0;
         }
     }
 
-    public double getEnergyConsumption() {
+    public float getEnergyConsumption() {
         return energyConsumptionTotal;
     }
 
-    public double getEnergyReceived() {
+    public float getEnergyReceived() {
         return energyReceived;
     }
 
-    public void receiveEnergy(double energyReceived) {
+    public void receiveEnergy(float energyReceived) {
         this.energyReceived += energyReceived;
     }
+    
+    
 }

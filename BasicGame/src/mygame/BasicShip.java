@@ -32,23 +32,33 @@ public class BasicShip extends Node {
         }
     }
 
-    public void addModule(BasicModule module, int x, int y) {
-        modules[x][y] = module;
-        module.onPlaced(x, y, this);
+    public void addModule(BasicModule module, Point p) {
+        modules[p.x][p.y] = module;
+        module.onPlaced(this);
     }
 
     public void removeModule(BasicModule m) {
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] == m) {
+                    modules[i][j] = null;
+                }
+            }
+        }
     }
 
-    public BasicModule getModule(int x, int y) {
-        if (!(x < 0 || x > modules.length - 1 || y < 0 || y > modules[0].length - 1)) {
-            return modules[x][y];
+    public void removeModule(Point p) {
+        modules[p.x][p.y] = null;
+    }
+
+    public BasicModule getModule(Point p) {
+        if (!(p.x < 0 || p.x > modules.length - 1 || p.y < 0 || p.y > modules[0].length - 1)) {
+            return modules[p.x][p.y];
         }
         return null;
     }
 
     public Point getPositionInGrid(BasicModule m) {
-
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] == m) {
@@ -63,7 +73,7 @@ public class BasicShip extends Node {
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null) {
-                    System.out.print(modules[i][j].getName() + "\t\t");
+                    System.out.print(modules[i][j].getModuleName() + "\t\t");
                 } else {
                     System.out.print("-\t\t");
                 }

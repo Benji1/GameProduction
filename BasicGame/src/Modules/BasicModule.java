@@ -19,18 +19,19 @@ public abstract class BasicModule extends Node {
 
     // RIGIDBODY OBJECT (MASS, COLLIDER)
     // GRAPHICAL STUFF
-    protected int maxHealth;
-    protected int health;
-    protected float dropRateInPercent;
+    // DIRECTION THE BLOCK FACES
+    protected int maxHealth = 100;
+    protected int health = maxHealth;
+    protected float dropRateInPercent = 2;
     protected BasicShip ship;
-    protected String name;
+    protected String moduleName;
     protected ColorRGBA color = ColorRGBA.Gray;
 
     public BasicModule() {
     }
 
-    public String getName() {
-        return name;
+    public String getModuleName() {
+        return moduleName;
     }
 
     public void update() {
@@ -51,7 +52,7 @@ public abstract class BasicModule extends Node {
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 
-    public void onPlaced(int x, int y, BasicShip ship) {
+    public void onPlaced(BasicShip ship) {
         this.ship = ship;
 
         Box b = new Box(1, 1, 1);
@@ -69,5 +70,15 @@ public abstract class BasicModule extends Node {
     }
 
     public void onRemoved() {
+    }
+
+    // HELPER METHOD MAYBE SOMEWHERE ELSE WOULD BE A BETTER PLACE
+    public static float fillNotOverLimit(float actualValue, float increase, float limit) {
+        if (actualValue + increase > limit) {
+            return limit;
+        } else {
+            return actualValue + increase;
+        }
+
     }
 }
