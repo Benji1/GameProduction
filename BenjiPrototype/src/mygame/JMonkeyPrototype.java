@@ -107,7 +107,7 @@ public class JMonkeyPrototype extends SimpleApplication implements ActionListene
     private void initPlayer() {
         this.playerNode = new Node("Player");
 
-        Spatial player = assetManager.loadModel("Models/shuttle/shuttle.obj");
+        Spatial player = assetManager.loadModel("Models/shuttle/shuttle.j3o");
         player.rotate(0, -1.5707963268f, 0); // rotate model 90degree
         Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat.setTexture("DiffuseMap", assetManager.loadTexture("Textures/shuttle/texturemap.tga"));
