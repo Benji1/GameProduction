@@ -69,7 +69,7 @@ public class JMonkeyPrototype extends SimpleApplication implements ActionListene
         v = new Vector3f(v.x + lookDir.x, 0, v.z + lookDir.z);
 
         playerNode.setLocalTranslation(v);
-        
+
         // update rotation
         playerNode.rotate(0, tpf * speed * shipRotation * rotDir, 0);
     }

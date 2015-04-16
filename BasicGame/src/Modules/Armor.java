@@ -2,20 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package Modules;
+
+import com.jme3.math.ColorRGBA;
+import mygame.BasicShip;
 
 /**
  *
  * @author 1337
  */
 public class Armor extends BasicModule {
-    
-    public Armor(BasicShip ship) {
-         super(ship);
-         name = "Armor";
+
+    public Armor() {
+        name = "Armor";
+        color = ColorRGBA.Gray;
     }
-    
-    
-    
-    
 }

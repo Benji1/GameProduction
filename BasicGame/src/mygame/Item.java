@@ -8,10 +8,6 @@ package mygame;
  *
  * @author 1337
  */
-public class Weapon extends InteractiveModule {
-
-    public Weapon(BasicShip ship) {
-        super(ship);
-        name = "Weapon";
-    }
+public class Item {
+    
 }
