@@ -10,6 +10,7 @@ import com.jme3.scene.shape.Box;
 
 /**
  * test
+ *
  * @author normenhansen
  */
 public class Main extends SimpleApplication {
@@ -21,14 +22,40 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Box b = new Box(1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
 
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
+        BasicShip s = new BasicShip();
 
-        rootNode.attachChild(geom);
+        s.print();
+
+
+
+        s.addModule(new Armor(s), s.modules.length / 2, s.modules.length / 2);
+        s.addModule(new Armor(s), s.modules.length / 2 - 1, s.modules.length / 2);
+
+        s.addModule(new Weapon(s), s.modules.length / 2 - 2, s.modules.length / 2);
+
+        
+        EnergyGenerator eg = new EnergyGenerator(s);
+        
+        s.addModule(eg, s.modules.length / 2 + 1, s.modules.length / 2);
+
+
+
+        System.out.println();
+        System.out.println();
+        s.print();
+        
+        eg.printModules();
+        
+        /*
+         Box b = new Box(1, 1, 1);
+         Geometry geom = new Geometry("Box", b);
+
+         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+         mat.setColor("Color", ColorRGBA.Blue);
+         geom.setMaterial(mat);
+
+         rootNode.attachChild(geom);*/
     }
 
     @Override
