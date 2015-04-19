@@ -4,6 +4,7 @@
  */
 package Modules;
 
+import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class EnergyGenerator extends BasicModule {
     // GIVE ENERGY TO PARTS
     @Override
     public void update() {
+        fillModulesWithEnergy();
+    }
+
+    public void fillModulesWithEnergy() {
         energyStorage = fillNotOverLimit(energyStorage, energyGeneratedPerSecond, energyStorageLimit);
 
         System.out.println();

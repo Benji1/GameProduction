@@ -14,11 +14,13 @@ public class Thruster extends InteractiveModule {
 
     protected float maxThrust;
     protected float thrust;
-    
-    
+
     public Thruster() {
         moduleName = "Thruster";
         energyConsumptionPerSecond = 10;
         color = ColorRGBA.Orange;
+    }
+
+    protected void onActive() {
     }
 }

@@ -28,7 +28,7 @@ public abstract class InteractiveModule extends BasicModule {
     public void deactivate() {
         active = false;
     }
-    
+
     public boolean isActive() {
         return active;
     }
@@ -36,15 +36,22 @@ public abstract class InteractiveModule extends BasicModule {
     @Override
     public void update() {
         if (active) {
-            energyConsumptionTotal = energyConsumptionPerSecond + energyConsumptionPerAction;
-
-            if (energyConsumptionTotal > 0) {
-                energyAvailableInPercent = (energyReceived / energyConsumptionTotal) * 100;
-                System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
-            }
-            energyReceived = 0;
+            calculateEnergyConsumption();
+            onActive();
         }
     }
+
+    private void calculateEnergyConsumption() {
+        energyConsumptionTotal = energyConsumptionPerSecond + energyConsumptionPerAction;
+
+        if (energyConsumptionTotal > 0) {
+            energyAvailableInPercent = (energyReceived / energyConsumptionTotal) * 100;
+            System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
+        }
+        energyReceived = 0;
+    }
+
+    protected abstract void onActive();
 
     public float getEnergyConsumption() {
         return energyConsumptionTotal;
@@ -57,6 +64,4 @@ public abstract class InteractiveModule extends BasicModule {
     public void receiveEnergy(float energyReceived) {
         this.energyReceived += energyReceived;
     }
-    
-    
 }

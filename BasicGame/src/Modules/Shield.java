@@ -4,6 +4,7 @@
  */
 package Modules;
 
+import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
 
 /**
@@ -15,17 +16,15 @@ public class Shield extends InteractiveModule {
     protected float maxShieldPower = 700;
     protected float shieldPower = maxShieldPower;
     protected float shieldRegenRate = 40;
-    
+
     public Shield() {
         moduleName = "Shield";
         energyConsumptionPerSecond = 50;
         color = ColorRGBA.Blue;
     }
-    
-    @Override
-    public void update() {
-        super.update();
-        if(energyAvailableInPercent >= 100) {
+
+    protected void onActive() {
+        if (energyAvailableInPercent >= 100) {
             shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate, maxShieldPower);
         }
     }
