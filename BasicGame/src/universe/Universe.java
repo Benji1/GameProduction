@@ -43,11 +43,11 @@ public class Universe {
     
     public boolean enterNewChunk(int chunkX, int chunkZ) {
         // Entered Chunk is not new
-        if(this.universeChunks[chunkX][chunkZ] == true)
+        if(this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter] == true)
             return false;
         
         // Entered Chunk is new
-        this.universeChunks[chunkX][chunkZ] = true;
+        this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter] = true;
         return true;
     }
     

@@ -30,8 +30,8 @@ public abstract class Abs_ChunkNode extends Node {
         // init node
         this.app = app;
         
-        this.chunkX = Universe.UNIVERSE_SIZE / 2;
-        this.chunkZ = Universe.UNIVERSE_SIZE / 2;
+        this.chunkX = 0;
+        this.chunkZ = 0;
         this.posCurChunk = new Vector3f(0, 0, 0);
         
         // add to universe
