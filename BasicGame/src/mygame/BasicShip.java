@@ -8,21 +8,26 @@ import Modules.BasicModule;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Node;
 import java.awt.Point;
+import universe.Abs_ChunkNode;
 
 /**
  *
  * @author 1337
  */
-public class BasicShip extends Node {
+public class BasicShip extends Abs_ChunkNode {
 
     public BasicModule[][] modules = new BasicModule[5][5];
     public AssetManager assetManager;
 
-    public BasicShip(AssetManager assetManager) {
+    public BasicShip(AssetManager assetManager, Main app) {
+        super(app);
         this.assetManager = assetManager;
     }
-
-    public void update() {
+    
+    @Override
+    public void update(float tpf) {
+        super.update(tpf);
+        
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null) {
