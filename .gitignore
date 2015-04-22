@@ -17,3 +17,4 @@ hs_err_pid*
 /BasicGame/build/
 /BasicGame2/nbproject/private/
 /BasicGame/dist/
+!/BasicGame/libs
