@@ -42,7 +42,7 @@ public class EnergyGenerator extends BasicModule {
     public void fillModulesWithEnergy() {
         energyStorage = fillNotOverLimit(energyStorage, energyGeneratedPerSecond, energyStorageLimit);
 
-        System.out.println();
+        //System.out.println();
         // distribute energy to modules        
         for (InteractiveModule im : modules) {
             if (energyStorage >= im.getEnergyConsumption() && im.getEnergyReceived() < im.getEnergyConsumption()) {
@@ -51,7 +51,7 @@ public class EnergyGenerator extends BasicModule {
 
                 im.receiveEnergy(deliverEnergy);
                 energyStorage -= deliverEnergy;
-                System.out.println("Energy Gen at: " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " powering: " + im.getModuleName() + " with " + deliverEnergy + " Energy. E-Remaining: " + energyStorage);
+                //System.out.println("Energy Gen at: " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " powering: " + im.getModuleName() + " with " + deliverEnergy + " Energy. E-Remaining: " + energyStorage);
             }
         }
     }

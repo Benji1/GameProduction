@@ -5,6 +5,7 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
+import config.ConfigReader;
 
 /**
  *
@@ -12,13 +13,14 @@ import com.jme3.math.ColorRGBA;
  */
 public class Thruster extends InteractiveModule {
 
-    protected float maxThrust;
+    protected float thrusterMaxAcceleration;
     protected float thrust;
 
     public Thruster() {
         moduleName = "Thruster";
         energyConsumptionPerSecond = 10;
         color = ColorRGBA.Orange;
+        thrusterMaxAcceleration = ConfigReader.get("ThrusterMaxAcceleration", Float.class);
     }
 
     protected void onActive() {

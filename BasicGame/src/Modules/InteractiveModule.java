@@ -46,7 +46,7 @@ public abstract class InteractiveModule extends BasicModule {
 
         if (energyConsumptionTotal > 0) {
             energyAvailableInPercent = (energyReceived / energyConsumptionTotal) * 100;
-            System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
+            //System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
         }
         energyReceived = 0;
     }

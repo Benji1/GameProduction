@@ -5,6 +5,7 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
+import config.ConfigReader;
 
 /**
  *
@@ -15,7 +16,7 @@ public class Armor extends BasicModule {
     public Armor() {
         moduleName = "Armor";
         color = ColorRGBA.Gray;
-        maxHealth = 500;
-        health = 500;
+        maxHealth = ConfigReader.get("MaxArmorBlockHealth", int.class);
+        health = maxHealth;
     }
 }

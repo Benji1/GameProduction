@@ -9,6 +9,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import config.ConfigReader;
 import mygame.BasicShip;
 
 /**
@@ -20,7 +21,7 @@ public abstract class BasicModule extends Node {
     // RIGIDBODY OBJECT (MASS, COLLIDER)
     // GRAPHICAL STUFF
     // DIRECTION THE BLOCK FACES
-    protected int maxHealth = 100;
+    protected int maxHealth = ConfigReader.get("MaxStandardBlockHealth", int.class);
     protected int health = maxHealth;
     protected float dropRateInPercent = 2;
     protected BasicShip ship;

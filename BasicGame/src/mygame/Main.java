@@ -24,6 +24,7 @@ import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.util.SkyFactory;
+import config.ConfigReader;
 import java.awt.Point;
 import universe.Universe;
 
@@ -63,6 +64,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
+        ConfigReader.init();
         this.u = new Universe(this);
         this.initShip();
         this.initWorld();
@@ -90,10 +92,10 @@ public class Main extends SimpleApplication implements ActionListener {
         EnergyGenerator eg2 = new EnergyGenerator();
         s.addModule(eg2, new Point(s.modules.length / 2, s.modules.length / 2 + 2));
 
-        s.print();
+        //s.print();
 
-        eg.printModules();
-        eg2.printModules();
+        //eg.printModules();
+        //eg2.printModules();
     }
     
     private void initCamera() {
