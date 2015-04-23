@@ -15,6 +15,8 @@ import com.jme3.scene.shape.Box;
 import mygame.BasicShip;
 import mygame.PhysicsWorld;
 import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -121,11 +123,13 @@ public abstract class BasicModule extends Node {
     }
 
     private void generatePhysicsBody(int x, int y) {
-        CircleShape circle = new CircleShape();
-        circle.m_radius = 1.0f;
+        PolygonShape square = new PolygonShape();
+        square.setAsBox(1, 1);
+        //CircleShape circle = new CircleShape();
+        //circle.m_radius = 1.0f;
         
         FixtureDef fDef = new FixtureDef();
-        fDef.shape = circle;
+        fDef.shape = square;
         fDef.density = 1.0f;
         fDef.friction = 0.6f;
         //fDef.restitution = 0.5f;

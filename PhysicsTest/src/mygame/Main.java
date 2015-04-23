@@ -101,7 +101,7 @@ public class Main extends SimpleApplication implements ActionListener {
         s.addModule(armor2, new Point(s.modules.length / 2, s.modules.length / 2 + 1));
         armor2.lockToShip();        
         
-        /*
+        
         Weapon weapon = new Weapon();
         s.addModule(weapon, new Point(s.modules.length / 2 - 2, s.modules.length / 2));
         weapon.lockToShip();
@@ -110,7 +110,7 @@ public class Main extends SimpleApplication implements ActionListener {
         Thruster thruster = new Thruster();
         s.addModule(thruster, new Point(s.modules.length / 2 + 2, s.modules.length / 2));
         thruster.lockToShip();
-        */
+        
         Shield shield = new Shield();
         s.addModule(shield, new Point(s.modules.length / 2 - 1, s.modules.length / 2));
         shield.lockToShip();
@@ -119,11 +119,11 @@ public class Main extends SimpleApplication implements ActionListener {
         s.addModule(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
         eg.lockToShip();
 
-        /*
+        
         EnergyGenerator eg2 = new EnergyGenerator();
         s.addModule(eg2, new Point(s.modules.length / 2, s.modules.length / 2 + 2));
         eg2.lockToShip();
-        */
+        
         s.print();
 
         eg.printModules();
