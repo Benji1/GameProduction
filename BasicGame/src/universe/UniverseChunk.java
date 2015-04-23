@@ -11,8 +11,8 @@ import java.util.ArrayList;
  * @author Benjamin
  */
 public class UniverseChunk {
-    private ArrayList<Abs_ChunkNode> universeEntities;  // solar sys, planets,..
-    private ArrayList<Abs_ChunkNode> gameEntities;      // asteroids, ships,...
+    public ArrayList<Abs_ChunkNode> universeEntities;  // solar sys, planets,..
+    public ArrayList<Abs_ChunkNode> gameEntities;      // asteroids, ships,...
     
     public Boolean visited = false;
     
@@ -27,5 +27,13 @@ public class UniverseChunk {
     
     public void removeGameEntity(Abs_ChunkNode n) {
         this.gameEntities.remove(n);
+    }
+    
+    public void addUniverseEntity(Abs_ChunkNode n) {
+        this.universeEntities.add(n);
+    }
+    
+    public void removeUniverseEntity(Abs_ChunkNode n) {
+        this.universeEntities.remove(n);
     }
 }

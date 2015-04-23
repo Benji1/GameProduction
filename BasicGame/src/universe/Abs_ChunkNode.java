@@ -26,13 +26,18 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Abs_ChunkNode(Main app) {
+    public Abs_ChunkNode(Main app, int chunkX, int chunkZ, Vector3f posInChunk) {
         // init node
         this.app = app;
         
-        this.chunkX = 0;
-        this.chunkZ = 0;
-        this.posCurChunk = new Vector3f(0, 0, 0);
+        this.chunkX = chunkX;
+        this.chunkZ = chunkZ;
+        
+        this.posCurChunk = new Vector3f(posInChunk.x % (Universe.CHUNK_SIZE / 2), posInChunk.y, posInChunk.z % (Universe.CHUNK_SIZE / 2));
+    }
+    
+    public Abs_ChunkNode(Main app) {
+        this(app, 0, 0, Vector3f.ZERO);
         
         // add to universe
         this.app.getUniverse().addNewGameEntity(this, this.chunkX, this.chunkZ);

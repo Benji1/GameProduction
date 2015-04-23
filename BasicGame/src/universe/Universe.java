@@ -54,4 +54,6 @@ public class Universe {
     public void addNewGameEntity(Abs_ChunkNode n, int chunkX, int chunkZ) {
         this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter].addGameEntity(n);
     }
+    
+    
 }
