@@ -22,11 +22,8 @@ public class Universe {
     
     private Main app;
     
-    private ArrayList<Abs_ChunkNode> universeEntities;  // solar sys, planets,..
-    private ArrayList<Abs_ChunkNode> gameEntities;      // asteroids, ships,...
-    
     // PLACEHOLDERS FOR UNIVERSE STORAGE
-    private boolean[][] universeChunks;                    
+    private UniverseChunk[][] universeChunks;
     private int universeCenter = UNIVERSE_SIZE / 2;
     
     
@@ -36,22 +33,25 @@ public class Universe {
     
     public Universe(Main app) {
         this.app = app;
-        this.universeEntities = new ArrayList<Abs_ChunkNode>();
-        this.gameEntities = new ArrayList<Abs_ChunkNode>();
-        this.universeChunks = new boolean[UNIVERSE_SIZE][UNIVERSE_SIZE];
+        
+        this.universeChunks = new UniverseChunk[UNIVERSE_SIZE][UNIVERSE_SIZE];
+        for(int i = 0; i < UNIVERSE_SIZE; i++) {
+            for(int j = 0; j < UNIVERSE_SIZE; j++) {
+                this.universeChunks[i][j] = new UniverseChunk();
+            }
+        }
     }
     
     public boolean enterNewChunk(int chunkX, int chunkZ) {
-        // Entered Chunk is not new
-        if(this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter] == true)
+        // Check if Chunk new
+        if(this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter].visited == true)
             return false;
         
-        // Entered Chunk is new
-        this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter] = true;
+        this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter].visited = true;
         return true;
     }
     
-    public void addNewGameEntity(Abs_ChunkNode n) {
-        this.gameEntities.add(n);
+    public void addNewGameEntity(Abs_ChunkNode n, int chunkX, int chunkZ) {
+        this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter].addGameEntity(n);
     }
 }

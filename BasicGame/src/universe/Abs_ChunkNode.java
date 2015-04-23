@@ -35,7 +35,7 @@ public abstract class Abs_ChunkNode extends Node {
         this.posCurChunk = new Vector3f(0, 0, 0);
         
         // add to universe
-        this.app.getUniverse().addNewGameEntity(this);
+        this.app.getUniverse().addNewGameEntity(this, this.chunkX, this.chunkZ);
     }
     
     public void update(float tpf) {
