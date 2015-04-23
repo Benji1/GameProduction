@@ -11,14 +11,31 @@ import mygame.Main;
  * @author 
  */
 public abstract class Abs_ChunkNode extends Node {
+	/**********************************
+     ************ GLOBALS  ************
+     **********************************/
+	
+	public enum ChunkNodeType { Ship, Debris, Asteroid, Universe }
+	
+	
+	
+	
+	
     /**********************************
      ********** CLASS FIELDS  *********
      **********************************/
-    private Main app;  // the main game class
-    
-    private int chunkX;            // the current chunkX
-    private int chunkZ;            // the current chunkZ
+	
+    private Main app;  				// the main game class
+    private ChunkNodeType type;		// the type of the Node
+    private int chunkX;            	// the current chunkX
+    private int chunkZ;            	// the current chunkZ
+    private int chunkXLast;			// the last chunkX
+    private int chunkZLast;			// the last chunkZ
     private Vector3f posCurChunk;   // the position within the current chunk
+    
+    
+    
+    
     
     
     
@@ -26,26 +43,92 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Abs_ChunkNode(Main app, int chunkX, int chunkZ, Vector3f posInChunk) {
-        // init node
+    public Abs_ChunkNode(Main app, String name, ChunkNodeType t, int chunkX, int chunkZ, Vector3f posInChunk) {
+    	super(name);
+    	
         this.app = app;
-        
+        this.type = t;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
-        
+        this.chunkXLast = chunkX;
+        this.chunkZLast = chunkZ;
         this.posCurChunk = new Vector3f(posInChunk.x % (Universe.CHUNK_SIZE / 2), posInChunk.y, posInChunk.z % (Universe.CHUNK_SIZE / 2));
-    }
-    
-    public Abs_ChunkNode(Main app) {
-        this(app, 0, 0, Vector3f.ZERO);
         
-        // add to universe
-        this.app.getUniverse().addNewGameEntity(this, this.chunkX, this.chunkZ);
+        this.app.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
     }
     
-    public void update(float tpf) {
-        this.app.textShipPos.setText("PosChunk: " + this.chunkX + "/" + this.chunkZ + ". PosCurChunk: " + this.posCurChunk.toString() + ". PosAbs: " + this.getWorldTranslation().toString());
+    public Abs_ChunkNode(Main app, String name, ChunkNodeType t, int chunkX, int chunkZ) {
+        this(app, name, t, chunkX, chunkZ, Vector3f.ZERO);
     }
+    
+    public Abs_ChunkNode(Main app, String name, ChunkNodeType t) {
+        this(app, name, t, 0, 0, Vector3f.ZERO);
+    }
+    
+    protected Abs_ChunkNode() {}
+    
+    
+    
+    
+    
+    /**********************************
+     ************ METHODS  ************
+     **********************************/
+    
+    public void update(float tpf) {}
+    
+    private void recalcChunkPos() {
+    	/// TODO remove redundant code
+    	this.chunkXLast = 0;
+    	this.chunkZLast = 0;
+        if(this.posCurChunk.x > Universe.CHUNK_SIZE / 2) {
+            this.chunkX++;
+            this.chunkXLast++;
+            this.posCurChunk.x = -(Universe.CHUNK_SIZE / 2);
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+        } else if(this.posCurChunk.x < -(Universe.CHUNK_SIZE / 2)) {
+            this.chunkX--;
+            this.chunkXLast--;
+            this.posCurChunk.x = Universe.CHUNK_SIZE / 2;
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+        }
+        
+        if(this.posCurChunk.z > Universe.CHUNK_SIZE / 2) {
+            this.chunkZ++;
+            this.chunkZLast++;
+            this.posCurChunk.z = -(Universe.CHUNK_SIZE / 2);
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+        } else if(this.posCurChunk.z < -(Universe.CHUNK_SIZE / 2)) {
+            this.chunkZ--;
+            this.chunkZLast--;
+            this.posCurChunk.z = Universe.CHUNK_SIZE / 2;
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+        }
+        
+        this.app.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
+        
+        // check universe if we discovered a new chunk
+        if(this.discoveredNewChunk(this.chunkX, this.chunkZ))
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+    }
+    
+    private boolean discoveredNewChunk(int chunkX, int chunkZ) {
+        if(this.app.getUniverse().getChunk(chunkX, chunkZ).visited == true)
+            return false;
+        
+        this.app.getUniverse().getChunk(chunkX, chunkZ).visited = true;
+        return true;
+    }
+    
+    
+    
+    
+    
+    
+    /**********************************
+     **** OVERRIDE NODE & PHYSICS  ****
+     **********************************/
+    
     
     @Override
     public Spatial move(Vector3f offset) {
@@ -66,31 +149,8 @@ public abstract class Abs_ChunkNode extends Node {
         return this;
     }
     
-    private void recalcChunkPos() {
-        if(this.posCurChunk.x > Universe.CHUNK_SIZE / 2) {
-            this.chunkX++;
-            this.posCurChunk.x = -(Universe.CHUNK_SIZE / 2);
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
-        } else if(this.posCurChunk.x < -(Universe.CHUNK_SIZE / 2)) {
-            this.chunkX--;
-            this.posCurChunk.x = Universe.CHUNK_SIZE / 2;
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
-        }
-        
-        if(this.posCurChunk.z > Universe.CHUNK_SIZE / 2) {
-            this.chunkZ++;
-            this.posCurChunk.z = -(Universe.CHUNK_SIZE / 2);
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
-        } else if(this.posCurChunk.z < -(Universe.CHUNK_SIZE / 2)) {
-            this.chunkZ--;
-            this.posCurChunk.z = Universe.CHUNK_SIZE / 2;
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
-        }
-        
-        // check universe if we discovered a new chunk
-        if(this.app.getUniverse().enterNewChunk(this.chunkX, this.chunkZ))
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
-    }
+    
+    
     
     
     
@@ -99,6 +159,7 @@ public abstract class Abs_ChunkNode extends Node {
      **********************************/
     
     public Vector3f getPosCurChunk() {return this.posCurChunk;}
-    public long getChunkX() {return this.chunkX;}
-    public long getChunkZ() {return this.chunkZ;}
+    public int getChunkX() {return this.chunkX;}
+    public int getChunkZ() {return this.chunkZ;}
+    public ChunkNodeType getType(){return this.type;}
 }

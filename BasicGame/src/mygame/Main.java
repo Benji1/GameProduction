@@ -37,7 +37,7 @@ import universe.Universe;
 public class Main extends SimpleApplication implements ActionListener {
 
     private CameraNode camNode;
-    private BasicShip s;
+    public BasicShip s;
     private Universe u;
     
     public BitmapText textShipPos;
@@ -105,7 +105,7 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.s.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(0, 40 * (this.viewPort.getCamera().getWidth() / 1280f), -0.1f));
+        camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
         camNode.lookAt(this.s.getLocalTranslation(), Vector3f.UNIT_Y);
     }
     
@@ -113,8 +113,9 @@ public class Main extends SimpleApplication implements ActionListener {
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
-
-        inputManager.addListener(this, "Up", "Left", "Right");
+        inputManager.addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
+        
+        inputManager.addListener(this, "Up", "Left", "Right", "ToggleUniverseDebug");
     }
     
     private void initHUD() {
@@ -123,14 +124,12 @@ public class Main extends SimpleApplication implements ActionListener {
         this.textShipPos.setColor(ColorRGBA.Green);                             // font color
         this.textShipPos.setText("POS");             // the text
         this.textShipPos.setLocalTranslation(0, this.settings.getHeight(), 0); // position
-        guiNode.attachChild(this.textShipPos);
         
         this.textNewChunk = new BitmapText(guiFont, false);          
         this.textNewChunk.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
         this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
         this.textNewChunk.setLocalTranslation(this.settings.getWidth() -250, this.settings.getHeight(), 0); // position
-        guiNode.attachChild(this.textNewChunk);
     }
     
     private void initWorld() {
@@ -179,14 +178,31 @@ public class Main extends SimpleApplication implements ActionListener {
                 this.rotDir = 0;
             }
         }
+        if (name.equals("ToggleUniverseDebug")) {
+        	if (!keyPressed) {
+	        	if(camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
+	        		camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+	        		this.u.toggleUniverseDebug();
+	        		guiNode.attachChild(this.textShipPos);
+	        		guiNode.attachChild(this.textNewChunk);
+	        	} else {
+	        		camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+	        		this.u.toggleUniverseDebug();
+	        		guiNode.detachChild(this.textShipPos);
+	        		guiNode.detachChild(this.textNewChunk);
+	        	}
+        	}
+        }
     }
+
     
     @Override
     public void simpleUpdate(float tpf) {
+    	this.u.update(tpf);
         s.update(tpf);
         
         // update movement
-        Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(shipSpeed).clone();
+        Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(-1).mult(shipSpeed).clone();
         this.s.move(lookDir);
 
         // update rotation

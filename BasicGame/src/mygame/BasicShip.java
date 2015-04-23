@@ -6,9 +6,9 @@ package mygame;
 
 import Modules.BasicModule;
 import com.jme3.asset.AssetManager;
-import com.jme3.scene.Node;
 import java.awt.Point;
 import universe.Abs_ChunkNode;
+
 
 /**
  *
@@ -20,7 +20,7 @@ public class BasicShip extends Abs_ChunkNode {
     public AssetManager assetManager;
 
     public BasicShip(AssetManager assetManager, Main app) {
-        super(app);
+        super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
         this.assetManager = assetManager;
     }
     

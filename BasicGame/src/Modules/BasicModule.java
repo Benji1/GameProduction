@@ -64,7 +64,8 @@ public abstract class BasicModule extends Node {
 
 
         //DONT KNOW WHY X and Y have to be this way, but now it looks like in the array
-        this.move(ship.getPositionInGrid(this).y * -2, 0, ship.getPositionInGrid(this).x * -2);
+        // I fixed this, was my fault, the cam looked in the wrong Y direction. Benji_Stu
+        this.move(ship.getPositionInGrid(this).y * 2, 0, ship.getPositionInGrid(this).x * 2);
 
         ship.attachChild(this);
         this.attachChild(geom);
