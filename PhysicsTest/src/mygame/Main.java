@@ -26,17 +26,16 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.util.SkyFactory;
 import java.awt.Point;
+import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
 import java.util.List;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.Force;
-import org.dyn4j.dynamics.World;
-import org.dyn4j.dynamics.joint.DistanceJoint;
-import org.dyn4j.dynamics.joint.RevoluteJoint;
-import org.dyn4j.geometry.Mass;
-import org.dyn4j.geometry.Rectangle;
-import org.dyn4j.geometry.Vector2;
+import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
+import org.jbox2d.dynamics.FixtureDef;
 import universe.Abs_ChunkNode;
 import universe.Universe;
 
@@ -102,14 +101,16 @@ public class Main extends SimpleApplication implements ActionListener {
         s.addModule(armor2, new Point(s.modules.length / 2, s.modules.length / 2 + 1));
         armor2.lockToShip();        
         
+        /*
         Weapon weapon = new Weapon();
         s.addModule(weapon, new Point(s.modules.length / 2 - 2, s.modules.length / 2));
         weapon.lockToShip();
         
+        
         Thruster thruster = new Thruster();
         s.addModule(thruster, new Point(s.modules.length / 2 + 2, s.modules.length / 2));
         thruster.lockToShip();
-        
+        */
         Shield shield = new Shield();
         s.addModule(shield, new Point(s.modules.length / 2 - 1, s.modules.length / 2));
         shield.lockToShip();
@@ -118,14 +119,15 @@ public class Main extends SimpleApplication implements ActionListener {
         s.addModule(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
         eg.lockToShip();
 
+        /*
         EnergyGenerator eg2 = new EnergyGenerator();
         s.addModule(eg2, new Point(s.modules.length / 2, s.modules.length / 2 + 2));
         eg2.lockToShip();
-
+        */
         s.print();
 
         eg.printModules();
-        eg2.printModules();
+        //eg2.printModules();
     }
 
     private void initCamera() {
@@ -236,27 +238,37 @@ public class Main extends SimpleApplication implements ActionListener {
     Body testBody;
     Spatial testBox;
     public void initPhysics() {
-        PhysicsWorld.world.setGravity(new Vector2(0.0, -4.1));
+        //PhysicsWorld.world.setGravity(new Vector2(0.0, -9.7));
         testBody = generateBody();
         testBox = generateCrapBox();
         
     }
     
     public Body generateBody(){
-        Rectangle rect = new Rectangle(1, 1);
-        BodyFixture f = new BodyFixture(rect);
-        f.setDensity(1);
-        f.setFriction(0.6);
+        //Rectangle rect = new Rectangle(1, 1);                    
+        CircleShape circle = new CircleShape();
+        circle.m_radius = 1.0f;
         
-        // set body
-        Body body = new Body();
-        body.addFixture(f);
-        body.setLinearDamping(0.3);
-        body.setMass(Mass.Type.NORMAL);
+        FixtureDef fDef = new FixtureDef();
+        fDef.shape = circle;
+        fDef.density = 1.0f;
+        fDef.friction = 0.6f;
+        //fDef.restitution = 0.5f;
         
-        PhysicsWorld.world.addBody(body);
+        // set body                        
+        BodyDef bDef = new BodyDef();
+        bDef.position.set(0, -1);
+        bDef.type = BodyType.DYNAMIC;
         
-        System.out.println("dynamic: " + body.isDynamic());
+        Body body = PhysicsWorld.world.createBody(bDef);
+        body.createFixture(fDef);
+        //body.setLinearDamping(0.3);
+        //body.setMass(Mass.Type.NORMAL);
+        
+        
+        //PhysicsWorld.world.addBody(body);
+        
+        //System.out.println("dynamic: " + body.isDynamic());
         
         return body;
     }
@@ -265,7 +277,7 @@ public class Main extends SimpleApplication implements ActionListener {
     {
         Box box1 = new Box(1,1,1);
         Geometry blue = new Geometry("Box", box1);
-        blue.setLocalTranslation(new Vector3f(1,-5,1));
+        blue.setLocalTranslation(new Vector3f(0,-0,0));
         Material mat1 = new Material(assetManager, 
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat1.setColor("Color", ColorRGBA.Blue);
@@ -274,7 +286,8 @@ public class Main extends SimpleApplication implements ActionListener {
         
         return blue;
     }
-    public Vector3f Vector2ToVector3f(Vector2 v2)
+    
+    public Vector3f Vector2ToVector3f(Vec2 v2)
     {
         Vector3f returnVec = new Vector3f();
         returnVec.x = (float)v2.x;
@@ -283,24 +296,24 @@ public class Main extends SimpleApplication implements ActionListener {
         return returnVec;
     }
     
-    public Vector2 Vector3fToVector2(Vector3f v3)
+    public Vec2 Vector3fToVector2(Vector3f v3)
     {
-        Vector2 returnVec = new Vector2();
+        Vec2 returnVec = new Vec2();
         returnVec.x = v3.x;
         returnVec.y = v3.z;
         return returnVec;
     }
-    public Vector2 getBodyPos(Body b)
+    public Vec2 getBodyPos(Body b)
     {
         return b.getWorldPoint(b.getLocalCenter());
     }
     
     public void phyicsUpdate(float delta) {
-        testBody.applyForce(new Vector2(1f, 1f));
+        testBody.applyForce(new Vec2(-51f, 0f), testBody.getLocalCenter());
         
         Vector3f crapV2 = Vector2ToVector3f(getBodyPos(testBody));
         testBox.setLocalTranslation(crapV2);
         
-        PhysicsWorld.world.update(delta);
+        PhysicsWorld.world.step(delta, 8, 8);
     }
 }

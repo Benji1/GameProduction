@@ -35,7 +35,8 @@ public class EnergyGenerator extends BasicModule {
 
     // GIVE ENERGY TO PARTS
     @Override
-    public void update(float tpf) {
+    public void update(float delta) {
+        super.update(delta);
         fillModulesWithEnergy();
     }
 

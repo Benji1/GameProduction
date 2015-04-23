@@ -4,7 +4,9 @@
  */
 package mygame;
 
-import org.dyn4j.dynamics.World;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
+
 
 /**
  *
@@ -12,7 +14,7 @@ import org.dyn4j.dynamics.World;
  */
 public class PhysicsWorld {
     //public static PhysicsWorld instance = new PhysicsWorld();
-    public static World world = new World();
+    public static World world = new World(new Vec2(0.0f, 0.0f), true);
     
     private PhysicsWorld() {}
     

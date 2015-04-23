@@ -4,6 +4,8 @@
  */
 package Modules;
 
+import com.jme3.math.Vector3f;
+
 /**
  *
  * @author 1337
@@ -34,7 +36,8 @@ public abstract class InteractiveModule extends BasicModule {
     }
 
     @Override
-    public void update(float tpf) {
+    public void update(float delta) {
+        super.update(delta);
         if (active) {
             calculateEnergyConsumption();
             onActive();
