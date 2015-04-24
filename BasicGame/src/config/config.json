@@ -1,5 +1,5 @@
 {
-    "MaxStandardBlockHealth": 100,
-    "MaxArmorBlockHealth": 500,
-    "ThrusterMaxAcceleration": 5
+    "StandardMaxHealth": 100,
+    "ArmorMaxHealth": 500,
+    "ThrusterMaxForce": 200
 }

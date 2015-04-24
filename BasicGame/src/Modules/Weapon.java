@@ -14,7 +14,8 @@ public class Weapon extends InteractiveModule {
 
     public Weapon() {
         moduleName = "Weapon";
-        color = ColorRGBA.Red;
+        color = ColorRGBA.Brown;
+        colorActive = ColorRGBA.Red;
     }
 
     protected void onActive() {

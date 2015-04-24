@@ -35,7 +35,8 @@ public class EnergyGenerator extends BasicModule {
 
     // GIVE ENERGY TO PARTS
     @Override
-    public void update() {
+    public void update(float delta) {
+        super.update(delta);
         fillModulesWithEnergy();
     }
 
@@ -57,11 +58,11 @@ public class EnergyGenerator extends BasicModule {
     }
 
     public void printModules() {
-        System.out.println("Energy Generator at " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " can power " + modules.size() + " modules:");
+        //System.out.println("Energy Generator at " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " can power " + modules.size() + " modules:");
         for (InteractiveModule im : modules) {
-            System.out.println(im.getModuleName());
+            //System.out.println(im.getModuleName());
         }
-        System.out.println();
+        //System.out.println();
     }
 
     private void refreshModuleList() {

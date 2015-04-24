@@ -16,7 +16,7 @@ public class Armor extends BasicModule {
     public Armor() {
         moduleName = "Armor";
         color = ColorRGBA.Gray;
-        maxHealth = ConfigReader.get("MaxArmorBlockHealth", int.class);
+        maxHealth = ConfigReader.get("ArmorMaxHealth", int.class);
         health = maxHealth;
     }
 }

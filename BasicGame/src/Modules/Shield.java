@@ -21,6 +21,7 @@ public class Shield extends InteractiveModule {
         moduleName = "Shield";
         energyConsumptionPerSecond = 50;
         color = ColorRGBA.Blue;
+        colorActive = ColorRGBA.Cyan;
     }
 
     protected void onActive() {

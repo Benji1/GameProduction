@@ -4,6 +4,10 @@
  */
 package Modules;
 
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import mygame.BasicShip;
+
 /**
  *
  * @author 1337
@@ -15,7 +19,9 @@ public abstract class InteractiveModule extends BasicModule {
     protected float energyReceived = 0;
     protected float energyConsumptionTotal = 0;
     protected float energyAvailableInPercent = 0;
-    protected boolean active = true;
+    protected boolean active = false;
+    protected ColorRGBA colorActive;
+    protected Material materialActive;
 
     public InteractiveModule() {
     }
@@ -23,10 +29,12 @@ public abstract class InteractiveModule extends BasicModule {
     // button pressed
     public void activate() {
         active = true;
+        spatial.setMaterial(materialActive);
     }
 
     public void deactivate() {
         active = false;
+        spatial.setMaterial(material);
     }
 
     public boolean isActive() {
@@ -34,7 +42,8 @@ public abstract class InteractiveModule extends BasicModule {
     }
 
     @Override
-    public void update() {
+    public void update(float delta) {
+        super.update(delta);
         if (active) {
             calculateEnergyConsumption();
             onActive();
@@ -49,6 +58,15 @@ public abstract class InteractiveModule extends BasicModule {
             //System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
         }
         energyReceived = 0;
+    }
+    
+    @Override
+    public void onPlaced(BasicShip ship) {
+        super.onPlaced(ship);
+        materialActive = new Material(ship.assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        materialActive.setBoolean("UseMaterialColors",true);
+        materialActive.setColor("Ambient", colorActive);
+        materialActive.setColor("Diffuse", colorActive);
     }
 
     protected abstract void onActive();
