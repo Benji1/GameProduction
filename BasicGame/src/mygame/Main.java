@@ -140,7 +140,8 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.s.attachChild(camNode);
         camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-        camNode.lookAt(this.s.getLocalTranslation(), Vector3f.UNIT_Y);
+        
+        camNode.lookAt(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
     }
 
     private void initKeys() {
@@ -251,8 +252,14 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleUpdate(float delta) {
         this.u.update(delta);
         s.update(delta);
-
+        
         phyicsUpdate(delta);
+        
+        
+        camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y));
+        camNode.lookAt(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
+        
+        
         // update movement        
         //Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(-1).mult(shipSpeed).clone();
         //this.s.move(lookDir);
