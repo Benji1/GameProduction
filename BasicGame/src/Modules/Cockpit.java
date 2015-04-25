@@ -5,7 +5,6 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import org.jbox2d.common.Vec2;
 
 /**
  *
@@ -22,8 +21,14 @@ public class Cockpit extends BasicModule {
         ship.cockpit = this;        
     }
     
-    public void update(float delta)
-    {
+    @Override
+    public void update(float delta) {
         super.update(delta);
+    }
+    
+    @Override
+    public void destroy() {
+        super.destroy();        
+        ship.disable();
     }
 }

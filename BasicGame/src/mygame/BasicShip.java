@@ -95,4 +95,16 @@ public class BasicShip extends Abs_ChunkNode {
             System.out.println();
         }
     }
+    
+    public void disable() {
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] instanceof InteractiveModule) {
+                    ((InteractiveModule)modules[i][j]).disable();
+                }
+            }
+        }
+        
+        // TODO: player returns to base
+    }
 }

@@ -20,6 +20,7 @@ public abstract class InteractiveModule extends BasicModule {
     protected float energyConsumptionTotal = 0;
     protected float energyAvailableInPercent = 0;
     protected boolean active = false;
+    protected boolean disabled = false;
     protected ColorRGBA colorActive;
     protected Material materialActive;
 
@@ -28,8 +29,10 @@ public abstract class InteractiveModule extends BasicModule {
 
     // button pressed
     public void activate() {
-        active = true;
-        spatial.setMaterial(materialActive);
+        if (!disabled) {
+            active = true;
+            spatial.setMaterial(materialActive);
+        }        
     }
 
     public void deactivate() {
@@ -81,5 +84,10 @@ public abstract class InteractiveModule extends BasicModule {
 
     public void receiveEnergy(float energyReceived) {
         this.energyReceived += energyReceived;
+    }
+    
+    public void disable() {
+        disabled = true;
+        deactivate();
     }
 }
