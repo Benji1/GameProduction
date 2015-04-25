@@ -7,6 +7,7 @@ package mygame;
 import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
+import Modules.Storage;
 import com.jme3.asset.AssetManager;
 import java.awt.Point;
 import universe.Abs_ChunkNode;
@@ -106,5 +107,18 @@ public class BasicShip extends Abs_ChunkNode {
         }
         
         // TODO: player returns to base
+    }
+    
+    public void collectItem(Item item) {
+        // check for available item storage
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] instanceof Storage) {
+                    if (((Storage) modules[i][j]).storeItem(item)) {
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

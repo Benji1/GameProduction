@@ -5,6 +5,7 @@ import Modules.EnergyGenerator;
 import Modules.Armor;
 import Modules.Cockpit;
 import Modules.Shield;
+import Modules.Storage;
 import Modules.Thruster;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
@@ -120,6 +121,14 @@ public class Main extends SimpleApplication implements ActionListener {
         EnergyGenerator eg = new EnergyGenerator();
         s.addModule(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
         eg.lockToShip();
+        
+        Storage storage1 = new Storage();
+        s.addModule(storage1, new Point(s.modules.length / 2 - 1, s.modules.length / 2 - 1));
+        storage1.lockToShip();
+        
+        Storage storage2 = new Storage();
+        s.addModule(storage2, new Point(s.modules.length / 2 - 1, s.modules.length / 2 + 1));
+        storage2.lockToShip();
 
 
         //EnergyGenerator eg2 = new EnergyGenerator();

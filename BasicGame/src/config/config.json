@@ -1,5 +1,6 @@
 {
     "StandardMaxHealth": 100,
     "ArmorMaxHealth": 500,
-    "ThrusterMaxForce": 200
+    "ThrusterMaxForce": 200,
+    "MaxStorage": 5
 }

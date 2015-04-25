@@ -4,6 +4,8 @@
  */
 package Modules;
 
+import com.jme3.math.ColorRGBA;
+import config.ConfigReader;
 import java.util.ArrayList;
 import mygame.Item;
 
@@ -14,8 +16,23 @@ import mygame.Item;
 public class Storage extends BasicModule {
 
     protected ArrayList<Item> itemsInStorage = new ArrayList<Item>();
+    protected int maxStoredItems = ConfigReader.get("MaxStorage", int.class);
 
     public Storage() {
         moduleName = "Storage";
+        color = ColorRGBA.Magenta;
+    }
+    
+    public boolean storeItem(Item item) {
+        if (itemsInStorage.size() < maxStoredItems) {
+            itemsInStorage.add(item);
+            return true;
+        }
+
+        return false;
+    }
+    
+    public Item removeItem(int index) {
+        return itemsInStorage.remove(index);
     }
 }
