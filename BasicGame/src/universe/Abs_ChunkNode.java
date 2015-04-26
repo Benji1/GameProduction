@@ -25,7 +25,7 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CLASS FIELDS  *********
      **********************************/
 	
-    private Main app;  				// the main game class
+    protected Main app;  				// the main game class
     private ChunkNodeType type;		// the type of the Node
     private int chunkX;            	// the current chunkX
     private int chunkZ;            	// the current chunkZ

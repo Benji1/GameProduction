@@ -1,6 +1,9 @@
 package universe;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import universe.Abs_ChunkNode.ChunkNodeType;
 
 import com.jme3.font.BitmapFont;
@@ -37,6 +40,7 @@ public class Universe {
     
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
+    public List<SolarSystem> systems;
     private int universeCenter = UNIVERSE_SIZE / 2;
     
     // Debug Stuff
@@ -60,6 +64,7 @@ public class Universe {
         }
         
         this.initDebug();
+        this.systems = new ArrayList<SolarSystem>();
     }
     
     
@@ -109,6 +114,8 @@ public class Universe {
     }
     
     public void update(float tpf) {
+    	for (SolarSystem s: systems)
+    		s.update(tpf);
     	if(this.isDebug)
     		this.app.textShipPos.setText("PosChunk: " + this.app.s.getChunkX() + "/" + this.app.s.getChunkX() + "\nPosCurChunk: " + this.app.s.getPosCurChunk().toString() + "\nPosAbs: " + this.app.s.getWorldTranslation().toString());
     }

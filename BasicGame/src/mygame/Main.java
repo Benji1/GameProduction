@@ -7,6 +7,7 @@ import Modules.Cockpit;
 import Modules.Shield;
 import Modules.Storage;
 import Modules.Thruster;
+
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
@@ -24,17 +25,22 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
+
 import config.ConfigReader;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
+
 import universe.Universe;
+import universe.UniverseGenerator;
 
 /**
  * test
@@ -73,6 +79,8 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleInitApp() {
         ConfigReader.init();
         this.u = new Universe(this);
+        //UniverseGenerator.generateUniverse(this, u);
+        UniverseGenerator.debugSystem(this, u);
         this.initShip();
         this.initWorld();
         this.initLight();
