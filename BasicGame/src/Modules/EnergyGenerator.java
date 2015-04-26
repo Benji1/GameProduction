@@ -20,7 +20,6 @@ public class EnergyGenerator extends BasicModule {
     private float energyGeneratedPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "EnergyGeneratedPerSecond", float.class);
     private float energyStorageLimit = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "EnergyStorageLimit", float.class);
     private float energyStorage = energyStorageLimit;
-    
     private int radius = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "Radius", int.class);
     ArrayList<InteractiveModule> modules = new ArrayList<InteractiveModule>();
 
@@ -46,16 +45,26 @@ public class EnergyGenerator extends BasicModule {
         energyStorage = fillNotOverLimit(energyStorage, energyGeneratedPerSecond, energyStorageLimit);
 
         //System.out.println();
-        // distribute energy to modules        
+        // distribute energy to modules
+        
+        boolean refresh = false;
         for (InteractiveModule im : modules) {
-            if (energyStorage >= im.getEnergyConsumption() && im.getEnergyReceived() < im.getEnergyConsumption()) {
+            if (im != null) {
+                if (energyStorage >= im.getEnergyConsumption() && im.getEnergyReceived() < im.getEnergyConsumption()) {
 
-                float deliverEnergy = im.getEnergyConsumption() - im.getEnergyReceived();
+                    float deliverEnergy = im.getEnergyConsumption() - im.getEnergyReceived();
 
-                im.receiveEnergy(deliverEnergy);
-                energyStorage -= deliverEnergy;
-                //System.out.println("Energy Gen at: " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " powering: " + im.getModuleName() + " with " + deliverEnergy + " Energy. E-Remaining: " + energyStorage);
+                    im.receiveEnergy(deliverEnergy);
+                    energyStorage -= deliverEnergy;
+                    //System.out.println("Energy Gen at: " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " powering: " + im.getModuleName() + " with " + deliverEnergy + " Energy. E-Remaining: " + energyStorage);
+                }
+            } else {
+                refresh = true;
             }
+        }
+        
+        if(refresh) {
+            refreshModuleList();
         }
     }
 
