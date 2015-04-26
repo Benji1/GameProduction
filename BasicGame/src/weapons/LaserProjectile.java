@@ -29,7 +29,7 @@ public class LaserProjectile extends Projectile {
     
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
-        this.speed = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Speed", float.class);
+        this.startForce = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Speed", float.class);
         this.lifetime = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Lifetime", float.class);
 
         createBox(spawnPoint);  
@@ -69,7 +69,8 @@ public class LaserProjectile extends Projectile {
         bDef.type = BodyType.DYNAMIC;
         
         body = PhysicsWorld.world.createBody(bDef);
-        body.createFixture(fDef);         
+        body.createFixture(fDef);
+        body.applyForce(direction.mul(startForce), body.getPosition());
     }    
     
     protected void updateBoxPosition() {
@@ -90,7 +91,6 @@ public class LaserProjectile extends Projectile {
     public void update(float delta) {
         super.update(delta);
         updateBoxPosition();
-        body.applyForce(direction.mul(speed), body.getPosition());
     }
     
     @Override

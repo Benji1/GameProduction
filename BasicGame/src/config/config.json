@@ -22,8 +22,8 @@
         "Radius": 3
     },
     "Weapon": {
-        "LaserProjectile_Speed": 10,
+        "LaserProjectile_Speed": 500,
         "LaserProjectile_Lifetime": 2.0,
-        "LaserGun_Firerate": 0.5
+        "LaserGun_Firerate": 0.3
     }
 }

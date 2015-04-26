@@ -11,7 +11,7 @@ import org.jbox2d.common.Vec2;
 
 public abstract class Projectile extends Node implements Updateable {
     
-    protected float speed;
+    protected float startForce;
     protected float lifetime;       // in seconds
     protected float lifetimeCounter;
     
