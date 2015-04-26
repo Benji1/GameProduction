@@ -15,18 +15,22 @@ import com.jme3.scene.shape.Box;
 import config.ConfigReader;
 import mygame.BasicShip;
 import mygame.PhysicsWorld;
+import org.jbox2d.callbacks.ContactImpulse;
+import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.dynamics.joints.WeldJointDef;
 
 /**
  *
  * @author 1337
  */
-public abstract class BasicModule extends Node {
+public abstract class BasicModule extends Node implements ContactListener {
 
     // RIGIDBODY OBJECT (MASS, COLLIDER)
     // GRAPHICAL STUFF
@@ -158,6 +162,13 @@ public abstract class BasicModule extends Node {
         } else {
             return actualValue + increase;
         }
-
     }
+    
+    public void beginContact(Contact cntct) {}
+
+    public void endContact(Contact cntct) {}
+
+    public void preSolve(Contact cntct, Manifold mnfld) {}
+
+    public void postSolve(Contact cntct, ContactImpulse ci) {}
 }
