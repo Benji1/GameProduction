@@ -65,7 +65,7 @@ public class LaserProjectile extends Projectile {
         // set body                        
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
-        //bDef.angle = 1f;
+        bDef.angle = (float)Math.atan2(direction.y, direction.x);
         bDef.type = BodyType.DYNAMIC;
         
         body = PhysicsWorld.world.createBody(bDef);
