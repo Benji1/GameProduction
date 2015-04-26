@@ -6,6 +6,10 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
+import org.jbox2d.callbacks.ContactImpulse;
+import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Manifold;
+import org.jbox2d.dynamics.contacts.Contact;
 
 /**
  *
@@ -28,5 +32,26 @@ public class Shield extends InteractiveModule {
         if (energyAvailableInPercent >= 100) {
             shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate, maxShieldPower);
         }
+    }
+    
+    @Override
+    public void update(float tpf) {
+        
+    }
+    
+    private class ShieldCollider implements ContactListener {
+
+        public void beginContact(Contact cntct) {            
+        }
+
+        public void endContact(Contact cntct) {
+        }
+
+        public void preSolve(Contact cntct, Manifold mnfld) {
+        }
+
+        public void postSolve(Contact cntct, ContactImpulse ci) {
+        }
+        
     }
 }
