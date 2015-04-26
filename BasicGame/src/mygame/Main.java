@@ -52,6 +52,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private CameraNode camNode;
     public BasicShip s;
+    public BasicShip targetS;
     private Universe u;
     private List<Body> bodies = new ArrayList<Body>();
     private List<Updateable> updateables = new ArrayList<Updateable>();
@@ -131,11 +132,11 @@ public class Main extends SimpleApplication implements ActionListener {
         EnergyGenerator eg = new EnergyGenerator();
         s.addModule(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
         eg.lockToShip();
-        
+
         Storage storage1 = new Storage();
         s.addModule(storage1, new Point(s.modules.length / 2 - 1, s.modules.length / 2 - 1));
         storage1.lockToShip();
-        
+
         Storage storage2 = new Storage();
         s.addModule(storage2, new Point(s.modules.length / 2 - 1, s.modules.length / 2 + 1));
         storage2.lockToShip();
@@ -145,10 +146,28 @@ public class Main extends SimpleApplication implements ActionListener {
         //s.addModule(eg2, new Point(s.modules.length / 2, s.modules.length / 2 + 2));
         //eg2.lockToShip();
 
-        s.print();
+        //s.print();
 
         //eg.printModules();
         //eg2.printModules();
+
+
+        targetS = new BasicShip(assetManager, this);
+        rootNode.attachChild(targetS);
+
+        Cockpit cockpitTs = new Cockpit();
+        targetS.addModule(cockpitTs, new Point(targetS.modules.length / 2 + 2, targetS.modules.length / 2 + 2));
+        cockpitTs.addToShip();
+
+        Armor armorTs1 = new Armor();
+        targetS.addModule(armorTs1, new Point(targetS.modules.length / 2 + 1, targetS.modules.length / 2 + 2));
+        armorTs1.lockToShip();
+
+        Armor armorTs2 = new Armor();
+        targetS.addModule(armorTs2, new Point(targetS.modules.length / 2, targetS.modules.length / 2 + 2));
+        armorTs2.lockToShip();
+        
+        //targetS.print();
     }
 
     private void initCamera() {
@@ -251,27 +270,28 @@ public class Main extends SimpleApplication implements ActionListener {
                 s.getInteractiveModule(new Point(s.modules.length / 2 - 1, s.modules.length / 2)).activate();
             }
         }
-        
+
         if (name.equals("ToggleUniverseDebug")) {
-        	if (!keyPressed) {
-	        	if(camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
-	        		camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-	        		this.u.toggleUniverseDebug();
-	        		guiNode.attachChild(this.textShipPos);
-	        		guiNode.attachChild(this.textNewChunk);
-	        	} else {
-	        		camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-	        		this.u.toggleUniverseDebug();
-	        		guiNode.detachChild(this.textShipPos);
-	        		guiNode.detachChild(this.textNewChunk);
-	        	}
-        	}
+            if (!keyPressed) {
+                if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
+                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+                    this.u.toggleUniverseDebug();
+                    guiNode.attachChild(this.textShipPos);
+                    guiNode.attachChild(this.textNewChunk);
+                } else {
+                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+                    this.u.toggleUniverseDebug();
+                    guiNode.detachChild(this.textShipPos);
+                    guiNode.detachChild(this.textNewChunk);
+                }
+            }
         }
     }
-    
+
     public void addUpdateable(Updateable u) {
         updateables.add(u);
     }
+
     public void removeUpdateable(Updateable u) {
         updateables.remove(u);
     }
@@ -280,20 +300,20 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleUpdate(float delta) {
         this.u.update(delta);
         s.update(delta);
-        
+        targetS.update(delta);
         phyicsUpdate(delta);
-        
-        for(int i=0; i<updateables.size(); i++) {
+
+        for (int i = 0; i < updateables.size(); i++) {
             if (updateables.get(i) != null) {
                 updateables.get(i).update(delta);
             }
         }
-        
+
         // Does not work quite right
         //camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y));
         //camNode.lookAt(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
-        
-        
+
+
         // update movement        
         //Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(-1).mult(shipSpeed).clone();
         //this.s.move(lookDir);
