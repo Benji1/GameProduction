@@ -25,5 +25,12 @@
         "LaserProjectile_Speed": 500,
         "LaserProjectile_Lifetime": 2.0,
         "LaserGun_Firerate": 0.3
+    },
+    "ConfigExamples": {
+        "Example1": 1,
+        "Example2": "Example",
+        "Example3": {
+            "Example3Secret": "Psst!"
+        }
     }
 }

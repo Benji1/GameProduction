@@ -20,11 +20,7 @@ public class Thruster extends InteractiveModule {
     public Thruster(int orientation) {
         moduleName = "Thruster";
         energyConsumptionPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "EnergyConsumptionPerSecond", float.class);
-        
-        // Nested Config Example
-        //System.out.println(ConfigReader.getFromMap((Map) ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "TestLayeredConfig", Map.class), "EvenDeeperLayer", String.class));
-        
-        
+
         color = ColorRGBA.LightGray;
         colorActive = ColorRGBA.Orange;
         
