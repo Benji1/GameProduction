@@ -98,7 +98,7 @@ public class Universe {
                 	blue.setMaterial(mat0);
                 else
                 	blue.setMaterial(mat1);
-                blue.setLocalTranslation(Universe.CHUNK_SIZE * i, 0, Universe.CHUNK_SIZE * j);
+                blue.setLocalTranslation(Universe.CHUNK_SIZE * i, -10, Universe.CHUNK_SIZE * j);
                 this.debugBoxes.attachChild(blue);
                 
                 BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
