@@ -32,7 +32,7 @@ public abstract class Weapon extends InteractiveModule {
     }
 
     protected void onActive() {
-        if (fireRateTimer >= fireRate) {
+        if (fireRateTimer >= fireRate && energyAvailableInPercent >= 100) {
             fire();
             fireRateTimer = 0;
         }        

@@ -18,6 +18,7 @@ public class LaserGun extends Weapon {
         super(orientation);
         moduleName = "LaserGun";
         fireRate = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserGun_Firerate", float.class);
+        energyConsumptionPerAction = 50;
     }
 
     @Override
