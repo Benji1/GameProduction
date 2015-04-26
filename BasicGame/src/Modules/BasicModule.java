@@ -150,6 +150,8 @@ public abstract class BasicModule extends Node implements ContactListener {
         
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
+        
+        PhysicsWorld.world.setContactListener(this);
     }
     
     public void onRemoved() {
@@ -164,11 +166,19 @@ public abstract class BasicModule extends Node implements ContactListener {
         }
     }
     
-    public void beginContact(Contact cntct) {}
+    public void beginContact(Contact cntct) {
+            System.out.println("beginContact");
+}
 
-    public void endContact(Contact cntct) {}
+    public void endContact(Contact cntct) {
+            System.out.println("endContact");
+    }
 
-    public void preSolve(Contact cntct, Manifold mnfld) {}
+    public void preSolve(Contact cntct, Manifold mnfld) {
+            System.out.println("preSolve");
+    }
 
-    public void postSolve(Contact cntct, ContactImpulse ci) {}
+    public void postSolve(Contact cntct, ContactImpulse ci) {
+            System.out.println("postSolve");
+    }
 }
