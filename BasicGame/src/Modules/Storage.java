@@ -16,7 +16,7 @@ import mygame.Item;
 public class Storage extends BasicModule {
 
     protected ArrayList<Item> itemsInStorage = new ArrayList<Item>();
-    protected int maxStoredItems = ConfigReader.get("MaxStorage", int.class);
+    protected int maxStoredItems = ConfigReader.getFromMap(ConfigReader.getBaseMap("Storage"), "MaxStorage", int.class);
 
     public Storage() {
         moduleName = "Storage";

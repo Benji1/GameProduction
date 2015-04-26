@@ -17,7 +17,7 @@ public class LaserGun extends Weapon {
     public LaserGun(int orientation) {
         super(orientation);
         moduleName = "LaserGun";
-        fireRate = ConfigReader.get("LaserGun_Firerate", float.class);
+        fireRate = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserGun_Firerate", float.class);
     }
 
     @Override

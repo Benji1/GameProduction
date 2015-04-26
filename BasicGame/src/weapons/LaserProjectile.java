@@ -29,9 +29,9 @@ public class LaserProjectile extends Projectile {
     
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
-        this.speed = ConfigReader.get("LaserProjectile_Speed", float.class);
-        this.lifetime = ConfigReader.get("LaserProjectile_Lifetime", float.class);
-        
+        this.speed = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Speed", float.class);
+        this.lifetime = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Lifetime", float.class);
+
         createBox(spawnPoint);  
     }   
     

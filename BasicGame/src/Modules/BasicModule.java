@@ -31,9 +31,9 @@ public abstract class BasicModule extends Node {
     // RIGIDBODY OBJECT (MASS, COLLIDER)
     // GRAPHICAL STUFF
     // DIRECTION THE BLOCK FACES
-    protected int maxHealth = ConfigReader.get("StandardMaxHealth", int.class);
+    protected int maxHealth = ConfigReader.getFromMap(ConfigReader.getBaseMap("Basic"), "MaxHealth", int.class);
     protected int health = maxHealth;
-    protected float dropRateInPercent = 2;
+    protected float dropRateInPercent = ConfigReader.getFromMap(ConfigReader.getBaseMap("Basic"), "DropRateInPercent", float.class);
     protected BasicShip ship;
     protected String moduleName;
     protected ColorRGBA color = ColorRGBA.Gray;

@@ -14,17 +14,19 @@ import org.jbox2d.common.Vec2;
  */
 public class Thruster extends InteractiveModule {
 
-    protected float maxForce;
-    protected float forceMagnitude = 100;    
+    protected float forceMagnitude = ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "ForceMagnitude", float.class); 
     protected Vec2 forceVector;
    
     public Thruster(int orientation) {
         moduleName = "Thruster";
-        energyConsumptionPerSecond = 10;
+        energyConsumptionPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "EnergyConsumptionPerSecond", float.class);
+        
+        // Nested Config Example
+        //System.out.println(ConfigReader.getFromMap((Map) ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "TestLayeredConfig", Map.class), "EvenDeeperLayer", String.class));
+        
+        
         color = ColorRGBA.LightGray;
         colorActive = ColorRGBA.Orange;
-        
-        maxForce = ConfigReader.get("ThrusterMaxForce", float.class);
         
         switch(orientation) {
             case 0: forceVector = new Vec2(0, 1); break;
