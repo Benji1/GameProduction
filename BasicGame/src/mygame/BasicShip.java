@@ -24,7 +24,7 @@ public class BasicShip extends Abs_ChunkNode {
 
     public BasicShip(AssetManager assetManager, Main app) {
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
-        this.assetManager = assetManager;          
+        this.assetManager = assetManager;
     }
     
     @Override
@@ -38,6 +38,10 @@ public class BasicShip extends Abs_ChunkNode {
                 }
             }
         }
+    }
+    
+    public Main getApp() {
+        return this.app;
     }
 
     public void addModule(BasicModule module, Point p) {

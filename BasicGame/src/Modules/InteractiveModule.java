@@ -25,6 +25,7 @@ public abstract class InteractiveModule extends BasicModule {
     protected Material materialActive;
 
     public InteractiveModule() {
+ 
     }
 
     // button pressed

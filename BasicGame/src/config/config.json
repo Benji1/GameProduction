@@ -2,5 +2,8 @@
     "StandardMaxHealth": 100,
     "ArmorMaxHealth": 500,
     "ThrusterMaxForce": 200,
-    "MaxStorage": 5
+    "MaxStorage": 5,
+    "LaserProjectile_Speed": 10,
+    "LaserProjectile_Lifetime": 2.0,
+    "LaserGun_Firerate": 0.5
 }

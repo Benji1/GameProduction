@@ -81,8 +81,7 @@ public abstract class BasicModule extends Node {
          float angleRad = body.getAngle();
          Quaternion q = new Quaternion();
          q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-         spatial.setLocalRotation(q);
-         
+         spatial.setLocalRotation(q);         
     }
 
     public void takeDamage(int amount) {

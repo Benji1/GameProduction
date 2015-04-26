@@ -4,6 +4,7 @@ import Modules.Weapon;
 import Modules.EnergyGenerator;
 import Modules.Armor;
 import Modules.Cockpit;
+import Modules.LaserGun;
 import Modules.Shield;
 import Modules.Storage;
 import Modules.Thruster;
@@ -53,6 +54,7 @@ public class Main extends SimpleApplication implements ActionListener {
     public BasicShip s;
     private Universe u;
     private List<Body> bodies = new ArrayList<Body>();
+    private List<Updateable> updateables = new ArrayList<Updateable>();
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
     protected float shipSpeed = 0;
@@ -106,7 +108,7 @@ public class Main extends SimpleApplication implements ActionListener {
         s.addModule(armor2, new Point(s.modules.length / 2, s.modules.length / 2 + 1));
         armor2.lockToShip();
 
-        Weapon weapon = new Weapon();
+        Weapon weapon = new LaserGun(0);
         s.addModule(weapon, new Point(s.modules.length / 2 - 2, s.modules.length / 2));
         weapon.lockToShip();
 
@@ -266,6 +268,13 @@ public class Main extends SimpleApplication implements ActionListener {
         	}
         }
     }
+    
+    public void addUpdateable(Updateable u) {
+        updateables.add(u);
+    }
+    public void removeUpdateable(Updateable u) {
+        updateables.remove(u);
+    }
 
     @Override
     public void simpleUpdate(float delta) {
@@ -273,6 +282,12 @@ public class Main extends SimpleApplication implements ActionListener {
         s.update(delta);
         
         phyicsUpdate(delta);
+        
+        for(int i=0; i<updateables.size(); i++) {
+            if (updateables.get(i) != null) {
+                updateables.get(i).update(delta);
+            }
+        }
         
         // Does not work quite right
         //camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y));
