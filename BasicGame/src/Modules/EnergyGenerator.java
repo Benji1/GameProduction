@@ -6,6 +6,7 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
+import config.ConfigReader;
 import java.awt.Point;
 import java.util.ArrayList;
 import mygame.BasicShip;
@@ -16,10 +17,11 @@ import mygame.BasicShip;
  */
 public class EnergyGenerator extends BasicModule {
 
-    private float energyGeneratedPerSecond = 20;
-    private float energyStorageLimit = 1000;
+    private float energyGeneratedPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "EnergyGeneratedPerSecond", float.class);
+    private float energyStorageLimit = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "EnergyStorageLimit", float.class);
     private float energyStorage = energyStorageLimit;
-    private int radius = 3;
+    
+    private int radius = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "Radius", int.class);
     ArrayList<InteractiveModule> modules = new ArrayList<InteractiveModule>();
 
     public EnergyGenerator() {

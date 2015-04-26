@@ -4,7 +4,6 @@
  */
 package config;
 
-import Modules.Thruster;
 import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import java.io.BufferedReader;
@@ -21,14 +20,15 @@ import java.util.logging.Logger;
  */
 public class ConfigReader {
 
-    static Map jsonData;
+    public static Map jsonData;
 
     public static void init() {
         StringBuilder sb = new StringBuilder();
         BufferedReader r;
         try {
             r = new BufferedReader(new FileReader("src/config/config.json"));
-            String line;
+            
+             String line;
             while ((line = r.readLine()) != null) {
                 sb.append(line).append("\n");
             }
@@ -37,32 +37,38 @@ public class ConfigReader {
             JSONParser parser = factory.newJsonParser();
             jsonData = parser.parseJson(sb.toString());
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Thruster.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfigReader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Thruster.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfigReader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public static <T> T get(String key, Class type) {
-        if (jsonData != null) {
+    
+    public static Map getBaseMap(String key) {
+        return  (Map) jsonData.get(key);
+    }
+    
+    public static <T> T getFromMap(Map m, String key, Class type) {
+        if (m != null) {
             if (type == float.class || type == Float.class) {
-                return (T) new Float(Float.parseFloat((String) jsonData.get(key)));
+                return (T) new Float(Float.parseFloat((String) m.get(key)));
             } else if (type == int.class || type == Integer.class) {
-                return (T) new Integer(Integer.parseInt((String) jsonData.get(key)));
+                return (T) new Integer(Integer.parseInt((String) m.get(key)));
             } else if (type == double.class || type == Double.class) {
-                return (T) new Double(Double.parseDouble((String) jsonData.get(key)));
+                return (T) new Double(Double.parseDouble((String) m.get(key)));
             } else if (type == long.class || type == Long.class) {
-                return (T) new Long(Long.parseLong((String) jsonData.get(key)));
+                return (T) new Long(Long.parseLong((String) m.get(key)));
             } else if (type == String.class) {
-                return (T) (String) jsonData.get(key);
+                return (T) (String) m.get(key);
             } else if (type == boolean.class || type == Boolean.class) {
-                if (((String) jsonData.get(key)).toLowerCase().equals("true") || ((String) jsonData.get(key)).equals("1")) {
+                if (((String) m.get(key)).toLowerCase().equals("true") || ((String) m.get(key)).equals("1")) {
                     return (T) Boolean.TRUE;
                 } else {
                     return (T) Boolean.FALSE;
                 }
+            } else if (type == Map.class) {
+                return (T) m.get(key);
             }
-            return (T) jsonData.get(key);
+            return (T) m.get(key);
         } else {
             return null;
         }
