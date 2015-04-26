@@ -36,7 +36,7 @@ public class Shield extends InteractiveModule {
     
     @Override
     public void update(float tpf) {
-        
+        super.update(tpf);
     }
     
     private class ShieldCollider implements ContactListener {
