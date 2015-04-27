@@ -12,6 +12,7 @@ public class Planet extends Abs_ChunkNode {
 	float distance = 0;
 	float orbit = 0;
 	float orbitspeed = 0;
+	float ellypsiness = 1.25f;
 	
 	public Planet(Main app){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
@@ -42,8 +43,8 @@ public class Planet extends Abs_ChunkNode {
 	public void update(float tpf){
 		this.orbit += orbitspeed*tpf;
 		this.orbit%=360;
-		float x = (float) (this.distance * Math.cos(this.orbit));
-		float y = (float) (this.distance * Math.sin(this.orbit)*0.7f);
+		float x = (float) (this.distance * Math.cos(this.orbit)* this.ellypsiness);
+		float y = (float) (this.distance * Math.sin(this.orbit) / this.ellypsiness);
 		this.setLocalTranslation(x, 0, y);
 	}
 }
