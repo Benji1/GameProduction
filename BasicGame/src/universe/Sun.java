@@ -5,15 +5,19 @@ import java.awt.Color;
 import universe.Abs_ChunkNode.ChunkNodeType;
 import mygame.Main;
 
+import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 
 public class Sun extends Abs_ChunkNode {
 	Geometry model;
-	public Sun(Main app){
+	PointLight light;
+	public Sun(Main app, SolarSystem parent){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
+		//this.parent = parent;
 		this.init();
 	}
 	
@@ -25,5 +29,14 @@ public class Sun extends Abs_ChunkNode {
 		sphereMat.setColor("Color", ColorRGBA.Yellow);
 		model.setMaterial(sphereMat);
 		this.attachChild(model);
+		light = new PointLight();
+		light.setColor(ColorRGBA.White);
+		light.setRadius(shape.radius*100);
+		light.setPosition(this.getWorldTranslation());
+		app.getRootNode().addLight(light);
+	}
+	
+	public void update(float tpf){
+		light.setPosition(this.getWorldTranslation().add(new Vector3f(0,20,0)));
 	}
 }

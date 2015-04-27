@@ -6,10 +6,10 @@ import universe.Abs_ChunkNode.ChunkNodeType;
 public class SolarSystem extends Abs_ChunkNode {
 	private Sun sun;
 	private Planet[] planets;
-	private int radius;
+	public int radius;
 	private static int MaxRadius = 10;
 	private static int MinRadius = 1;
-	public float timescale = 20f;
+	public float timescale = 200f;
 	
 	public SolarSystem(Main app){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
@@ -17,7 +17,7 @@ public class SolarSystem extends Abs_ChunkNode {
 	}
 	
 	private void init(){
-		sun = new Sun(app);
+		sun = new Sun(app, this);
 		this.attachChild(sun);
 		int numPlanets = (int)(Math.random()*9+5);
 		System.out.println(numPlanets);
@@ -35,6 +35,7 @@ public class SolarSystem extends Abs_ChunkNode {
 	}
 	
 	public void update(float tpf){
+		sun.update(tpf);
 		for (Planet p:planets)
 			p.update(tpf*timescale);
 	}

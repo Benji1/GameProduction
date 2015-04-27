@@ -15,6 +15,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -82,8 +83,6 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleInitApp() {
         ConfigReader.init();
         this.u = new Universe(this);
-        //UniverseGenerator.generateUniverse(this, u);
-        UniverseGenerator.debugSystem(this, u);
         this.initShip();
         this.initWorld();
         this.initLight();
@@ -211,10 +210,14 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initWorld() {
         // testbox
+        //UniverseGenerator.generateUniverse(this, u);
+        UniverseGenerator.debugSystem(this, u);
+    	
         Box box1 = new Box(1, 1, 1);
         Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat1.setColor("Diffuse", ColorRGBA.Blue);
         mat1.setColor("Specular", ColorRGBA.Blue);
+        
 
         for (int i = 0; i < 1000; i++) {
             Geometry blue = new Geometry("Box", box1);
@@ -230,9 +233,12 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initLight() {
-        DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
-        rootNode.addLight(sun);
+    	AmbientLight ambient = new AmbientLight();
+    	ambient.setColor(ColorRGBA.White.mult(0.2f));
+    	rootNode.addLight(ambient);
+        //DirectionalLight sun = new DirectionalLight();
+        //sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
+        //rootNode.addLight(sun);
     }
 
     @Override

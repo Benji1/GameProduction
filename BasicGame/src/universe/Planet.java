@@ -22,8 +22,11 @@ public class Planet extends Abs_ChunkNode {
 		Sphere shape = new Sphere(32, 32, (float) (Math.random()*4)+1f);
 		model = new Geometry(this.name+"_model", shape);
 		Material sphereMat = new Material(app.getAssetManager(), 
-				"Common/MatDefs/Misc/Unshaded.j3md");
-		sphereMat.setColor("Color", ColorRGBA.randomColor());
+				"Common/MatDefs/Light/Lighting.j3md");
+		sphereMat.setBoolean("UseMaterialColors", true);
+		sphereMat.setColor("Diffuse", ColorRGBA.randomColor());
+		sphereMat.setColor("Ambient", ColorRGBA.randomColor());
+		
 		model.setMaterial(sphereMat);
 		this.attachChild(model);
 	}
@@ -37,9 +40,10 @@ public class Planet extends Abs_ChunkNode {
 	}
 	
 	public void update(float tpf){
-		this.orbit = (this.orbit+orbitspeed*tpf)%360;
+		this.orbit += orbitspeed*tpf;
+		this.orbit%=360;
 		float x = (float) (this.distance * Math.cos(this.orbit));
-		float y = (float) (this.distance * Math.sin(this.orbit));
+		float y = (float) (this.distance * Math.sin(this.orbit)*0.7f);
 		this.setLocalTranslation(x, 0, y);
 	}
 }

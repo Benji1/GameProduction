@@ -4,13 +4,13 @@ import mygame.Main;
 
 public class UniverseGenerator {
 	private static int[] size = {3,3};
-	private static int density = 80;
+	private static int density = 20;
 	
 	
 	public static void debugSystem(Main app, Universe u){
 		SolarSystem sys = new SolarSystem(app);
 		app.getRootNode().attachChild(sys);
-		sys.setLocalTranslation(-20, -10, 0);
+		sys.setLocalTranslation(-20, -5, 0);
 		u.systems.add(sys);
 	}
 	
