@@ -167,18 +167,18 @@ public abstract class BasicModule extends Node implements ContactListener {
     }
     
     public void beginContact(Contact cntct) {
-            System.out.println("beginContact");
+            //System.out.println("beginContact");
 }
 
     public void endContact(Contact cntct) {
-            System.out.println("endContact");
+            //System.out.println("endContact");
     }
 
     public void preSolve(Contact cntct, Manifold mnfld) {
-            System.out.println("preSolve");
+            //System.out.println("preSolve");
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
-            System.out.println("postSolve");
+            //System.out.println("postSolve");
     }
 }

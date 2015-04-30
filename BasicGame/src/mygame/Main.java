@@ -20,6 +20,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
@@ -29,6 +30,11 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 
 import config.ConfigReader;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.DefaultScreenController;
+import de.lessvoid.nifty.screen.ScreenController;
+import gui.EditorScreenController;
+import gui.StartScreenController;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -63,6 +69,7 @@ public class Main extends SimpleApplication implements ActionListener {
     protected float shipRotation = 1.5f;
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
+    private Nifty nifty;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -90,6 +97,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initKeys();
         this.initHUD();
         this.initPhysics();
+        this.initNifty();
     }
 
     private void initShip() {
@@ -190,8 +198,9 @@ public class Main extends SimpleApplication implements ActionListener {
         inputManager.addMapping("Weapon", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Shield", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
+        inputManager.addMapping("Editor", new KeyTrigger(KeyInput.KEY_E));
 
-        inputManager.addListener(this, "Up", "Left", "Right", "Weapon", "Shield", "ToggleUniverseDebug");
+        inputManager.addListener(this, "Up", "Left", "Right", "Weapon", "Shield", "ToggleUniverseDebug", "Editor");
     }
 
     private void initHUD() {
@@ -291,6 +300,14 @@ public class Main extends SimpleApplication implements ActionListener {
                     guiNode.detachChild(this.textNewChunk);
                 }
             }
+        }
+        
+        if (name.equals("Editor") && !keyPressed) {
+            System.out.println(nifty.getCurrentScreen().getScreenId());
+            if (!nifty.getCurrentScreen().getScreenId().equals("editor"))
+                nifty.gotoScreen("editor");
+            else
+                nifty.gotoScreen("start");
         }
     }
 
@@ -413,5 +430,19 @@ public class Main extends SimpleApplication implements ActionListener {
         //testBox.setLocalTranslation(crapV2);
 
         PhysicsWorld.world.step(delta, 8, 8);
+    }
+
+    private void initNifty() {
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+            assetManager, inputManager, audioRenderer, guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+        flyCam.setDragToRotate(true);
+        nifty.loadStyleFile("nifty-default-styles.xml");
+        nifty.loadControlFile("nifty-default-controls.xml");
+        nifty.loadControlFile("Interface/nifty-controls/nifty-button.xml");
+        nifty.addXml("Interface/editor.xml");
+        nifty.addXml("Interface/start.xml");
+        nifty.gotoScreen("start");
     }
 }
