@@ -29,8 +29,8 @@ public class EditorScreenController implements ScreenController
         System.out.println("onEndScreen " + this.getClass().getSimpleName());
     }
     
-    public void quit() {
-        System.out.println("quit");
+    public void exit() {
+        System.out.println("exit");
         nifty.gotoScreen("start");
     }
     
