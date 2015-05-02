@@ -441,8 +441,8 @@ public class Main extends SimpleApplication implements ActionListener {
         nifty.loadStyleFile("Interface/CustomStyles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
         nifty.loadControlFile("Interface/CustomControls.xml");
-        nifty.addXml("Interface/Editor.xml");
-        nifty.addXml("Interface/Start.xml");
+        nifty.addXml("Interface/EditorScreen.xml");
+        nifty.addXml("Interface/StartScreen.xml");
         nifty.gotoScreen("start");
     }
 }
