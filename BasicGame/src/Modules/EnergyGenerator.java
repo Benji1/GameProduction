@@ -75,6 +75,14 @@ public class EnergyGenerator extends BasicModule {
         }
         //System.out.println();
     }
+    
+    @Override
+    public void otherModulePlaced(BasicModule module, Point p) {
+        super.otherModulePlaced(module, p);
+        if(module instanceof InteractiveModule) {
+            refreshModuleList();
+        }
+    }
 
     private void refreshModuleList() {
         modules.clear();

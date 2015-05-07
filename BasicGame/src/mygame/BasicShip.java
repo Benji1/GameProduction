@@ -44,23 +44,35 @@ public class BasicShip extends Abs_ChunkNode {
         return this.app;
     }
 
-    public void addModule(BasicModule module, Point p) {
+    public void addModuleAt(BasicModule module, Point p) {
         modules[p.x][p.y] = module;
         module.onPlaced(this);
+        informOtherModulesOfAddedModule(module, p);
     }
-
-    public void removeModule(BasicModule m) {
+    
+    public void informOtherModulesOfAddedModule(BasicModule module, Point p) {
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
-                if (modules[i][j] == m) {
-                    modules[i][j] = null;
+                if (modules[i][j] != null && !(p.x == i && p.y == j)) {
+                    modules[i][j].otherModulePlaced(module, p);
                 }
             }
         }
     }
 
-    public void removeModule(Point p) {
+    public void removeModuleAt(Point p) {
+        informOtherModulesOfRemovedModule(getModule(p), p);
         modules[p.x][p.y] = null;
+    }
+    
+    public void informOtherModulesOfRemovedModule(BasicModule module, Point p) {
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null && !(p.x == i && p.y == j)) {
+                    modules[i][j].otherModuleRemoved(module, p);
+                }
+            }
+        }
     }
 
     public BasicModule getModule(Point p) {
