@@ -8,22 +8,33 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
+
 import com.jme3.asset.AssetManager;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+
 import java.awt.Point;
+
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
+
 import universe.Abs_ChunkNode;
 
 /**
  *
  * @author 1337
  */
-public class BasicShip extends Abs_ChunkNode {
+public class BasicShip extends JBox2dNode {
 
     public BasicModule[][] modules = new BasicModule[5][5];
     public AssetManager assetManager;
-    public Cockpit cockpit;
+    //public Cockpit cockpit;
 
-    public BasicShip(AssetManager assetManager, Main app) {
-        super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
+    public BasicShip(AssetManager assetManager, Main app, String name) {
+        super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
         this.assetManager = assetManager;
     }
     
@@ -38,6 +49,9 @@ public class BasicShip extends Abs_ChunkNode {
                 }
             }
         }
+        
+        //if(this.name.equals("PlayerShip"))
+        //	System.out.println(this.getLocalTranslation().toString() + " / " + this.physicsCenter.getPosition().toString());
     }
     
     public Main getApp() {

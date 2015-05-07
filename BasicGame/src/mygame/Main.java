@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.common.IViewportTransform;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -82,18 +83,17 @@ public class Main extends SimpleApplication implements ActionListener {
     @Override
     public void simpleInitApp() {
         ConfigReader.init();
-        this.u = new Universe(this);
-        this.initShip();
+        
         this.initWorld();
+        this.initShip();
         this.initLight();
-        this.initCamera();
         this.initKeys();
         this.initHUD();
-        this.initPhysics();
+        this.initCamera();
     }
 
     private void initShip() {
-        s = new BasicShip(assetManager, this);
+        s = new BasicShip(assetManager, this, "PlayerShip");
         rootNode.attachChild(s);
 
         Cockpit cockpit = new Cockpit();
@@ -151,7 +151,7 @@ public class Main extends SimpleApplication implements ActionListener {
         //eg2.printModules();
 
 
-        targetS = new BasicShip(assetManager, this);
+        targetS = new BasicShip(assetManager, this, "TargetShip");
         rootNode.attachChild(targetS);
 
         Cockpit cockpitTs = new Cockpit();
@@ -175,12 +175,9 @@ public class Main extends SimpleApplication implements ActionListener {
 
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        this.s.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+        this.rootNode.attachChild(camNode);
+        camNode.setLocalTranslation(new Vector3f(this.s.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getLocalTranslation().z + 0.1f));
         camNode.lookAt(this.s.getLocalTranslation(), Vector3f.UNIT_Y);
-
-        // Does not work quite right
-        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
     }
 
     private void initKeys() {
@@ -209,36 +206,15 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initWorld() {
-        // testbox
-        //UniverseGenerator.generateUniverse(this, u);
-        UniverseGenerator.debugSystem(this, u);
+    	this.u = new Universe(this);
     	
-        Box box1 = new Box(1, 1, 1);
-        Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat1.setColor("Diffuse", ColorRGBA.Blue);
-        mat1.setColor("Specular", ColorRGBA.Blue);
-        
-
-        for (int i = 0; i < 1000; i++) {
-            Geometry blue = new Geometry("Box", box1);
-            blue.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, -15, ((float) Math.random() - 0.5f) * 1000));
-            blue.setMaterial(mat1);
-            rootNode.attachChild(blue);
-
-            Geometry blue2 = new Geometry("Box", box1);
-            blue2.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, 10, ((float) Math.random() - 0.5f) * 1000));
-            blue2.setMaterial(mat1);
-            rootNode.attachChild(blue2);
-        }
+        UniverseGenerator.debugSystem(this, u);
     }
 
     private void initLight() {
     	AmbientLight ambient = new AmbientLight();
     	ambient.setColor(ColorRGBA.White.mult(0.2f));
     	rootNode.addLight(ambient);
-        //DirectionalLight sun = new DirectionalLight();
-        //sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
-        //rootNode.addLight(sun);
     }
 
     @Override
@@ -279,6 +255,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
+            	System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
                 if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
                     camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
                     this.u.toggleUniverseDebug();
@@ -304,28 +281,19 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleUpdate(float delta) {
+    	phyicsUpdate(delta);
         this.u.update(delta);
         s.update(delta);
         targetS.update(delta);
-        phyicsUpdate(delta);
 
         for (int i = 0; i < updateables.size(); i++) {
             if (updateables.get(i) != null) {
                 updateables.get(i).update(delta);
             }
         }
-
-        // Does not work quite right
-        //camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y));
-        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(s.modules.length / 2, s.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
-
-
-        // update movement        
-        //Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(-1).mult(shipSpeed).clone();
-        //this.s.move(lookDir);
-
-        // update rotation
-        //this.s.rotate(0, delta * speed * shipRotation * rotDir, 0);
+        
+        // update camera position
+        camNode.setLocalTranslation(new Vector3f(this.s.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.s.getLocalTranslation().z + 0.1f));
     }
 
     @Override
@@ -335,43 +303,6 @@ public class Main extends SimpleApplication implements ActionListener {
 
     public Universe getUniverse() {
         return this.u;
-    }
-    Body testBody;
-    Spatial testBox;
-
-    public void initPhysics() {
-        //PhysicsWorld.world.setGravity(new Vector2(0.0, -9.7));
-        //testBody = generateBody();
-        //testBox = generateCrapBox();
-    }
-
-    public Body generateBody() {
-        //Rectangle rect = new Rectangle(1, 1);                    
-        CircleShape circle = new CircleShape();
-        circle.m_radius = 1.0f;
-
-        FixtureDef fDef = new FixtureDef();
-        fDef.shape = circle;
-        fDef.density = 1.0f;
-        fDef.friction = 0.6f;
-        //fDef.restitution = 0.5f;
-
-        // set body                        
-        BodyDef bDef = new BodyDef();
-        bDef.position.set(0, -1);
-        bDef.type = BodyType.DYNAMIC;
-
-        Body body = PhysicsWorld.world.createBody(bDef);
-        body.createFixture(fDef);
-        //body.setLinearDamping(0.3);
-        //body.setMass(Mass.Type.NORMAL);
-
-
-        //PhysicsWorld.world.addBody(body);
-
-        //System.out.println("dynamic: " + body.isDynamic());
-
-        return body;
     }
 
     public Spatial generateCrapBox() {

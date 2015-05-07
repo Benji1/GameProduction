@@ -9,7 +9,7 @@ public class SolarSystem extends Abs_ChunkNode {
 	public int radius;
 	private static int MaxRadius = 10;
 	private static int MinRadius = 1;
-	public float timescale = 200f;
+	public float timescale = 20f;
 	
 	public SolarSystem(Main app){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);

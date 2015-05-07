@@ -32,6 +32,7 @@ public abstract class Abs_ChunkNode extends Node {
     private int chunkXLast;			// the last chunkX
     private int chunkZLast;			// the last chunkZ
     private Vector3f posCurChunk;   // the position within the current chunk
+    private Vector3f lastAbsPos;
     
     
     
@@ -53,6 +54,7 @@ public abstract class Abs_ChunkNode extends Node {
         this.chunkXLast = chunkX;
         this.chunkZLast = chunkZ;
         this.posCurChunk = new Vector3f(posInChunk.x % (Universe.CHUNK_SIZE / 2), posInChunk.y, posInChunk.z % (Universe.CHUNK_SIZE / 2));
+        this.lastAbsPos = this.getLocalTranslation();
         
         this.app.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
     }
@@ -75,7 +77,10 @@ public abstract class Abs_ChunkNode extends Node {
      ************ METHODS  ************
      **********************************/
     
-    public void update(float tpf) {}
+    public void update(float tpf) {
+    	this.posCurChunk.set(this.getLocalTranslation().x % (this.chunkX * Universe.CHUNK_SIZE / 2f), this.posCurChunk.y, this.getLocalTranslation().z % (this.chunkZ * Universe.CHUNK_SIZE / 2f));
+    	this.recalcChunkPos();
+    }
     
     private void recalcChunkPos() {
     	/// TODO remove redundant code
@@ -130,7 +135,7 @@ public abstract class Abs_ChunkNode extends Node {
      **********************************/
     
     
-    @Override
+    /*@Override
     public Spatial move(Vector3f offset) {
         this.posCurChunk.addLocal(offset);
         
@@ -147,7 +152,7 @@ public abstract class Abs_ChunkNode extends Node {
         this.recalcChunkPos();
         super.move(x, y, z);
         return this;
-    }
+    }*/
     
     
     

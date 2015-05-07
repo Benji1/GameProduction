@@ -18,12 +18,13 @@ public class Cockpit extends BasicModule {
     }   
     
     public void addToShip() {
-        ship.cockpit = this;        
+        ship.setPhysicsCenter(this.body);        
     }
     
     @Override
     public void update(float delta) {
         super.update(delta);
+        //this.ship.setLocalTranslation(this.getLocalTranslation());
     }
     
     @Override

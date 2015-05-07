@@ -15,8 +15,11 @@ import org.jbox2d.dynamics.World;
 public class PhysicsWorld {
     //public static PhysicsWorld instance = new PhysicsWorld();
     public static World world = new World(new Vec2(0.0f, 0.0f), true);
+
     
-    private PhysicsWorld() {}
+    private PhysicsWorld() {
+    	
+    }
     
     /*
     public static PhysicsWorld getInstance()

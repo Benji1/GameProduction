@@ -114,8 +114,15 @@ public class Universe {
     }
     
     public void update(float tpf) {
+    	for(int i = 0; i < UNIVERSE_SIZE; i++) {
+            for(int j = 0; j < UNIVERSE_SIZE; j++) {
+                this.universeChunks[i][j].update(tpf);
+            }
+        }
+    	
     	for (SolarSystem s: systems)
     		s.update(tpf);
+    	
     	if(this.isDebug)
     		this.app.textShipPos.setText("PosChunk: " + this.app.s.getChunkX() + "/" + this.app.s.getChunkX() + "\nPosCurChunk: " + this.app.s.getPosCurChunk().toString() + "\nPosAbs: " + this.app.s.getWorldTranslation().toString());
     }

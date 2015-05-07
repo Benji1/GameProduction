@@ -46,24 +46,13 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected Spatial spatial;
     protected Material material;
 
-    public BasicModule() {    
-       
-        
-    }
+    public BasicModule() {}
     
-    public void lockToShip() {               
-//        Vector3f cockpitPos = new Vector3f(
-//            (float)ship.cockpit.body.getWorldPoint(ship.cockpit.body.getLocalCenter()).x, 
-//            0.0f, 
-//            (float)ship.cockpit.body.getWorldPoint(ship.cockpit.body.getLocalCenter()).y);
+    public void lockToShip() {
         WeldJointDef wjDef = new WeldJointDef();        
-        //wjDef.bodyA = ship.cockpit.body;
-        //wjDef.bodyB = this.body;
-        wjDef.initialize(ship.cockpit.body, this.body, ship.cockpit.body.getPosition());
+        wjDef.initialize(ship.getPhysicsCenter(), this.body, ship.getPhysicsCenter().getPosition());
         wjDef.collideConnected = false;
         PhysicsWorld.world.createJoint(wjDef);
-        
-        //WeldJoint wj = new WeldJoint(ship.cockpit.body, this.body, new Vector2(cockpitPos.x, cockpitPos.z));
     }
 
     public String getModuleName() {
@@ -73,20 +62,12 @@ public abstract class BasicModule extends Node implements ContactListener {
     public Body getBody() {
         return body;
     }
-
-    public void update(float tpf) {
-         Vector3f bodyPos = new Vector3f(
-                (float)body.getWorldPoint(body.getLocalCenter()).x, 
-                0.0f, 
-                (float)body.getWorldPoint(body.getLocalCenter()).y);
-
-         spatial.setLocalTranslation(bodyPos);
-         
-         float angleRad = body.getAngle();
-         Quaternion q = new Quaternion();
-         q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-         spatial.setLocalRotation(q);         
+    
+    public Spatial getSpatial() {
+    	return this.spatial;
     }
+    
+    public void update(float tpf) {}
 
     public void takeDamage(int amount) {
         health -= amount;
@@ -106,10 +87,11 @@ public abstract class BasicModule extends Node implements ContactListener {
 
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
-
+        
+        // create module model
         Box box = new Box(1, 1, 1);
         spatial = new Geometry("Box", box);
-        spatial.scale(1f, 0.2f, 1f);
+        spatial.scale(1f, 1f, 1f);
         material = new Material(ship.assetManager, "Common/MatDefs/Light/Lighting.j3md");
         
         material.setBoolean("UseMaterialColors",true);
@@ -117,17 +99,27 @@ public abstract class BasicModule extends Node implements ContactListener {
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
+        
+        // create physics
+        int x = (ship.getPositionInGrid(this).y * 2) - 4;
+        int y = (ship.getPositionInGrid(this).x * 2) - 4;
 
-        //DONT KNOW WHY X and Y have to be this way, but now it looks like in the array
-        // I fixed this, was my fault, the cam looked in the wrong Y direction. Benji_Stu
-        //this.move(ship.getPositionInGrid(this).y * 2, 0, ship.getPositionInGrid(this).x * 2);
-        int x = ship.getPositionInGrid(this).y * 2;
-        int y = ship.getPositionInGrid(this).x * 2;
-        
-        
         generatePhysicsBody(x, y);
         
-        ship.attachChild(this);
+        // position jme node
+        Vector3f bodyPos = new Vector3f(
+                (float)body.getWorldPoint(body.getLocalCenter()).x, 
+                0.0f, 
+                (float)body.getWorldPoint(body.getLocalCenter()).y);
+
+		this.setLocalTranslation(bodyPos);
+		 
+		float angleRad = body.getAngle();
+		Quaternion q = new Quaternion();
+		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+		this.setLocalRotation(q);
+        
+        this.ship.attachChild(this);
         this.attachChild(spatial);
     }
 
@@ -167,18 +159,18 @@ public abstract class BasicModule extends Node implements ContactListener {
     }
     
     public void beginContact(Contact cntct) {
-            System.out.println("beginContact");
-}
+            //System.out.println("beginContact");
+    }
 
     public void endContact(Contact cntct) {
-            System.out.println("endContact");
+            //System.out.println("endContact");
     }
 
     public void preSolve(Contact cntct, Manifold mnfld) {
-            System.out.println("preSolve");
+            //System.out.println("preSolve");
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
-            System.out.println("postSolve");
+            //System.out.println("postSolve");
     }
 }
