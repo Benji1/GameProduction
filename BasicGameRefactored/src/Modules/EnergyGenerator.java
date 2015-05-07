@@ -65,6 +65,12 @@ public class EnergyGenerator extends BasicModule {
         if (refresh) {
             refreshModuleList();
         }
+        
+        ColorRGBA c = new ColorRGBA();
+        c.interpolate(ColorRGBA.DarkGray, color, energyStorage / energyStorageLimit);
+    
+        material.setColor("Ambient", c);
+        material.setColor("Diffuse", c);
     }
 
     public void printModules() {

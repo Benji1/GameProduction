@@ -103,8 +103,6 @@ public class TestShipDesigns {
         s.addModuleAt(new Storage(), new Point(-1, 1));
         s.addModuleAt(new Storage(), new Point(1, 1));
         
-        s.removeModuleAtFromOffset(new Point(1, 1));
-        
         return s;
     }
 
@@ -127,17 +125,17 @@ public class TestShipDesigns {
         s.addModuleAt(new Armor(), new Point(-2, 0));
         s.addModuleAt(new Armor(), new Point(2, 0));
         
-        s.addModuleAt(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
-        s.addModuleAt(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, 1));
-        s.addModuleAt(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-1, 1));
-        s.addModuleAt(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, 1));
-        s.addModuleAt(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-2, 1));
+        s.addModuleAt(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, -1));
+        s.addModuleAt(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, -1));
+        s.addModuleAt(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-1, -1));
+        s.addModuleAt(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, -1));
+        s.addModuleAt(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-2, -1));
         
-        s.addModuleAt(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, -1));
-        s.addModuleAt(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(1, -1));
-        s.addModuleAt(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-1, -1));
-        s.addModuleAt(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(2, -1));
-        s.addModuleAt(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-2, -1));
+        s.addModuleAt(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, 1));
+        s.addModuleAt(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(1, 1));
+        s.addModuleAt(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-1, 1));
+        s.addModuleAt(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(2, 1));
+        s.addModuleAt(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-2, 1));
         
         return s;
     }

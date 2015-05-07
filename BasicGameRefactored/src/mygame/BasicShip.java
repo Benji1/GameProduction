@@ -179,7 +179,6 @@ public class BasicShip extends Abs_ChunkNode {
                 }
             }
         }
-        
         return ims;
     }
     
