@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty-controls>
-    <controlDefinition style="nifty-button" name="button" controller="de.lessvoid.nifty.controls.button.ButtonControl" inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping">
+    <controlDefinition name="button" style="nifty-button" controller="de.lessvoid.nifty.controls.button.ButtonControl" inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping">
         <panel style="#panel" focusable="true">
-            <text id="#text" style="#text" text="$label"/>
+            <text id="#text" style="#text" text="$label" font="Interface/Fonts/Agency-FB-Bold-36.fnt"/>
         </panel>
+    </controlDefinition>
+    <controlDefinition name="part-panel">
+        <panel childLayout="center">
+            <panel backgroundImage="Interface/Images/Parts.png" imageMode="$sprite" width="80%" height="80%"/>
+            <panel backgroundImage="Interface/Images/Parts.png" imageMode="sprite:100,100,1"/>
+            <text text="$label" font="Interface/Fonts/Agency-FB-Bold-24.fnt" align="right" valign="bottom" marginRight="8" marginBottom="2"/>
+        </panel>
+    </controlDefinition>
+    <controlDefinition name="empty-slot">
+        <panel backgroundImage="Interface/Images/Parts.png" imageMode="sprite:100,100,0" width="100" height="100"/>
     </controlDefinition>
 </nifty-controls>

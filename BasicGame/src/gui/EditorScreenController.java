@@ -17,20 +17,31 @@ public class EditorScreenController implements ScreenController
     Nifty nifty;
     
     public void bind(Nifty nifty, Screen screen) {
-        System.out.println("bind " + this.getClass().getSimpleName());
+        //System.out.println("bind " + this.getClass().getSimpleName());
         this.nifty = nifty;
     }
 
     public void onStartScreen() {
-        System.out.println("onStartScreen " + this.getClass().getSimpleName());
+        //System.out.println("onStartScreen " + this.getClass().getSimpleName());
     }
 
     public void onEndScreen() {
-        System.out.println("onEndScreen " + this.getClass().getSimpleName());
+        //System.out.println("onEndScreen " + this.getClass().getSimpleName());
     }
     
-    public void exit() {
-        System.out.println("exit");
+    public void switchToMap() {
+        System.out.println("Go to Map");
+    }
+    
+    public void switchToShop() {
+        System.out.println("Go to Shop");
+    }
+    
+    public void switchToShipBuilder() {
+        System.out.println("Go to Ship Builder");
+    }
+    
+    public void exitMenu() {
         nifty.gotoScreen("start");
     }
     
