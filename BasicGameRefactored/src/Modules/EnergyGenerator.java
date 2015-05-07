@@ -46,7 +46,6 @@ public class EnergyGenerator extends BasicModule {
 
         //System.out.println();
         // distribute energy to modules
-        
         boolean refresh = false;
         for (InteractiveModule im : modules) {
             if (im != null) {
@@ -62,25 +61,39 @@ public class EnergyGenerator extends BasicModule {
                 refresh = true;
             }
         }
-        
-        if(refresh) {
+
+        if (refresh) {
             refreshModuleList();
         }
+        
+        ColorRGBA c = new ColorRGBA();
+        c.interpolate(ColorRGBA.DarkGray, color, energyStorage / energyStorageLimit);
+    
+        material.setColor("Ambient", c);
+        material.setColor("Diffuse", c);
     }
 
     public void printModules() {
-        //System.out.println("Energy Generator at " + ship.getPositionInGrid(this).x + "|" + ship.getPositionInGrid(this).y + " can power " + modules.size() + " modules:");
+        System.out.println("Energy Generator at " + ship.getActualPositionInGrid(this).x + "|" + ship.getActualPositionInGrid(this).y + " can power " + modules.size() + " modules:");
         for (InteractiveModule im : modules) {
-            //System.out.println(im.getModuleName());
+            System.out.println(im.getModuleName());
         }
-        //System.out.println();
+        System.out.println();
     }
-    
+
     @Override
     public void otherModulePlaced(BasicModule module, Point p) {
         super.otherModulePlaced(module, p);
-        if(module instanceof InteractiveModule) {
+        if (module instanceof InteractiveModule) {
             refreshModuleList();
+        }
+    }
+    
+    @Override
+    public void otherModuleRemoved(BasicModule module, Point p) {
+        super.otherModulePlaced(module, p);
+        if(module instanceof InteractiveModule) {
+            modules.remove((InteractiveModule) module);
         }
     }
 
@@ -88,13 +101,12 @@ public class EnergyGenerator extends BasicModule {
         modules.clear();
 
         //Add all modules in radius
-        for (int i = -radius; i < radius; i++) {
-            for (int j = -radius; j < radius; j++) {
-                Point positionInArray = ship.getPositionInGrid(this);
-                BasicModule module = ship.getModule(new Point(positionInArray.x + i, positionInArray.y + j));
-
-                if (module instanceof InteractiveModule) {
-                    modules.add((InteractiveModule) module);
+        Point positionInArray = ship.getActualPositionInGrid(this);
+        for (int i = positionInArray.y - radius; i <= positionInArray.y + radius; i++) {
+            for (int j = positionInArray.x - radius; j <= positionInArray.x + radius; j++) {
+                InteractiveModule module = ship.getInteractiveModule(new Point(i, j));
+                if (module != null) {
+                    modules.add(module);
                 }
             }
         }

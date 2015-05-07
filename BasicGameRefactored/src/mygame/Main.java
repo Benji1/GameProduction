@@ -1,13 +1,6 @@
 package mygame;
 
-import Modules.Weapon;
-import Modules.EnergyGenerator;
-import Modules.Armor;
-import Modules.Cockpit;
-import Modules.LaserGun;
-import Modules.Shield;
-import Modules.Storage;
-import Modules.Thruster;
+import ShipDesigns.TestShipDesigns;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
@@ -28,17 +21,14 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import config.ConfigReader;
 import de.lessvoid.nifty.Nifty;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.common.IViewportTransform;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-
 import universe.Universe;
 import universe.UniverseGenerator;
 
@@ -50,8 +40,6 @@ import universe.UniverseGenerator;
 public class Main extends SimpleApplication implements ActionListener {
 
     private CameraNode camNode;
-    public BasicShip s;
-    public BasicShip targetS;
     private Universe u;
     private List<Body> bodies = new ArrayList<Body>();
     private List<Updateable> updateables = new ArrayList<Updateable>();
@@ -62,6 +50,8 @@ public class Main extends SimpleApplication implements ActionListener {
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
     private Nifty nifty;
+    private List<BasicShip> ships = new ArrayList<BasicShip>();
+    public BasicShip playersShip;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -75,97 +65,29 @@ public class Main extends SimpleApplication implements ActionListener {
         Main app = new Main();
         app.setSettings(settings);
         app.setShowSettings(false);
+
         app.start();
     }
 
     @Override
     public void simpleInitApp() {
         ConfigReader.init();
-        
-        this.initWorld();
+        this.u = new Universe(this);
         this.initShip();
+        this.initWorld();
         this.initLight();
+        this.initCamera();
         this.initKeys();
         this.initHUD();
-        this.initCamera();
+        this.initPhysics();
         this.initNifty();
     }
 
     private void initShip() {
-        s = new BasicShip(assetManager, this, "PlayerShip");
-        rootNode.attachChild(s);
-
-        Cockpit cockpit = new Cockpit();
-        s.addModuleAt(cockpit, new Point(s.modules.length / 2, s.modules.length / 2));
-        cockpit.addToShip();
-
-        Armor armor1 = new Armor();
-        s.addModuleAt(armor1, new Point(s.modules.length / 2, s.modules.length / 2 - 1));
-        armor1.lockToShip();
-
-        Armor armor2 = new Armor();
-        s.addModuleAt(armor2, new Point(s.modules.length / 2, s.modules.length / 2 + 1));
-        armor2.lockToShip();
-
-        Weapon weapon = new LaserGun(0);
-        s.addModuleAt(weapon, new Point(s.modules.length / 2 - 2, s.modules.length / 2));
-        weapon.lockToShip();
-
-        Thruster thruster = new Thruster(2);
-        s.addModuleAt(thruster, new Point(s.modules.length / 2 + 2, s.modules.length / 2));
-        thruster.lockToShip();
-
-        Thruster thruster2 = new Thruster(1);
-        s.addModuleAt(thruster2, new Point(s.modules.length / 2 + 1, s.modules.length / 2 + 1));
-        thruster2.lockToShip();
-
-        Thruster thruster3 = new Thruster(3);
-        s.addModuleAt(thruster3, new Point(s.modules.length / 2 + 1, s.modules.length / 2 - 1));
-        thruster3.lockToShip();
-
-        Shield shield = new Shield();
-        s.addModuleAt(shield, new Point(s.modules.length / 2 - 1, s.modules.length / 2));
-        shield.lockToShip();
-
-        EnergyGenerator eg = new EnergyGenerator();
-        s.addModuleAt(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
-        eg.lockToShip();
-
-        Storage storage1 = new Storage();
-        s.addModuleAt(storage1, new Point(s.modules.length / 2 - 1, s.modules.length / 2 - 1));
-        storage1.lockToShip();
-
-        Storage storage2 = new Storage();
-        s.addModuleAt(storage2, new Point(s.modules.length / 2 - 1, s.modules.length / 2 + 1));
-        storage2.lockToShip();
-
-
-        //EnergyGenerator eg2 = new EnergyGenerator();
-        //s.addModule(eg2, new Point(s.modules.length / 2, s.modules.length / 2 + 2));
-        //eg2.lockToShip();
-
-        //s.print();
-
-        //eg.printModules();
-        //eg2.printModules();
-
-
-        targetS = new BasicShip(assetManager, this, "TargetShip");
-        rootNode.attachChild(targetS);
-
-        Cockpit cockpitTs = new Cockpit();
-        targetS.addModuleAt(cockpitTs, new Point(targetS.modules.length / 2 + 2, targetS.modules.length / 2 + 2));
-        cockpitTs.addToShip();
-
-        Armor armorTs1 = new Armor();
-        targetS.addModuleAt(armorTs1, new Point(targetS.modules.length / 2 + 1, targetS.modules.length / 2 + 2));
-        armorTs1.lockToShip();
-
-        Armor armorTs2 = new Armor();
-        targetS.addModuleAt(armorTs2, new Point(targetS.modules.length / 2, targetS.modules.length / 2 + 2));
-        armorTs2.lockToShip();
-        
-        //targetS.print();
+        TestShipDesigns tsd = new TestShipDesigns(this);
+        playersShip = tsd.createStickShip();
+        ships.add(playersShip);
+        //ships.add(tsd.createTestTargetShip());
     }
 
     private void initCamera() {
@@ -174,21 +96,25 @@ public class Main extends SimpleApplication implements ActionListener {
 
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        this.rootNode.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(this.s.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getLocalTranslation().z + 0.1f));
-        camNode.lookAt(this.s.getLocalTranslation(), Vector3f.UNIT_Y);
+        this.playersShip.attachChild(camNode);
+        camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+        camNode.lookAt(this.playersShip.getLocalTranslation(), Vector3f.UNIT_Y);
+
+        // Does not work quite right
+        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
     }
 
     private void initKeys() {
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
         inputManager.addMapping("Weapon", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Shield", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
         inputManager.addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
 
-        inputManager.addListener(this, "Up", "Left", "Right", "Weapon", "Shield", "ToggleUniverseDebug", "ToggleEditor");
+        inputManager.addListener(this, "Up", "Left", "Right", "Down", "Weapon", "Shield", "ToggleUniverseDebug", "ToggleEditor");
     }
 
     private void initHUD() {
@@ -206,56 +132,85 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initWorld() {
-    	this.u = new Universe(this);
-    	
+        // testbox
+        //UniverseGenerator.generateUniverse(this, u);
         UniverseGenerator.debugSystem(this, u);
+
+        Box box1 = new Box(1, 1, 1);
+        Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat1.setColor("Diffuse", ColorRGBA.Blue);
+        mat1.setColor("Specular", ColorRGBA.Blue);
+
+
+        for (int i = 0; i < 1000; i++) {
+            Geometry blue = new Geometry("Box", box1);
+            blue.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, -15, ((float) Math.random() - 0.5f) * 1000));
+            blue.setMaterial(mat1);
+            rootNode.attachChild(blue);
+
+            Geometry blue2 = new Geometry("Box", box1);
+            blue2.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, 10, ((float) Math.random() - 0.5f) * 1000));
+            blue2.setMaterial(mat1);
+            rootNode.attachChild(blue2);
+        }
     }
 
     private void initLight() {
-    	AmbientLight ambient = new AmbientLight();
-    	ambient.setColor(ColorRGBA.White.mult(0.2f));
-    	rootNode.addLight(ambient);
+        AmbientLight ambient = new AmbientLight();
+        ambient.setColor(ColorRGBA.White.mult(0.2f));
+        rootNode.addLight(ambient);
     }
 
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         if (name.equals("Up")) {
-            s.getInteractiveModule(new Point(s.modules.length / 2 + 2, s.modules.length / 2)).activate();
+            playersShip.activateModules("Up");
             if (!keyPressed) {
-                s.getInteractiveModule(new Point(s.modules.length / 2 + 2, s.modules.length / 2)).deactivate();
+                playersShip.deactivateModules("Up");
             }
         }
+
         if (name.equals("Left")) {
-            s.getInteractiveModule(new Point(s.modules.length / 2 + 1, s.modules.length / 2 + -1)).activate();
+            playersShip.activateModules("Left");
             if (!keyPressed) {
-                s.getInteractiveModule(new Point(s.modules.length / 2 + 1, s.modules.length / 2 + -1)).deactivate();
+                playersShip.deactivateModules("Left");
             }
         }
+
         if (name.equals("Right")) {
-            s.getInteractiveModule(new Point(s.modules.length / 2 + 1, s.modules.length / 2 + 1)).activate();
+            playersShip.activateModules("Right");
             if (!keyPressed) {
-                s.getInteractiveModule(new Point(s.modules.length / 2 + 1, s.modules.length / 2 + 1)).deactivate();
+                playersShip.deactivateModules("Right");
+            }
+        }
+
+        if (name.equals("Down")) {
+            playersShip.activateModules("Down");
+            if (!keyPressed) {
+                playersShip.deactivateModules("Down");
             }
         }
 
         if (name.equals("Weapon")) {
-            s.getInteractiveModule(new Point(s.modules.length / 2 - 2, s.modules.length / 2)).activate();
+            playersShip.activateModules("Weapon");
             if (!keyPressed) {
-                s.getInteractiveModule(new Point(s.modules.length / 2 - 2, s.modules.length / 2)).deactivate();
+                playersShip.deactivateModules("Weapon");
             }
         }
 
         if (name.equals("Shield") && !keyPressed) {
-            if (s.getInteractiveModule(new Point(s.modules.length / 2 - 1, s.modules.length / 2)).isActive()) {
-                s.getInteractiveModule(new Point(s.modules.length / 2 - 1, s.modules.length / 2)).deactivate();
-            } else {
-                s.getInteractiveModule(new Point(s.modules.length / 2 - 1, s.modules.length / 2)).activate();
+            // TODO: improve bool test
+            if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
+                if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
+                    playersShip.deactivateModules("Shield");
+                } else {
+                    playersShip.activateModules("Shield");
+                }
             }
         }
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
-            	System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
                 if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
                     camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
                     this.u.toggleUniverseDebug();
@@ -269,12 +224,13 @@ public class Main extends SimpleApplication implements ActionListener {
                 }
             }
         }
-        
+
         if (name.equals("ToggleEditor") && !keyPressed) {
-            if (!nifty.getCurrentScreen().getScreenId().equals("editor"))
+            if (!nifty.getCurrentScreen().getScreenId().equals("editor")) {
                 nifty.gotoScreen("editor");
-            else
+            } else {
                 nifty.gotoScreen("start");
+            }
         }
     }
 
@@ -288,19 +244,30 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleUpdate(float delta) {
-    	phyicsUpdate(delta);
         this.u.update(delta);
-        s.update(delta);
-        targetS.update(delta);
+
+        for (BasicShip s : ships) {
+            s.update(delta);
+        }
+        phyicsUpdate(delta);
 
         for (int i = 0; i < updateables.size(); i++) {
             if (updateables.get(i) != null) {
                 updateables.get(i).update(delta);
             }
         }
-        
-        // update camera position
-        camNode.setLocalTranslation(new Vector3f(this.s.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.s.getLocalTranslation().z + 0.1f));
+
+        // Does not work quite right
+        //camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y));
+        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
+
+
+        // update movement        
+        //Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(-1).mult(shipSpeed).clone();
+        //this.s.move(lookDir);
+
+        // update rotation
+        //this.s.rotate(0, delta * speed * shipRotation * rotDir, 0);
     }
 
     @Override
@@ -310,6 +277,43 @@ public class Main extends SimpleApplication implements ActionListener {
 
     public Universe getUniverse() {
         return this.u;
+    }
+    Body testBody;
+    Spatial testBox;
+
+    public void initPhysics() {
+        //PhysicsWorld.world.setGravity(new Vector2(0.0, -9.7));
+        //testBody = generateBody();
+        //testBox = generateCrapBox();
+    }
+
+    public Body generateBody() {
+        //Rectangle rect = new Rectangle(1, 1);                    
+        CircleShape circle = new CircleShape();
+        circle.m_radius = 1.0f;
+
+        FixtureDef fDef = new FixtureDef();
+        fDef.shape = circle;
+        fDef.density = 1.0f;
+        fDef.friction = 0.6f;
+        //fDef.restitution = 0.5f;
+
+        // set body                        
+        BodyDef bDef = new BodyDef();
+        bDef.position.set(0, -1);
+        bDef.type = BodyType.DYNAMIC;
+
+        Body body = PhysicsWorld.world.createBody(bDef);
+        body.createFixture(fDef);
+        //body.setLinearDamping(0.3);
+        //body.setMass(Mass.Type.NORMAL);
+
+
+        //PhysicsWorld.world.addBody(body);
+
+        //System.out.println("dynamic: " + body.isDynamic());
+
+        return body;
     }
 
     public Spatial generateCrapBox() {
@@ -355,7 +359,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initNifty() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
-            assetManager, inputManager, audioRenderer, guiViewPort);
+                assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
         flyCam.setDragToRotate(true);

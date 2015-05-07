@@ -46,12 +46,12 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected Spatial spatial;
     protected Material material;
 
+    public BasicModule() {
+    }
 
-    public BasicModule() {}
-    
     public void lockToShip() {
-        WeldJointDef wjDef = new WeldJointDef();        
-        wjDef.initialize(ship.getPhysicsCenter(), this.body, ship.getPhysicsCenter().getPosition());
+        WeldJointDef wjDef = new WeldJointDef();
+        wjDef.initialize(ship.cockpit.body, this.body, ship.cockpit.body.getPosition());
         wjDef.collideConnected = false;
         PhysicsWorld.world.createJoint(wjDef);
     }
@@ -59,16 +59,22 @@ public abstract class BasicModule extends Node implements ContactListener {
     public String getModuleName() {
         return moduleName;
     }
-    
+
     public Body getBody() {
         return body;
     }
-    
-    public Spatial getSpatial() {
-    	return this.spatial;
+
+    public void update(float tpf) {
+        Vector3f bodyPos = new Vector3f(
+                (float) body.getWorldPoint(body.getLocalCenter()).x, 0.0f, (float) body.getWorldPoint(body.getLocalCenter()).y);
+
+        spatial.setLocalTranslation(bodyPos);
+
+        float angleRad = body.getAngle();
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+        spatial.setLocalRotation(q);
     }
-    
-    public void update(float tpf) {}
 
     public void takeDamage(int amount) {
         health -= amount;
@@ -82,77 +88,64 @@ public abstract class BasicModule extends Node implements ContactListener {
         return health;
     }
 
-    public void destroy() {
-        // SPAWN WITH DROPABILITY OR JUST DESTROY
-    }
-
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
-        
-        // create module model
+
         Box box = new Box(1, 1, 1);
         spatial = new Geometry("Box", box);
-        spatial.scale(1f, 1f, 1f);
-        material = new Material(ship.assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        
-        material.setBoolean("UseMaterialColors",true);
+        spatial.scale(1f, 0.2f, 1f);
+        material = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+
+        material.setBoolean("UseMaterialColors", true);
         material.setColor("Ambient", color);
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
-
-        // create physics
-        int x = (ship.getPositionInGrid(this).y * 2) - 4;
-        int y = (ship.getPositionInGrid(this).x * 2) - 4;
-
+        int x = ship.getActualPositionInGrid(this).y * 2;
+        int y = ship.getActualPositionInGrid(this).x * 2;
         generatePhysicsBody(x, y);
-        
-        // position jme node
-        Vector3f bodyPos = new Vector3f(
-                (float)body.getWorldPoint(body.getLocalCenter()).x, 
-                0.0f, 
-                (float)body.getWorldPoint(body.getLocalCenter()).y);
 
-		this.setLocalTranslation(bodyPos);
-		 
-		float angleRad = body.getAngle();
-		Quaternion q = new Quaternion();
-		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-		this.setLocalRotation(q);
-        
-        this.ship.attachChild(this);
+        ship.attachChild(this);
         this.attachChild(spatial);
     }
-    
+
     public void otherModulePlaced(BasicModule module, Point p) {
     }
-    
+
     public void otherModuleRemoved(BasicModule module, Point p) {
     }
-    
 
     private void generatePhysicsBody(int x, int y) {
         PolygonShape square = new PolygonShape();
         square.setAsBox(1, 1);
-        
+
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
         fDef.density = 1.0f;
         fDef.friction = 0.6f;
         //fDef.restitution = 0.5f;
-        
+
         // set body                        
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
-        
+
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
-        
+        body.setUserData(this);
         PhysicsWorld.world.setContactListener(this);
     }
     
-    public void onRemoved() {
+    public void destroy() {
+        this.detachChild(spatial);
+        //body.destroyFixture(body.getFixtureList());
+        PhysicsWorld.world.destroyBody(body);
+        ship.removeModuleAt(ship.getActualPositionInGrid(this));
+        this.removeFromParent();
+        
+        
+        //ship.getApp().getRootNode().attachChild(this);
+        // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 
     // HELPER METHOD MAYBE SOMEWHERE ELSE WOULD BE A BETTER PLACE
@@ -163,20 +156,16 @@ public abstract class BasicModule extends Node implements ContactListener {
             return actualValue + increase;
         }
     }
-    
+
     public void beginContact(Contact cntct) {
-            //System.out.println("beginContact");
     }
 
     public void endContact(Contact cntct) {
-            //System.out.println("endContact");
     }
 
     public void preSolve(Contact cntct, Manifold mnfld) {
-            //System.out.println("preSolve");
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
-            //System.out.println("postSolve");
     }
 }

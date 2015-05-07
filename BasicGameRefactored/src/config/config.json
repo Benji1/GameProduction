@@ -1,0 +1,36 @@
+{
+    "Basic": {
+        "MaxHealth": 100,
+        "DropRateInPercent": 2
+    },
+    "Armor": {
+        "MaxHealth": 500
+    },
+    "Storage": {
+        "MaxStorage": 5
+    },
+    "Thruster": {
+        "ForceMagnitude": 200,
+        "EnergyConsumptionPerSecond": 10,
+        "TestLayeredConfig": {
+            "EvenDeeperLayer": "MegaDeeeeeeep"
+        }
+    },
+    "EnergyGenerator": {
+        "EnergyGeneratedPerSecond": 20,
+        "EnergyStorageLimit": 1000,
+        "Radius": 3
+    },
+    "Weapon": {
+        "LaserProjectile_Speed": 500,
+        "LaserProjectile_Lifetime": 2.0,
+        "LaserGun_Firerate": 0.3
+    },
+    "ConfigExamples": {
+        "Example1": 1,
+        "Example2": "Example",
+        "Example3": {
+            "Example3Secret": "Psst!"
+        }
+    }
+}

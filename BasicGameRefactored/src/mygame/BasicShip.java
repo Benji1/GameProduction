@@ -8,34 +8,22 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
-
-import com.jme3.asset.AssetManager;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
-
 import java.awt.Point;
-
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.FixtureDef;
-
+import java.util.ArrayList;
 import universe.Abs_ChunkNode;
 
 /**
  *
  * @author 1337
  */
-public class BasicShip extends JBox2dNode {
+public class BasicShip extends Abs_ChunkNode {
 
-    public BasicModule[][] modules = new BasicModule[5][5];
-    public AssetManager assetManager;
-    //public Cockpit cockpit;
+    public BasicModule[][] modules = new BasicModule[9][9];
+    public Cockpit cockpit;
 
-    public BasicShip(AssetManager assetManager, Main app, String name) {
-        super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
-        this.assetManager = assetManager;
+    public BasicShip(Main app) {
+        super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
+        app.getRootNode().attachChild(this);
     }
     
     @Override
@@ -49,22 +37,21 @@ public class BasicShip extends JBox2dNode {
                 }
             }
         }
-        
-        //if(this.name.equals("PlayerShip"))
-        //	System.out.println(this.getLocalTranslation().toString() + " / " + this.physicsCenter.getPosition().toString());
     }
     
     public Main getApp() {
         return this.app;
     }
 
-    public void addModuleAt(BasicModule module, Point p) {
+    public void addModuleAt(BasicModule module, Point offset) {
+        Point p = offsetToActual(offset);
         modules[p.x][p.y] = module;
         module.onPlaced(this);
+        module.lockToShip();
         informOtherModulesOfAddedModule(module, p);
     }
     
-    public void informOtherModulesOfAddedModule(BasicModule module, Point p) {
+    private void informOtherModulesOfAddedModule(BasicModule module, Point p) {
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null && !(p.x == i && p.y == j)) {
@@ -75,15 +62,22 @@ public class BasicShip extends JBox2dNode {
     }
 
     public void removeModuleAt(Point p) {
-        informOtherModulesOfRemovedModule(getModule(p), p);
-        modules[p.x][p.y] = null;
+        //informOtherModulesOfRemovedModule(p);
+        //System.out.println("Should remove myself: " + p);
+        if(p !=null) {
+            modules[p.x][p.y] = null;
+        }
     }
     
-    public void informOtherModulesOfRemovedModule(BasicModule module, Point p) {
+    public void removeModuleAtFromOffset(Point offset) {
+        removeModuleAt(offsetToActual(offset));
+    }
+    
+    private void informOtherModulesOfRemovedModule(Point p) {
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null && !(p.x == i && p.y == j)) {
-                    modules[i][j].otherModuleRemoved(module, p);
+                    modules[i][j].otherModuleRemoved(getModule(p), p);
                 }
             }
         }
@@ -96,14 +90,22 @@ public class BasicShip extends JBox2dNode {
         return null;
     }
     
+    public BasicModule getModuleFromOffset(Point offset) {
+        return getModule(offsetToActual(offset));
+    }
+    
     public InteractiveModule getInteractiveModule(Point p) {
         if (getModule(p) instanceof InteractiveModule) {
             return (InteractiveModule) getModule(p);
         }
         return null;
     }
+    
+    public InteractiveModule getInteractiveModuleFromOffset(Point offset) {
+        return getInteractiveModule(offsetToActual(offset));
+    }
 
-    public Point getPositionInGrid(BasicModule m) {
+    public Point getActualPositionInGrid(BasicModule m) {
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] == m) {
@@ -149,6 +151,46 @@ public class BasicShip extends JBox2dNode {
                     }
                 }
             }
+        }
+    }
+    
+    private Point offsetToActual (Point offset) {
+        return new Point(modules.length / 2 - offset.y, modules.length / 2 + offset.x);
+    }
+    
+    public ArrayList<InteractiveModule> getInteractiveModules() {
+        ArrayList<InteractiveModule> ims = new ArrayList<InteractiveModule>();
+         for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] instanceof InteractiveModule) {
+                    ims.add((InteractiveModule) modules[i][j]);
+                }
+            }
+        }
+        return ims;
+    }
+    
+    public ArrayList<InteractiveModule> getInteractiveModulesWithHotkey(String hotkey) {
+        ArrayList<InteractiveModule> ims = new ArrayList<InteractiveModule>();
+        for(InteractiveModule im: getInteractiveModules()) {
+            for(String s: im.getHotkeys()) {
+                if(s.equals(hotkey)) {
+                    ims.add(im);
+                }
+            }
+        }
+        return ims;
+    }
+    
+    public void activateModules(String hotkey) {
+        for(InteractiveModule im: getInteractiveModulesWithHotkey(hotkey)) {
+            im.activate();
+        }
+    }
+    
+    public void deactivateModules(String hotkey) {
+        for(InteractiveModule im: getInteractiveModulesWithHotkey(hotkey)) {
+            im.deactivate();
         }
     }
 }

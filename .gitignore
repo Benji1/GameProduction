@@ -18,3 +18,8 @@ hs_err_pid*
 /BasicGame2/nbproject/private/
 /BasicGame/dist/
 !/BasicGame/libs/*
+/NiftyTest/nbproject/private/
+/NiftyTest/build/
+/AssetFolder/nbproject/private/
+/BasicGameRefactored/nbproject/private/
+/BasicGameRefactored/build/

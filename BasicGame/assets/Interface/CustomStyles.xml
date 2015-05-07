@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+    <style id="custom-panel">
+        <attributes backgroundImage="Interface/Images/Panel.png"
+                    imageMode="resize:214,115,141,49,214,115,141,41,214,115,141,40"
+                    padding="38,10,28,10"/>
+    </style>
+    <style id="custom-button">
+        <attributes backgroundImage="Interface/Images/BigButtons.png"
+                    imageMode="sprite-resize:450,62,0,129,192,129,13,129,192,129,36,129,192,129,13"
+                    childLayout="center"/>
+    </style>
+    <!--<style id="custom-button#text" base="button-font">
+        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
+    </style>-->
+    <style id="custom-button-top">
+        <attributes backgroundImage="Interface/Images/BigButtons.png"
+                    imageMode="sprite-resize:450,62,1,129,192,129,13,129,192,129,36,129,192,129,13"
+                    childLayout="center"/>
+    </style>
+    <!--<style id="custom-button-top#text" base="button-font">
+        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
+    </style>-->
+    <style id="custom-button-middle">
+        <attributes backgroundImage="Interface/Images/BigButtons.png"
+                    imageMode="sprite-resize:450,62,2,129,192,129,13,129,192,129,36,129,192,129,13"
+                    childLayout="center"/>
+    </style>
+    <!--<style id="custom-button-middle#text" base="button-font">
+        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
+    </style>-->
+    <style id="custom-button-bottom">
+        <attributes backgroundImage="Interface/Images/BigButtons.png"
+                    imageMode="sprite-resize:450,62,3,129,192,129,13,129,192,129,36,129,192,129,13"
+                    childLayout="center"/>
+    </style>
+    <!--<style id="custom-button-bottom#text" base="button-font">
+        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
+    </style>-->
+</nifty-styles>
