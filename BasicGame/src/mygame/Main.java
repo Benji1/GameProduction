@@ -8,7 +8,6 @@ import Modules.LaserGun;
 import Modules.Shield;
 import Modules.Storage;
 import Modules.Thruster;
-
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
@@ -16,7 +15,6 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -28,18 +26,11 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
-
 import config.ConfigReader;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.DefaultScreenController;
-import de.lessvoid.nifty.screen.ScreenController;
-import gui.EditorScreenController;
-import gui.StartScreenController;
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -105,47 +96,47 @@ public class Main extends SimpleApplication implements ActionListener {
         rootNode.attachChild(s);
 
         Cockpit cockpit = new Cockpit();
-        s.addModule(cockpit, new Point(s.modules.length / 2, s.modules.length / 2));
+        s.addModuleAt(cockpit, new Point(s.modules.length / 2, s.modules.length / 2));
         cockpit.addToShip();
 
         Armor armor1 = new Armor();
-        s.addModule(armor1, new Point(s.modules.length / 2, s.modules.length / 2 - 1));
+        s.addModuleAt(armor1, new Point(s.modules.length / 2, s.modules.length / 2 - 1));
         armor1.lockToShip();
 
         Armor armor2 = new Armor();
-        s.addModule(armor2, new Point(s.modules.length / 2, s.modules.length / 2 + 1));
+        s.addModuleAt(armor2, new Point(s.modules.length / 2, s.modules.length / 2 + 1));
         armor2.lockToShip();
 
         Weapon weapon = new LaserGun(0);
-        s.addModule(weapon, new Point(s.modules.length / 2 - 2, s.modules.length / 2));
+        s.addModuleAt(weapon, new Point(s.modules.length / 2 - 2, s.modules.length / 2));
         weapon.lockToShip();
 
         Thruster thruster = new Thruster(2);
-        s.addModule(thruster, new Point(s.modules.length / 2 + 2, s.modules.length / 2));
+        s.addModuleAt(thruster, new Point(s.modules.length / 2 + 2, s.modules.length / 2));
         thruster.lockToShip();
 
         Thruster thruster2 = new Thruster(1);
-        s.addModule(thruster2, new Point(s.modules.length / 2 + 1, s.modules.length / 2 + 1));
+        s.addModuleAt(thruster2, new Point(s.modules.length / 2 + 1, s.modules.length / 2 + 1));
         thruster2.lockToShip();
 
         Thruster thruster3 = new Thruster(3);
-        s.addModule(thruster3, new Point(s.modules.length / 2 + 1, s.modules.length / 2 - 1));
+        s.addModuleAt(thruster3, new Point(s.modules.length / 2 + 1, s.modules.length / 2 - 1));
         thruster3.lockToShip();
 
         Shield shield = new Shield();
-        s.addModule(shield, new Point(s.modules.length / 2 - 1, s.modules.length / 2));
+        s.addModuleAt(shield, new Point(s.modules.length / 2 - 1, s.modules.length / 2));
         shield.lockToShip();
 
         EnergyGenerator eg = new EnergyGenerator();
-        s.addModule(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
+        s.addModuleAt(eg, new Point(s.modules.length / 2 + 1, s.modules.length / 2));
         eg.lockToShip();
 
         Storage storage1 = new Storage();
-        s.addModule(storage1, new Point(s.modules.length / 2 - 1, s.modules.length / 2 - 1));
+        s.addModuleAt(storage1, new Point(s.modules.length / 2 - 1, s.modules.length / 2 - 1));
         storage1.lockToShip();
 
         Storage storage2 = new Storage();
-        s.addModule(storage2, new Point(s.modules.length / 2 - 1, s.modules.length / 2 + 1));
+        s.addModuleAt(storage2, new Point(s.modules.length / 2 - 1, s.modules.length / 2 + 1));
         storage2.lockToShip();
 
 
@@ -163,15 +154,15 @@ public class Main extends SimpleApplication implements ActionListener {
         rootNode.attachChild(targetS);
 
         Cockpit cockpitTs = new Cockpit();
-        targetS.addModule(cockpitTs, new Point(targetS.modules.length / 2 + 2, targetS.modules.length / 2 + 2));
+        targetS.addModuleAt(cockpitTs, new Point(targetS.modules.length / 2 + 2, targetS.modules.length / 2 + 2));
         cockpitTs.addToShip();
 
         Armor armorTs1 = new Armor();
-        targetS.addModule(armorTs1, new Point(targetS.modules.length / 2 + 1, targetS.modules.length / 2 + 2));
+        targetS.addModuleAt(armorTs1, new Point(targetS.modules.length / 2 + 1, targetS.modules.length / 2 + 2));
         armorTs1.lockToShip();
 
         Armor armorTs2 = new Armor();
-        targetS.addModule(armorTs2, new Point(targetS.modules.length / 2, targetS.modules.length / 2 + 2));
+        targetS.addModuleAt(armorTs2, new Point(targetS.modules.length / 2, targetS.modules.length / 2 + 2));
         armorTs2.lockToShip();
         
         //targetS.print();
