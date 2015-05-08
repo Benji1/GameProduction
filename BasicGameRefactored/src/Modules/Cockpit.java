@@ -18,11 +18,6 @@ public class Cockpit extends BasicModule {
     }
 
     @Override
-    public void lockToShip() {
-        ship.cockpit = this;
-    }
-
-    @Override
     public void update(float delta) {
         super.update(delta);
     }

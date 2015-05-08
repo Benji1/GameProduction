@@ -117,7 +117,6 @@ public class LaserProjectile extends Projectile implements ContactListener {
     
     private void handleBasicModuleCollision(BasicModule b) {
         b.takeDamage(100);
-        //System.out.println("PROJECTILE SHOULD KILL ITSELF!");
         die();
     }
 

@@ -51,11 +51,22 @@ public abstract class BasicModule extends Node implements ContactListener {
     public BasicModule() {
     }
 
-    public void lockToShip() {
-        WeldJointDef wjDef = new WeldJointDef();
-        wjDef.initialize(ship.cockpit.body, this.body, ship.cockpit.body.getPosition());
-        wjDef.collideConnected = false;
-        PhysicsWorld.world.createJoint(wjDef);
+    private void lockToShip() {
+        Point pos = ship.getActualPositionInGrid(this);
+        
+        lockTo(ship.getModule(new Point(pos.x+1, pos.y)));
+        lockTo(ship.getModule(new Point(pos.x-1, pos.y)));
+        lockTo(ship.getModule(new Point(pos.x, pos.y+1)));
+        lockTo(ship.getModule(new Point(pos.x, pos.y-1)));
+    }
+    
+    private void lockTo(BasicModule lockon) {
+        if(lockon != null) {
+            WeldJointDef wjDef = new WeldJointDef();
+            wjDef.initialize(lockon.body, this.body, lockon.body.getPosition());
+            wjDef.collideConnected = false;
+            PhysicsWorld.world.createJoint(wjDef);
+        }
     }
 
     public String getModuleName() {
