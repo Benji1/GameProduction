@@ -93,9 +93,8 @@ public abstract class BasicModule extends Node implements ContactListener {
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
         
-        Box box = new Box(1, 1, 1);
+        Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
-        spatial.scale(1f, 0.2f, 1f);
         material = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 
         material.setBoolean("UseMaterialColors", true);

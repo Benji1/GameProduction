@@ -11,20 +11,25 @@
     },
     "Thruster": {
         "ForceMagnitude": 200,
-        "EnergyConsumptionPerSecond": 10,
-        "TestLayeredConfig": {
-            "EvenDeeperLayer": "MegaDeeeeeeep"
-        }
+        "EnergyConsumptionPerSecond": 10
     },
     "EnergyGenerator": {
         "EnergyGeneratedPerSecond": 20,
         "EnergyStorageLimit": 1000,
         "Radius": 3
     },
-    "Weapon": {
-        "LaserProjectile_Speed": 500,
-        "LaserProjectile_Lifetime": 2.0,
-        "LaserGun_Firerate": 0.3
+    "Shield": {
+        "MaxShieldPower": 700,
+        "RegenRate": 40,
+        "EnergyConsumptionPerSecond": 50,
+    },
+    "LaserGun": {
+        "Firerate": 0.3,
+        "EnergyConsumptionPerAction": 50
+    },
+    "LaserProjectile": {
+        "InitialAcceleration": 500,
+        "Lifetime": 2.0,
     },
     "ConfigExamples": {
         "Example1": 1,

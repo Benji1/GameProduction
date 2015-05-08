@@ -66,9 +66,8 @@ public abstract class InteractiveModule extends BasicModule {
     
      private void calculateEnergyConsumption(float delta) {
         energyConsumption = energyConsumptionPerSecond * delta;
-        
         if (energyConsumption > 0) {
-            if(eGens.size() > 1) {
+            if(eGens.size() > 0) {
                 EnergyGenerator mostEnergy = getEnergyGeneratorWithMostEnergy();
                 if(mostEnergy.getEnergy() >= energyConsumption) {
                     mostEnergy.reduceEnergy(energyConsumption);
@@ -132,9 +131,11 @@ public abstract class InteractiveModule extends BasicModule {
     }
     
     protected boolean withinRadius(EnergyGenerator eg) {
-        Point positionInArray = ship.getActualPositionInGrid(this);
-        Point positionOfEgen = ship.getActualPositionInGrid(eg);
-        if(Math.abs(positionInArray.x - positionOfEgen.x) <= eg.getRadius() && Math.abs(positionInArray.y - positionOfEgen.y) <= eg.getRadius()) {
+        Point myPos = ship.getActualPositionInGrid(this);
+        Point eGenPos = ship.getActualPositionInGrid(eg);
+        if(Math.abs(myPos.x - eGenPos.x) <= eg.getRadius() && Math.abs(myPos.y - eGenPos.y) <= eg.getRadius()) {
+            //material.setColor("Ambient", ColorRGBA.Green);
+            //material.setColor("Diffuse", ColorRGBA.Green);
             return true;
         }
         return false;
@@ -155,7 +156,7 @@ public abstract class InteractiveModule extends BasicModule {
         boolean enough = false;
         
         if (energyConsumptionPerAction > 0) {
-            if(eGens.size() > 1) {
+            if(eGens.size() > 0) {
                 EnergyGenerator mostEnergy = getEnergyGeneratorWithMostEnergy();
                 if(mostEnergy.getEnergy() >= energyConsumptionPerAction) {
                     mostEnergy.reduceEnergy(energyConsumptionPerAction);

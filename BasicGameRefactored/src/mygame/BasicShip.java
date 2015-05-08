@@ -61,9 +61,9 @@ public class BasicShip extends Abs_ChunkNode {
     }
 
     public void removeModuleAt(Point p) {
-        //informOtherModulesOfRemovedModule(p);
-        //System.out.println("Should remove myself: " + p);
-        if(p !=null) {
+         if(p !=null) {
+            informOtherModulesOfRemovedModule(p);
+            //System.out.println("Should remove myself: " + p);
             modules[p.x][p.y] = null;
         }
     }

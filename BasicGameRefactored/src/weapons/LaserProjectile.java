@@ -34,16 +34,15 @@ public class LaserProjectile extends Projectile implements ContactListener {
     
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
-        this.startForce = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Speed", float.class);
-        this.lifetime = ConfigReader.getFromMap(ConfigReader.getBaseMap("Weapon"), "LaserProjectile_Lifetime", float.class);
+        this.startForce = ConfigReader.getFromMap(ConfigReader.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
+        this.lifetime = ConfigReader.getFromMap(ConfigReader.getBaseMap("LaserProjectile"), "Lifetime", float.class);
 
         createBox(spawnPoint);  
     }   
     
     private void createBox(Vec2 spawnPoint) {
-        Box box = new Box(0.5f, 0.5f, 0.5f);
+        Box box = new Box(1f, 0.1f, 0.1f);
         spatial = new Geometry("Box", box);
-        spatial.scale(1f, 0.2f, 1f);
         material = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         
         material.setBoolean("UseMaterialColors",true);
@@ -60,7 +59,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     
     private void generatePhysicsBody(float x, float y) {
         PolygonShape rect = new PolygonShape();
-        rect.setAsBox(0.3f, 0.3f);
+        rect.setAsBox(0.1f, 1f);
         
         FixtureDef fDef = new FixtureDef();
         fDef.shape = rect;
