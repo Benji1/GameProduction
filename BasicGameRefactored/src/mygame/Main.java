@@ -1,6 +1,5 @@
 package mygame;
 
-import services.updater.IUpdateable;
 import services.ServiceManager;
 import ShipDesigns.TestShipDesigns;
 import com.jme3.app.FlyCamAppState;
@@ -20,7 +19,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
-import services.config.ConfigReader;
 import gui.GUI;
 import java.util.ArrayList;
 import org.jbox2d.collision.shapes.CircleShape;
@@ -42,7 +40,6 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private CameraNode camNode;
     private Universe u;
-    private ArrayList<Body> bodies = new ArrayList<Body>();
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
     protected float shipSpeed = 0;
@@ -82,7 +79,6 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initCamera();
         this.initKeys();
         this.initHUD();
-        this.initPhysics();
         this.gui = new GUI(this);
     }
 
@@ -240,32 +236,17 @@ public class Main extends SimpleApplication implements ActionListener {
     @Override
     public void simpleUpdate(float delta) {
         this.u.update(delta);
-        updateableManager.update(delta);
-
+        
         for (BasicShip s : ships) {
             s.update(delta);
         }
-        
+        updateableManager.update(delta);
         for(Body b: bodiesToRemove) {
             PhysicsWorld.world.destroyBody(b);
         }
         bodiesToRemove.clear();
         
         phyicsUpdate(delta);
-
-       
-
-        // Does not work quite right
-        //camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y));
-        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
-
-
-        // update movement        
-        //Vector3f lookDir = this.s.getLocalRotation().mult(Vector3f.UNIT_Z).mult(-1).mult(shipSpeed).clone();
-        //this.s.move(lookDir);
-
-        // update rotation
-        //this.s.rotate(0, delta * speed * shipRotation * rotDir, 0);
     }
 
     @Override
@@ -276,82 +257,8 @@ public class Main extends SimpleApplication implements ActionListener {
     public Universe getUniverse() {
         return this.u;
     }
-    Body testBody;
-    Spatial testBox;
-
-    public void initPhysics() {
-        //PhysicsWorld.world.setGravity(new Vector2(0.0, -9.7));
-        //testBody = generateBody();
-        //testBox = generateCrapBox();
-    }
-
-    public Body generateBody() {
-        //Rectangle rect = new Rectangle(1, 1);                    
-        CircleShape circle = new CircleShape();
-        circle.m_radius = 1.0f;
-
-        FixtureDef fDef = new FixtureDef();
-        fDef.shape = circle;
-        fDef.density = 1.0f;
-        fDef.friction = 0.6f;
-        //fDef.restitution = 0.5f;
-
-        // set body                        
-        BodyDef bDef = new BodyDef();
-        bDef.position.set(0, -1);
-        bDef.type = BodyType.DYNAMIC;
-
-        Body body = PhysicsWorld.world.createBody(bDef);
-        body.createFixture(fDef);
-        //body.setLinearDamping(0.3);
-        //body.setMass(Mass.Type.NORMAL);
-
-
-        //PhysicsWorld.world.addBody(body);
-
-        //System.out.println("dynamic: " + body.isDynamic());
-
-        return body;
-    }
-
-    public Spatial generateCrapBox() {
-        Box box1 = new Box(1, 1, 1);
-        Geometry blue = new Geometry("Box", box1);
-        blue.setLocalTranslation(new Vector3f(0, -0, 0));
-        Material mat1 = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        mat1.setColor("Color", ColorRGBA.Blue);
-        blue.setMaterial(mat1);
-        rootNode.attachChild(blue);
-
-        return blue;
-    }
-
-    public Vector3f Vector2ToVector3f(Vec2 v2) {
-        Vector3f returnVec = new Vector3f();
-        returnVec.x = (float) v2.x;
-        returnVec.y = 0;
-        returnVec.z = (float) v2.y;
-        return returnVec;
-    }
-
-    public Vec2 Vector3fToVector2(Vector3f v3) {
-        Vec2 returnVec = new Vec2();
-        returnVec.x = v3.x;
-        returnVec.y = v3.z;
-        return returnVec;
-    }
-
-    public Vec2 getBodyPos(Body b) {
-        return b.getWorldPoint(b.getLocalCenter());
-    }
-
+ 
     public void phyicsUpdate(float delta) {
-        //testBody.applyForce(new Vec2(-51f, 0f), testBody.getLocalCenter());
-
-        // Vector3f crapV2 = Vector2ToVector3f(getBodyPos(testBody));
-        //testBox.setLocalTranslation(crapV2);
-
         PhysicsWorld.world.step(delta, 8, 8);
     }
 }
