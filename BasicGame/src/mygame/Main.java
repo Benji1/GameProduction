@@ -28,6 +28,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import config.ConfigReader;
 import de.lessvoid.nifty.Nifty;
+import gui.GUI;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Main extends SimpleApplication implements ActionListener {
     protected float shipRotation = 1.5f;
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
-    private Nifty nifty;
+    private GUI gui;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -88,7 +89,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initKeys();
         this.initHUD();
         this.initCamera();
-        this.initNifty();
+        this.gui = new GUI(this);
     }
 
     private void initShip() {
@@ -271,10 +272,11 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         
         if (name.equals("ToggleEditor") && !keyPressed) {
-            if (!nifty.getCurrentScreen().getScreenId().equals("editor"))
-                nifty.gotoScreen("editor");
-            else
-                nifty.gotoScreen("start");
+            if (!gui.getCurrentScreenId().equals("editor")) {
+                gui.goToEditorScreen();
+            } else {
+                gui.goToStartScreen();
+            }
         }
     }
 
@@ -351,20 +353,5 @@ public class Main extends SimpleApplication implements ActionListener {
         //testBox.setLocalTranslation(crapV2);
 
         PhysicsWorld.world.step(delta, 8, 8);
-    }
-
-    private void initNifty() {
-        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
-            assetManager, inputManager, audioRenderer, guiViewPort);
-        nifty = niftyDisplay.getNifty();
-        guiViewPort.addProcessor(niftyDisplay);
-        flyCam.setDragToRotate(true);
-        nifty.loadStyleFile("nifty-default-styles.xml");
-        nifty.loadStyleFile("Interface/CustomStyles.xml");
-        nifty.loadControlFile("nifty-default-controls.xml");
-        nifty.loadControlFile("Interface/CustomControls.xml");
-        nifty.addXml("Interface/EditorScreen.xml");
-        nifty.addXml("Interface/StartScreen.xml");
-        nifty.gotoScreen("start");
     }
 }
