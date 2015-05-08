@@ -5,8 +5,6 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import services.ServiceManager;
-import services.config.ConfigReader;
 
 /**
  *
@@ -18,10 +16,7 @@ public class Armor extends BasicModule {
         moduleName = "Armor";
         color = ColorRGBA.Gray;
         
-        ConfigReader cr = ServiceManager.getConfigReader();
         maxHealth = cr.getFromMap(cr.getBaseMap("Armor"), "MaxHealth", int.class);
-        
-        
         health = maxHealth;
     }
 }

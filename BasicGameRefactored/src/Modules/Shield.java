@@ -6,13 +6,11 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
-import services.config.ConfigReader;
 import java.util.ArrayList;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.contacts.Contact;
-import services.ServiceManager;
 
 /**
  *
@@ -20,7 +18,6 @@ import services.ServiceManager;
  */
 public class Shield extends InteractiveModule {
     
-    ConfigReader cr = ServiceManager.getConfigReader();
     protected float maxShieldPower = cr.getFromMap(cr.getBaseMap("Shield"), "MaxShieldPower", float.class);
     protected float shieldPower = maxShieldPower;
     protected float shieldRegenRate = cr.getFromMap(cr.getBaseMap("Shield"), "RegenRate", float.class);

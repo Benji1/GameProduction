@@ -12,7 +12,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import services.config.ConfigReader;
 import mygame.Main;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
@@ -25,11 +24,9 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.contacts.Contact;
-import services.ServiceManager;
 
 public class LaserProjectile extends Projectile implements ContactListener {
     
-    ConfigReader cr = ServiceManager.getConfigReader();
     protected Body body;
     protected Spatial spatial;
     protected Material material;
@@ -104,8 +101,11 @@ public class LaserProjectile extends Projectile implements ContactListener {
     @Override
     public void die() {
         super.die();
+        //System.out.println("Should be dead now");
+        this.detachChild(spatial);
         app.bodiesToRemove.add(body);
-        this.removeFromParent();
+        //this.removeFromParent();
+        
     }
 
     public void beginContact(Contact cntct) {

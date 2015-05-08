@@ -23,34 +23,14 @@ public abstract class InteractiveModule extends BasicModule {
     protected ColorRGBA colorActive;
     protected Material materialActive;
     protected ArrayList<String> hotkeys;
-    
-    
-    
+
     protected ArrayList<EnergyGenerator> eGens;
     protected float energyReceived;
     protected float energyConsumption;
     protected float energyAvailableInPercent;
     
-
     public InteractiveModule(ArrayList<String> hotkeys) {
         this.hotkeys = hotkeys;
-    }
-
-    // button pressed
-    public void activate() {
-        if (!disabled) {
-            active = true;
-            spatial.setMaterial(materialActive);
-        }
-    }
-
-    public void deactivate() {
-        active = false;
-        spatial.setMaterial(material);
-    }
-
-    public boolean isActive() {
-        return active;
     }
 
     @Override
@@ -89,12 +69,38 @@ public abstract class InteractiveModule extends BasicModule {
         materialActive.setBoolean("UseMaterialColors", true);
         materialActive.setColor("Ambient", colorActive);
         materialActive.setColor("Diffuse", colorActive);
+        
+        ship.interactiveModules.add(this);
+        
         eGens = new ArrayList<EnergyGenerator>();
         addAlreadyExistingEgens();
     }
+    
+     @Override
+    public void onRemove() {
+        super.onRemove();
+        ship.interactiveModules.remove(this);
+    }
+    
+       // button pressed
+    public void activate() {
+        if (!disabled) {
+            active = true;
+            spatial.setMaterial(materialActive);
+        }
+    }
+
+    public void deactivate() {
+        active = false;
+        spatial.setMaterial(material);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 
     protected abstract void onActive();
-
+    
     public void disable() {
         disabled = true;
         deactivate();

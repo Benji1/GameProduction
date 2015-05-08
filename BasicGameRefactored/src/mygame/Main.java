@@ -131,27 +131,8 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initWorld() {
-        // testbox
         //UniverseGenerator.generateUniverse(this, u);
         UniverseGenerator.debugSystem(this, u);
-
-        Box box1 = new Box(1, 1, 1);
-        Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat1.setColor("Diffuse", ColorRGBA.Blue);
-        mat1.setColor("Specular", ColorRGBA.Blue);
-
-
-        for (int i = 0; i < 1000; i++) {
-            Geometry blue = new Geometry("Box", box1);
-            blue.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, -15, ((float) Math.random() - 0.5f) * 1000));
-            blue.setMaterial(mat1);
-            rootNode.attachChild(blue);
-
-            Geometry blue2 = new Geometry("Box", box1);
-            blue2.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, 10, ((float) Math.random() - 0.5f) * 1000));
-            blue2.setMaterial(mat1);
-            rootNode.attachChild(blue2);
-        }
     }
 
     private void initLight() {
@@ -240,8 +221,10 @@ public class Main extends SimpleApplication implements ActionListener {
         for (BasicShip s : ships) {
             s.update(delta);
         }
+        
         updateableManager.update(delta);
         for(Body b: bodiesToRemove) {
+            //System.out.println(b);
             PhysicsWorld.world.destroyBody(b);
         }
         bodiesToRemove.clear();

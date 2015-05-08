@@ -6,17 +6,13 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
-import services.config.ConfigReader;
-import mygame.BasicShip;
-import services.ServiceManager;
 
 /**
  *
  * @author 1337
  */
 public class EnergyGenerator extends BasicModule {
-
-    ConfigReader cr = ServiceManager.getConfigReader();
+    
     private float energyGeneratedPerSecond = cr.getFromMap(cr.getBaseMap("EnergyGenerator"), "EnergyGeneratedPerSecond", float.class);
     private float energyStorageLimit = cr.getFromMap(cr.getBaseMap("EnergyGenerator"), "EnergyStorageLimit", float.class);
     private float energyStorage = energyStorageLimit;
@@ -25,11 +21,6 @@ public class EnergyGenerator extends BasicModule {
     public EnergyGenerator() {
         moduleName = "E-Gen";
         color = ColorRGBA.Yellow;
-    }
-
-    @Override
-    public void onPlaced(BasicShip ship) {
-        super.onPlaced(ship);
     }
 
     @Override

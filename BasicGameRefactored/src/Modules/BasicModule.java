@@ -47,11 +47,8 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected Body body;
     protected Spatial spatial;
     protected Material material;
-    
-    protected Point posInShip;
 
     public BasicModule() {
-        
     }
 
     private void lockToShip() {
@@ -125,6 +122,9 @@ public abstract class BasicModule extends Node implements ContactListener {
         
         lockToShip();
     }
+    
+    public void onRemove() {
+    }
 
     public void otherModulePlaced(BasicModule module, Point p) {
     }
@@ -155,11 +155,8 @@ public abstract class BasicModule extends Node implements ContactListener {
     
     public void destroy() {
         this.detachChild(spatial);
-        //body.destroyFixture(body.getFixtureList());
         ship.getApp().bodiesToRemove.add(body);
         ship.removeModuleAt(ship.getActualPositionInGrid(this));
-        
-        //ship.getApp().getRootNode().attachChild(this);
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 

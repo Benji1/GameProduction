@@ -5,10 +5,8 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import services.config.ConfigReader;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
-import services.ServiceManager;
 
 /**
  *
@@ -16,7 +14,6 @@ import services.ServiceManager;
  */
 public class Thruster extends InteractiveModule {
 
-    ConfigReader cr = ServiceManager.getConfigReader();
     protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
     protected Vec2 orientation;
 
