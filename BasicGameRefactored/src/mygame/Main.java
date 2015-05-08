@@ -41,8 +41,8 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private CameraNode camNode;
     private Universe u;
-    private List<Body> bodies = new ArrayList<Body>();
-    private List<Updateable> updateables = new ArrayList<Updateable>();
+    private ArrayList<Body> bodies = new ArrayList<Body>();
+    private ArrayList<Updateable> updateables = new ArrayList<Updateable>();
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
     protected float shipSpeed = 0;
@@ -50,8 +50,10 @@ public class Main extends SimpleApplication implements ActionListener {
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
     private Nifty nifty;
-    private List<BasicShip> ships = new ArrayList<BasicShip>();
+    private ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
+    
+    public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -249,13 +251,21 @@ public class Main extends SimpleApplication implements ActionListener {
         for (BasicShip s : ships) {
             s.update(delta);
         }
-        phyicsUpdate(delta);
-
+        
         for (int i = 0; i < updateables.size(); i++) {
             if (updateables.get(i) != null) {
                 updateables.get(i).update(delta);
             }
         }
+        
+        for(Body b: bodiesToRemove) {
+            PhysicsWorld.world.destroyBody(b);
+        }
+        bodiesToRemove.clear();
+        
+        phyicsUpdate(delta);
+
+       
 
         // Does not work quite right
         //camNode.setLocalTranslation(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y));
