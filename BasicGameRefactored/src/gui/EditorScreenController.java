@@ -13,8 +13,6 @@ import de.lessvoid.nifty.controls.DraggableDragStartedEvent;
 import de.lessvoid.nifty.controls.dragndrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
-import de.lessvoid.nifty.elements.render.ImageRenderer;
-import de.lessvoid.nifty.render.image.ImageMode;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
