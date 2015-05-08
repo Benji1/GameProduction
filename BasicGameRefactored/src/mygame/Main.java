@@ -84,7 +84,8 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initShip() {
         TestShipDesigns tsd = new TestShipDesigns(this);
-        playersShip = tsd.createTestShip1();
+        //playersShip = tsd.createTestShip1();
+        playersShip = tsd.createStickShip();
         ships.add(playersShip);
         ships.add(tsd.createTestTargetShip());
     }
@@ -141,12 +142,16 @@ public class Main extends SimpleApplication implements ActionListener {
         rootNode.addLight(ambient);
     }
 
+    boolean up = false, down = false;
+    
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         if (name.equals("Up")) {
             playersShip.activateModules("Up");
+            up = true;
             if (!keyPressed) {
                 playersShip.deactivateModules("Up");
+                up = false;
             }
         }
 
@@ -154,6 +159,11 @@ public class Main extends SimpleApplication implements ActionListener {
             playersShip.activateModules("Left");
             if (!keyPressed) {
                 playersShip.deactivateModules("Left");
+                if (up) {
+                    playersShip.activateModules("Up");
+                } else if (down) {
+                    playersShip.activateModules("Down");
+                }
             }
         }
 
@@ -161,13 +171,20 @@ public class Main extends SimpleApplication implements ActionListener {
             playersShip.activateModules("Right");
             if (!keyPressed) {
                 playersShip.deactivateModules("Right");
+                if (up) {
+                    playersShip.activateModules("Up");
+                } else if (down) {
+                    playersShip.activateModules("Down");
+                }
             }
         }
 
         if (name.equals("Down")) {
             playersShip.activateModules("Down");
+            down = true;
             if (!keyPressed) {
                 playersShip.deactivateModules("Down");
+                down = false;
             }
         }
 
