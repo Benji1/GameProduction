@@ -11,7 +11,6 @@ import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
@@ -20,9 +19,8 @@ import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import config.ConfigReader;
-import de.lessvoid.nifty.Nifty;
+import gui.GUI;
 import java.util.ArrayList;
-import java.util.List;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -49,7 +47,7 @@ public class Main extends SimpleApplication implements ActionListener {
     protected float shipRotation = 1.5f;
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
-    private Nifty nifty;
+    private GUI gui;
     private ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
     
@@ -82,7 +80,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initKeys();
         this.initHUD();
         this.initPhysics();
-        this.initNifty();
+        this.gui = new GUI(this);
     }
 
     private void initShip() {
@@ -228,10 +226,10 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("ToggleEditor") && !keyPressed) {
-            if (!nifty.getCurrentScreen().getScreenId().equals("editor")) {
-                nifty.gotoScreen("editor");
+            if (!gui.getCurrentScreenId().equals("editor")) {
+                gui.goToEditorScreen();
             } else {
-                nifty.gotoScreen("start");
+                gui.goToStartScreen();
             }
         }
     }
@@ -365,20 +363,5 @@ public class Main extends SimpleApplication implements ActionListener {
         //testBox.setLocalTranslation(crapV2);
 
         PhysicsWorld.world.step(delta, 8, 8);
-    }
-
-    private void initNifty() {
-        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
-                assetManager, inputManager, audioRenderer, guiViewPort);
-        nifty = niftyDisplay.getNifty();
-        guiViewPort.addProcessor(niftyDisplay);
-        flyCam.setDragToRotate(true);
-        nifty.loadStyleFile("nifty-default-styles.xml");
-        nifty.loadStyleFile("Interface/CustomStyles.xml");
-        nifty.loadControlFile("nifty-default-controls.xml");
-        nifty.loadControlFile("Interface/CustomControls.xml");
-        nifty.addXml("Interface/EditorScreen.xml");
-        nifty.addXml("Interface/StartScreen.xml");
-        nifty.gotoScreen("start");
     }
 }
