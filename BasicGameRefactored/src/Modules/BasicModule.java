@@ -45,6 +45,8 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected Body body;
     protected Spatial spatial;
     protected Material material;
+    
+    protected Point posInShip;
 
     public BasicModule() {
     }
@@ -90,7 +92,7 @@ public abstract class BasicModule extends Node implements ContactListener {
 
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
-
+        
         Box box = new Box(1, 1, 1);
         spatial = new Geometry("Box", box);
         spatial.scale(1f, 0.2f, 1f);
@@ -107,6 +109,8 @@ public abstract class BasicModule extends Node implements ContactListener {
 
         ship.attachChild(this);
         this.attachChild(spatial);
+        
+        lockToShip();
     }
 
     public void otherModulePlaced(BasicModule module, Point p) {

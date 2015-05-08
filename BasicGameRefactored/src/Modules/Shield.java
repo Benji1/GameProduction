@@ -21,6 +21,7 @@ public class Shield extends InteractiveModule {
     protected float maxShieldPower = 700;
     protected float shieldPower = maxShieldPower;
     protected float shieldRegenRate = 40;
+    protected float delta;
 
     public Shield(ArrayList<String> hotkeys) {
         super(hotkeys);
@@ -31,14 +32,13 @@ public class Shield extends InteractiveModule {
     }
 
     protected void onActive() {
-        if (energyAvailableInPercent >= 100) {
-            shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate, maxShieldPower);
-        }
+        shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate * delta, maxShieldPower);
     }
 
     @Override
     public void update(float tpf) {
         super.update(tpf);
+        this.delta = tpf;
     }
 
     private class ShieldCollider implements ContactListener {

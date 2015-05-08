@@ -43,11 +43,10 @@ public class BasicShip extends Abs_ChunkNode {
         return this.app;
     }
 
-    public void addModuleAt(BasicModule module, Point offset) {
+    public void addModuleAtFromOffset(BasicModule module, Point offset) {
         Point p = offsetToActual(offset);
         modules[p.x][p.y] = module;
         module.onPlaced(this);
-        module.lockToShip();
         informOtherModulesOfAddedModule(module, p);
     }
     

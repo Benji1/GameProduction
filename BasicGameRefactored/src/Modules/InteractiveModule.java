@@ -6,6 +6,7 @@ package Modules;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import java.awt.Point;
 import java.util.ArrayList;
 import mygame.BasicShip;
 
@@ -17,14 +18,19 @@ public abstract class InteractiveModule extends BasicModule {
 
     protected float energyConsumptionPerSecond = 0;
     protected float energyConsumptionPerAction = 0;
-    protected float energyReceived = 0;
-    protected float energyConsumptionTotal = 0;
-    protected float energyAvailableInPercent = 0;
     protected boolean active = false;
     protected boolean disabled = false;
     protected ColorRGBA colorActive;
     protected Material materialActive;
     protected ArrayList<String> hotkeys;
+    
+    
+    
+    protected ArrayList<EnergyGenerator> eGens;
+    protected float energyReceived;
+    protected float energyConsumption;
+    protected float energyAvailableInPercent;
+    
 
     public InteractiveModule(ArrayList<String> hotkeys) {
         this.hotkeys = hotkeys;
@@ -51,24 +57,30 @@ public abstract class InteractiveModule extends BasicModule {
     public void update(float delta) {
         super.update(delta);
         if (active) {
-            calculateEnergyConsumption();
+            calculateEnergyConsumption(delta);
             if (active) {
                 onActive();
             }
         }
     }
-
-    private void calculateEnergyConsumption() {
-        energyConsumptionTotal = energyConsumptionPerSecond + energyConsumptionPerAction;
-
-        if (energyConsumptionTotal > 0) {
-            energyAvailableInPercent = (energyReceived / energyConsumptionTotal) * 100;
-            if (energyAvailableInPercent < 100) {
-                this.deactivate();
+    
+     private void calculateEnergyConsumption(float delta) {
+        energyConsumption = energyConsumptionPerSecond * delta;
+        
+        if (energyConsumption > 0) {
+            if(eGens.size() > 1) {
+                EnergyGenerator mostEnergy = getEnergyGeneratorWithMostEnergy();
+                if(mostEnergy.getEnergy() >= energyConsumption) {
+                    mostEnergy.reduceEnergy(energyConsumption);
+                    energyReceived = energyConsumption;
+                    
+                }
             }
-            //System.out.println(this.moduleName + " receiving " + energyAvailableInPercent + "% of needed energy");
         }
-        energyReceived = 0;
+        energyAvailableInPercent = energyReceived / energyConsumption;
+        if (energyReceived < energyConsumption) {
+            this.deactivate();
+        }
     }
 
     @Override
@@ -78,21 +90,11 @@ public abstract class InteractiveModule extends BasicModule {
         materialActive.setBoolean("UseMaterialColors", true);
         materialActive.setColor("Ambient", colorActive);
         materialActive.setColor("Diffuse", colorActive);
+        eGens = new ArrayList<EnergyGenerator>();
+        addAlreadyExistingEgens();
     }
 
     protected abstract void onActive();
-
-    public float getEnergyConsumption() {
-        return energyConsumptionTotal;
-    }
-
-    public float getEnergyReceived() {
-        return energyReceived;
-    }
-
-    public void receiveEnergy(float energyReceived) {
-        this.energyReceived += energyReceived;
-    }
 
     public void disable() {
         disabled = true;
@@ -101,5 +103,68 @@ public abstract class InteractiveModule extends BasicModule {
 
     public ArrayList<String> getHotkeys() {
         return hotkeys;
+    }
+    
+    protected EnergyGenerator getEnergyGeneratorWithMostEnergy() {
+        EnergyGenerator mostEnergy = eGens.get(0);
+        for(EnergyGenerator eg: eGens) {
+            if(eg.getEnergy() > mostEnergy.getEnergy()) {
+                mostEnergy = eg;
+            }
+        }
+        return mostEnergy;
+    }
+    
+    @Override
+    public void otherModulePlaced(BasicModule module, Point p) {
+        super.otherModulePlaced(module, p);
+        if (module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
+            eGens.add((EnergyGenerator) module);
+        }
+    }
+    
+    @Override
+    public void otherModuleRemoved(BasicModule module, Point p) {
+        super.otherModulePlaced(module, p);
+        if(module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
+            eGens.remove((EnergyGenerator) module);
+        }
+    }
+    
+    protected boolean withinRadius(EnergyGenerator eg) {
+        Point positionInArray = ship.getActualPositionInGrid(this);
+        Point positionOfEgen = ship.getActualPositionInGrid(eg);
+        if(Math.abs(positionInArray.x - positionOfEgen.x) <= eg.getRadius() && Math.abs(positionInArray.y - positionOfEgen.y) <= eg.getRadius()) {
+            return true;
+        }
+        return false;
+    }
+    
+    protected void addAlreadyExistingEgens() {
+        for (int i = 0; i <= ship.modules.length; i++) {
+            for (int j = 0; j <= ship.modules[0].length; j++) {
+                BasicModule module = ship.getModule(new Point(i, j));
+                if(module != null && module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
+                     eGens.add((EnergyGenerator) module);
+                }
+            }
+        }
+    }
+    
+    protected boolean hasEnoughEnergyForAction() {
+        boolean enough = false;
+        
+        if (energyConsumptionPerAction > 0) {
+            if(eGens.size() > 1) {
+                EnergyGenerator mostEnergy = getEnergyGeneratorWithMostEnergy();
+                if(mostEnergy.getEnergy() >= energyConsumptionPerAction) {
+                    mostEnergy.reduceEnergy(energyConsumptionPerAction);
+                    enough = true;
+                }
+            }
+        } else {
+            enough = true;
+        }
+        return enough;
     }
 }
