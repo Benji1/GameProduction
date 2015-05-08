@@ -75,7 +75,7 @@ public class GUI {
             parameter("width", gridItemSize+"px");
             parameter("height", gridItemSize+"px");
         }};
-        ControlBuilder emptyPanel = new ControlBuilder("empty-slot") {{
+        ControlBuilder emptyPanel = new ControlBuilder("empty-panel") {{
         }};
         
         for (int i=0; i<numOfBgPanels; i++) {
@@ -91,6 +91,8 @@ public class GUI {
                 else 
                     numOfItems = "x"+numOfEachItem[i];
                 
+                partPanel.parameter("parentId", "panel-parent-"+i);
+                partPanel.parameter("draggableId", "part-panel-"+i);
                 partPanel.parameter("label", numOfItems);
                 partPanel.parameter("x", x+"px");
                 partPanel.parameter("y", y+"px");
