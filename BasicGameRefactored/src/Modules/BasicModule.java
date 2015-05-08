@@ -12,7 +12,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import java.awt.Point;
 import mygame.BasicShip;
 import mygame.PhysicsWorld;
@@ -26,6 +26,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.dynamics.joints.WeldJointDef;
+import services.ServiceManager;
 
 /**
  *
@@ -36,9 +37,10 @@ public abstract class BasicModule extends Node implements ContactListener {
     // RIGIDBODY OBJECT (MASS, COLLIDER)
     // GRAPHICAL STUFF
     // DIRECTION THE BLOCK FACES
-    protected int maxHealth = ConfigReader.getFromMap(ConfigReader.getBaseMap("Basic"), "MaxHealth", int.class);
+    ConfigReader cr = ServiceManager.getConfigReader();
+    protected int maxHealth = cr.getFromMap(cr.getBaseMap("Basic"), "MaxHealth", int.class);
     protected int health = maxHealth;
-    protected float dropRateInPercent = ConfigReader.getFromMap(ConfigReader.getBaseMap("Basic"), "DropRateInPercent", float.class);
+    protected float dropRateInPercent = cr.getFromMap(cr.getBaseMap("Basic"), "DropRateInPercent", float.class);
     protected BasicShip ship;
     protected String moduleName;
     protected ColorRGBA color = ColorRGBA.Gray;
@@ -49,6 +51,7 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected Point posInShip;
 
     public BasicModule() {
+        
     }
 
     private void lockToShip() {

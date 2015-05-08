@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package config;
+package services.config;
 
 import java.util.Map;
+import services.ServiceManager;
 
 /**
  *
@@ -38,15 +39,15 @@ public class ExampleUsageOfConfig {
      * 
      * ConfigReader.getFromMap(ConfigReader.getBaseMap("ConfigExamples"), "Example1", int.class);
      */
-    
-    private int example1 = ConfigReader.getFromMap(ConfigReader.getBaseMap("ConfigExamples"), "Example1", int.class);
-    private String example2 = ConfigReader.getFromMap(ConfigReader.getBaseMap("ConfigExamples"), "Example2", String.class);
+    ConfigReader cr = ServiceManager.getConfigReader();
+    private int example1 = cr.getFromMap(cr.getBaseMap("ConfigExamples"), "Example1", int.class);
+    private String example2 = cr.getFromMap(cr.getBaseMap("ConfigExamples"), "Example2", String.class);
     
     
     /* Nested Config Example
      * Unfortunately you have to cast here to a Map
      */
-    private String example3 = ConfigReader.getFromMap((Map) ConfigReader.getFromMap(ConfigReader.getBaseMap("ConfigExamples"), "Example3", Map.class), "Example3Secret", String.class);
+    private String example3 = cr.getFromMap((Map) cr.getFromMap(cr.getBaseMap("ConfigExamples"), "Example3", Map.class), "Example3Secret", String.class);
 
     public ExampleUsageOfConfig () {
         System.out.println(example1);

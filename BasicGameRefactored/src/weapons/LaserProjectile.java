@@ -12,7 +12,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import mygame.Main;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
@@ -25,17 +25,19 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.contacts.Contact;
+import services.ServiceManager;
 
 public class LaserProjectile extends Projectile implements ContactListener {
     
+    ConfigReader cr = ServiceManager.getConfigReader();
     protected Body body;
     protected Spatial spatial;
     protected Material material;
     
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
-        this.startForce = ConfigReader.getFromMap(ConfigReader.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
-        this.lifetime = ConfigReader.getFromMap(ConfigReader.getBaseMap("LaserProjectile"), "Lifetime", float.class);
+        this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
+        this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);
 
         createBox(spawnPoint);  
     }   

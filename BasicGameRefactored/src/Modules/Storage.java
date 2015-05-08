@@ -5,9 +5,10 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import java.util.ArrayList;
 import mygame.Item;
+import services.ServiceManager;
 
 /**
  *
@@ -15,8 +16,9 @@ import mygame.Item;
  */
 public class Storage extends BasicModule {
 
+    ConfigReader cr = ServiceManager.getConfigReader();
     protected ArrayList<Item> itemsInStorage = new ArrayList<Item>();
-    protected int maxStoredItems = ConfigReader.getFromMap(ConfigReader.getBaseMap("Storage"), "MaxStorage", int.class);
+    protected int maxStoredItems = cr.getFromMap(cr.getBaseMap("Storage"), "MaxStorage", int.class);
 
     public Storage() {
         moduleName = "Storage";

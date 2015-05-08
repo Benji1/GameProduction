@@ -6,10 +6,11 @@ package weapons;
 
 import com.jme3.scene.Node;
 import mygame.Main;
-import mygame.Updateable;
+import services.updater.IUpdateable;
 import org.jbox2d.common.Vec2;
+import services.ServiceManager;
 
-public abstract class Projectile extends Node implements Updateable {
+public abstract class Projectile extends Node implements IUpdateable {
     
     protected float startForce;
     protected float lifetime;       // in seconds
@@ -23,7 +24,7 @@ public abstract class Projectile extends Node implements Updateable {
         this.direction = fireDirection;
         
         lifetimeCounter = 0;      
-        app.addUpdateable(this);
+        ServiceManager.getUpdateableManager().addUpdateable(this);
     }
         
     public void update(float tpf) {
@@ -38,7 +39,7 @@ public abstract class Projectile extends Node implements Updateable {
     }
     
     protected void die() {
-        app.removeUpdateable(this);
+        ServiceManager.getUpdateableManager().removeUpdateable(this);
     }
     
 }

@@ -5,9 +5,10 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
+import services.ServiceManager;
 
 /**
  *
@@ -15,13 +16,14 @@ import org.jbox2d.common.Vec2;
  */
 public class Thruster extends InteractiveModule {
 
-    protected float forceMagnitude = ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "ForceMagnitude", float.class);
+    ConfigReader cr = ServiceManager.getConfigReader();
+    protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
     protected Vec2 orientation;
 
     public Thruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys);
         moduleName = "Thruster";
-        energyConsumptionPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("Thruster"), "EnergyConsumptionPerSecond", float.class);
+        energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Thruster"), "EnergyConsumptionPerSecond", float.class);
 
         color = ColorRGBA.LightGray;
         colorActive = ColorRGBA.Orange;

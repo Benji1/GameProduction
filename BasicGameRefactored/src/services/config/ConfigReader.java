@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package config;
+package services.config;
 
 import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
@@ -13,22 +13,23 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import services.Service;
 
 /**
  *
  * @author 1337
  */
-public class ConfigReader {
+public class ConfigReader extends Service {
 
-    public static Map jsonData;
+    public Map jsonData;
 
-    public static void init() {
+    public void init() {
         StringBuilder sb = new StringBuilder();
         BufferedReader r;
         try {
-            r = new BufferedReader(new FileReader("src/config/config.json"));
+            r = new BufferedReader(new FileReader("src/services/config/config.json"));
             
-             String line;
+            String line;
             while ((line = r.readLine()) != null) {
                 sb.append(line).append("\n");
             }
@@ -43,11 +44,11 @@ public class ConfigReader {
         }
     }
     
-    public static Map getBaseMap(String key) {
+    public Map getBaseMap(String key) {
         return  (Map) jsonData.get(key);
     }
     
-    public static <T> T getFromMap(Map m, String key, Class type) {
+    public <T> T getFromMap(Map m, String key, Class type) {
         if (m != null) {
             if (type == float.class || type == Float.class) {
                 return (T) new Float(Float.parseFloat((String) m.get(key)));

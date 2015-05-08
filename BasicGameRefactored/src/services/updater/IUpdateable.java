@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package services.updater;
 
 /**
  *
  * @author Eva
  */
-public interface Updateable {
+public interface IUpdateable {
     
     public void update(float tpf);
     

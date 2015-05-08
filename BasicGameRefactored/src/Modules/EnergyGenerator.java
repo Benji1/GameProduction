@@ -6,8 +6,9 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import mygame.BasicShip;
+import services.ServiceManager;
 
 /**
  *
@@ -15,10 +16,11 @@ import mygame.BasicShip;
  */
 public class EnergyGenerator extends BasicModule {
 
-    private float energyGeneratedPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "EnergyGeneratedPerSecond", float.class);
-    private float energyStorageLimit = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "EnergyStorageLimit", float.class);
+    ConfigReader cr = ServiceManager.getConfigReader();
+    private float energyGeneratedPerSecond = cr.getFromMap(cr.getBaseMap("EnergyGenerator"), "EnergyGeneratedPerSecond", float.class);
+    private float energyStorageLimit = cr.getFromMap(cr.getBaseMap("EnergyGenerator"), "EnergyStorageLimit", float.class);
     private float energyStorage = energyStorageLimit;
-    private int radius = ConfigReader.getFromMap(ConfigReader.getBaseMap("EnergyGenerator"), "Radius", int.class);
+    private int radius = cr.getFromMap(cr.getBaseMap("EnergyGenerator"), "Radius", int.class);
     
     public EnergyGenerator() {
         moduleName = "E-Gen";

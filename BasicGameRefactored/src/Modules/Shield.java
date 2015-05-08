@@ -6,28 +6,30 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import java.util.ArrayList;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.contacts.Contact;
+import services.ServiceManager;
 
 /**
  *
  * @author 1337
  */
 public class Shield extends InteractiveModule {
-
-    protected float maxShieldPower = ConfigReader.getFromMap(ConfigReader.getBaseMap("Shield"), "MaxShieldPower", float.class);
+    
+    ConfigReader cr = ServiceManager.getConfigReader();
+    protected float maxShieldPower = cr.getFromMap(cr.getBaseMap("Shield"), "MaxShieldPower", float.class);
     protected float shieldPower = maxShieldPower;
-    protected float shieldRegenRate = ConfigReader.getFromMap(ConfigReader.getBaseMap("Shield"), "RegenRate", float.class);
+    protected float shieldRegenRate = cr.getFromMap(cr.getBaseMap("Shield"), "RegenRate", float.class);
     protected float delta;
 
     public Shield(ArrayList<String> hotkeys) {
         super(hotkeys);
         moduleName = "Shield";
-        energyConsumptionPerSecond = ConfigReader.getFromMap(ConfigReader.getBaseMap("Shield"), "EnergyConsumptionPerSecond", float.class);
+        energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Shield"), "EnergyConsumptionPerSecond", float.class);
         color = ColorRGBA.Blue;
         colorActive = ColorRGBA.Cyan;
     }

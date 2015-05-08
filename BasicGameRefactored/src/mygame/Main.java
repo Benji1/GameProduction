@@ -1,5 +1,7 @@
 package mygame;
 
+import services.updater.IUpdateable;
+import services.ServiceManager;
 import ShipDesigns.TestShipDesigns;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
@@ -18,7 +20,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
-import config.ConfigReader;
+import services.config.ConfigReader;
 import gui.GUI;
 import java.util.ArrayList;
 import org.jbox2d.collision.shapes.CircleShape;
@@ -27,6 +29,7 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
+import services.updater.UpdateableManager;
 import universe.Universe;
 import universe.UniverseGenerator;
 
@@ -40,7 +43,6 @@ public class Main extends SimpleApplication implements ActionListener {
     private CameraNode camNode;
     private Universe u;
     private ArrayList<Body> bodies = new ArrayList<Body>();
-    private ArrayList<Updateable> updateables = new ArrayList<Updateable>();
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
     protected float shipSpeed = 0;
@@ -50,6 +52,8 @@ public class Main extends SimpleApplication implements ActionListener {
     private GUI gui;
     private ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
+    
+    UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
 
@@ -71,7 +75,6 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
-        ConfigReader.init();
         this.u = new Universe(this);
         this.initShip();
         this.initWorld();
@@ -233,27 +236,14 @@ public class Main extends SimpleApplication implements ActionListener {
             }
         }
     }
-
-    public void addUpdateable(Updateable u) {
-        updateables.add(u);
-    }
-
-    public void removeUpdateable(Updateable u) {
-        updateables.remove(u);
-    }
-
+    
     @Override
     public void simpleUpdate(float delta) {
         this.u.update(delta);
+        updateableManager.update(delta);
 
         for (BasicShip s : ships) {
             s.update(delta);
-        }
-        
-        for (int i = 0; i < updateables.size(); i++) {
-            if (updateables.get(i) != null) {
-                updateables.get(i).update(delta);
-            }
         }
         
         for(Body b: bodiesToRemove) {
