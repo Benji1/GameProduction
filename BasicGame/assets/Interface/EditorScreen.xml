@@ -7,12 +7,12 @@
                     <onStartScreen name="move" mode="in" direction="top" length="200" startDelay="0" inherit="true"/>
                     <onEndScreen name="move" mode="out" direction="top" length="200" startDelay="0" inherit="true"/>
                 </effect>
-                <control name="part-panel" label="x00" sprite="sprite:100,100,2" width="100" height="100" x="10" y="10"/>
+                <!--<control name="part-panel" label="x00" sprite="sprite:100,100,2" width="100" height="100" x="10" y="10"/>
                 <control name="part-panel" label="x00" sprite="sprite:100,100,3" width="100" height="100" x="120" y="10"/>
                 <control name="part-panel" label="x00" sprite="sprite:100,100,4" width="100" height="100" x="230" y="10"/>
                 <control name="part-panel" label="x00" sprite="sprite:100,100,5" width="100" height="100" x="340" y="10"/>
                 <control name="part-panel" label="x00" sprite="sprite:100,100,6" width="100" height="100" x="10" y="120"/>
-                <control name="part-panel" label="x00" sprite="sprite:100,100,7" width="100" height="100" x="120" y="120"/>
+                <control name="part-panel" label="x00" sprite="sprite:100,100,7" width="100" height="100" x="120" y="120"/>-->
             </panel>
             <panel id="main-panel" style="custom-panel" height="390px" width="470px" align="left" valign="bottom" childLayout="vertical">
                 <effect>
