@@ -142,10 +142,8 @@ public abstract class BasicModule extends Node implements ContactListener {
     public void destroy() {
         this.detachChild(spatial);
         //body.destroyFixture(body.getFixtureList());
-        PhysicsWorld.world.destroyBody(body);
+        ship.getApp().bodiesToRemove.add(body);
         ship.removeModuleAt(ship.getActualPositionInGrid(this));
-        this.removeFromParent();
-        
         
         //ship.getApp().getRootNode().attachChild(this);
         // SPAWN WITH DROPABILITY OR JUST DESTROY

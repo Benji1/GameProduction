@@ -109,10 +109,16 @@ public class TestShipDesigns {
     public BasicShip createTestTargetShip() {
         BasicShip s = new BasicShip(main);
 
-        s.addModuleAtFromOffset(new Cockpit(), new Point(2, -2));
-        s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
-        s.addModuleAtFromOffset(new Armor(), new Point(2, 0));
-        s.addModuleAtFromOffset(new Shield(null), new Point(2, -3));
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 9));
+        s.addModuleAtFromOffset(new Armor(), new Point(0, 8));
+        s.addModuleAtFromOffset(new Armor(), new Point(0, 7));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 9));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 8));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 7));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 9));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 8));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 7));
+        
         return s;
     }
     

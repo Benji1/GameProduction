@@ -41,7 +41,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     }   
     
     private void createBox(Vec2 spawnPoint) {
-        Box box = new Box(1f, 0.1f, 0.1f);
+        Box box = new Box(0.9f, 0.1f, 0.1f);
         spatial = new Geometry("Box", box);
         material = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         
@@ -59,7 +59,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     
     private void generatePhysicsBody(float x, float y) {
         PolygonShape rect = new PolygonShape();
-        rect.setAsBox(0.1f, 1f);
+        rect.setAsBox(0.9f, 0.1f);
         
         FixtureDef fDef = new FixtureDef();
         fDef.shape = rect;
@@ -102,7 +102,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     @Override
     public void die() {
         super.die();
-        PhysicsWorld.world.destroyBody(body);
+        app.bodiesToRemove.add(body);
         this.removeFromParent();
     }
 

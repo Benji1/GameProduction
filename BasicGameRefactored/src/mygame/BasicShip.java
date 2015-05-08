@@ -18,7 +18,7 @@ import universe.Abs_ChunkNode;
  */
 public class BasicShip extends Abs_ChunkNode {
 
-    public BasicModule[][] modules = new BasicModule[9][9];
+    public BasicModule[][] modules = new BasicModule[22][22];
     public Cockpit cockpit;
 
     public BasicShip(Main app) {
