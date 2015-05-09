@@ -63,8 +63,8 @@ public abstract class InteractiveModule extends BasicModule {
     }
 
     @Override
-    public void onPlaced(BasicShip ship, int colliderType, int collidingWith) {
-        super.onPlaced(ship, colliderType, collidingWith);
+    public void onPlaced(BasicShip ship) {
+        super.onPlaced(ship);
         materialActive = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         materialActive.setBoolean("UseMaterialColors", true);
         materialActive.setColor("Ambient", colorActive);

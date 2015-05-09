@@ -42,7 +42,7 @@ public class TestShipDesigns {
     
     public int CATEGORY_PLAYER = 1;
     public int CATEGORY_ENEMY = 2;
-    public int CATEGORY_SCENERY = 2;
+    public int CATEGORY_SCENERY = 3;
     
     public int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY;
     public int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY;

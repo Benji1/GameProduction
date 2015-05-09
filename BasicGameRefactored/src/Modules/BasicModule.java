@@ -103,7 +103,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         return health;
     }
 
-    public void onPlaced(BasicShip ship, int colliderType, int collidingWith) {
+    public void onPlaced(BasicShip ship) {
         this.ship = ship;
         
         Box box = new Box(1, 0.4f, 1);
@@ -117,7 +117,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         spatial.setMaterial(material);
         int x = ship.getActualPositionInGrid(this).y * 2;
         int y = ship.getActualPositionInGrid(this).x * 2;
-        generatePhysicsBody(x, y, colliderType, collidingWith);
+        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
 
         ship.attachChild(this);
         this.attachChild(spatial);

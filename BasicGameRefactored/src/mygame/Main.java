@@ -15,18 +15,12 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
 import java.util.ArrayList;
-import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.FixtureDef;
 import services.updater.UpdateableManager;
 import universe.Universe;
 import universe.UniverseGenerator;
@@ -84,8 +78,8 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initShip() {
         TestShipDesigns tsd = new TestShipDesigns(this);
-        //playersShip = tsd.createTestShip1();
-        playersShip = tsd.createStickShip();
+        playersShip = tsd.createTestShip1();
+        //playersShip = tsd.createStickShip();
         ships.add(playersShip);
         ships.add(tsd.createTestTargetShip());
     }
@@ -134,6 +128,24 @@ public class Main extends SimpleApplication implements ActionListener {
     private void initWorld() {
         //UniverseGenerator.generateUniverse(this, u);
         UniverseGenerator.debugSystem(this, u);
+        
+        Box box1 = new Box(1, 1, 1);
+        Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat1.setColor("Diffuse", ColorRGBA.Blue);
+        mat1.setColor("Specular", ColorRGBA.Blue);
+
+
+        for (int i = 0; i < 1000; i++) {
+            Geometry blue = new Geometry("Box", box1);
+            blue.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, -15, ((float) Math.random() - 0.5f) * 1000));
+            blue.setMaterial(mat1);
+            rootNode.attachChild(blue);
+
+            Geometry blue2 = new Geometry("Box", box1);
+            blue2.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, 10, ((float) Math.random() - 0.5f) * 1000));
+            blue2.setMaterial(mat1);
+            rootNode.attachChild(blue2);
+        }
     }
 
     private void initLight() {

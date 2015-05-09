@@ -58,7 +58,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         Point p = offsetToActual(offset);
         modules[p.x][p.y] = module;
         
-        module.onPlaced(this, colliderType, collidingWith);
+        module.onPlaced(this);
         informOtherModulesOfAddedModule(module, p);
     }
 
