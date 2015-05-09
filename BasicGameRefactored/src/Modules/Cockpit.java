@@ -5,6 +5,7 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
+import mygame.BasicShip;
 
 /**
  *
@@ -15,6 +16,18 @@ public class Cockpit extends BasicModule {
     public Cockpit() {
         moduleName = "Cockpit";
         color = ColorRGBA.White;
+    }
+    
+    @Override
+    public void onPlaced(BasicShip ship) {
+        super.onPlaced(ship);
+        ship.cockpit = this;
+    }
+    
+    @Override
+    public void onRemove() {
+        super.onRemove();
+        ship.cockpit = null;
     }
 
     @Override

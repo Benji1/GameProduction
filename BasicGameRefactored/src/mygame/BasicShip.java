@@ -5,6 +5,7 @@
 package mygame;
 
 import Modules.BasicModule;
+import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
 import java.awt.Point;
@@ -18,8 +19,11 @@ import universe.Abs_ChunkNode;
  */
 public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
-    public BasicModule[][] modules = new BasicModule[22][22];
+    public int shipHeight = 22;
+    public int shipWidth = 22;
+    public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
+    public Cockpit cockpit;
 
     public BasicShip(Main app) {
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
@@ -63,9 +67,9 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public void removeModuleAt(Point p) {
         if (p != null) {
-            getModule(p).onRemove();
-            informOtherModulesOfRemovedModule(p);
-            modules[p.x][p.y] = null;
+        informOtherModulesOfRemovedModule(p);
+        modules[p.x][p.y] = null;
+        //sperateInNewShips();
         }
     }
 
@@ -183,6 +187,58 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public void deactivateModules(String hotkey) {
         for (InteractiveModule im : getInteractiveModulesWithHotkey(hotkey)) {
             im.deactivate();
+        }
+    }
+
+    public void sperateInNewShips() {
+        ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
+
+        boolean[][] alreadyAddedModules = new boolean[shipHeight][shipWidth];
+        BasicModule[][] ms = new BasicModule[shipHeight][shipWidth];
+
+        for (int i = 0; i < modules.length; i++) {
+            System.arraycopy(modules[i], 0, ms[i], 0, modules[i].length);
+        }
+
+        if (cockpit != null) {
+            floodFill(alreadyAddedModules, ms, getActualPositionInGrid(cockpit));
+        }
+        printBool(alreadyAddedModules);
+        System.out.println();
+    }
+
+    public void floodFill(boolean[][] alreadyAdded, BasicModule[][] ms, Point start) {
+        if(ms[start.x][start.y] != null && !alreadyAdded[start.x][start.y]) {
+            
+            ms[start.x][start.y] = modules[start.x][start.y];
+            alreadyAdded[start.x][start.y] = true;
+            if (start.x - 1 > 0) {
+                floodFill(alreadyAdded, ms, new Point(start.x - 1, start.y));
+            }
+            if (start.x + 1 < ms[start.y].length) {
+                floodFill(alreadyAdded, ms, new Point(start.x + 1, start.y));
+            }
+            if (start.y - 1 > 0) {
+                floodFill(alreadyAdded, ms, new Point(start.x, start.y - 1));
+            }
+            if (start.y + 1 < ms.length) {
+                floodFill(alreadyAdded, ms, new Point(start.x, start.y + 1));
+            }
+        }
+    }
+    
+    public void printBool(boolean[][] b) {
+        for (int i = 0; i < b.length; i++) {
+            for (int j = 0; j < b[i].length; j++) {
+                String s;
+                if(!b[i][j]) {
+                    s = "-";
+                } else {
+                    s = "x";
+                }
+                System.out.print(s + " ");
+            }
+            System.out.println();
         }
     }
 }
