@@ -20,6 +20,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public BasicModule[][] modules = new BasicModule[22][22];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
+    public int colliderType, collidingWith;
 
     public BasicShip(Main app) {
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
@@ -43,11 +44,16 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         return this.app;
     }
 
+    public void setColliderTypeAndWith(int type, int with) {
+        colliderType = type;
+        collidingWith = with;
+    }
+    
     public void addModuleAtFromOffset(BasicModule module, Point offset) {
         Point p = offsetToActual(offset);
         modules[p.x][p.y] = module;
-
-        module.onPlaced(this);
+        
+        module.onPlaced(this, colliderType, collidingWith);
         informOtherModulesOfAddedModule(module, p);
     }
 

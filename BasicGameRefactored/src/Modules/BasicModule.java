@@ -46,7 +46,9 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected ColorRGBA color = ColorRGBA.Gray;
     protected Body body;
     protected Spatial spatial;
-    protected Material material;
+    protected Material material;       
+    
+    public int group = 0;
 
     public BasicModule() {
     }
@@ -101,7 +103,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         return health;
     }
 
-    public void onPlaced(BasicShip ship) {
+    public void onPlaced(BasicShip ship, int colliderType, int collidingWith) {
         this.ship = ship;
         
         Box box = new Box(1, 0.4f, 1);
@@ -115,7 +117,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         spatial.setMaterial(material);
         int x = ship.getActualPositionInGrid(this).y * 2;
         int y = ship.getActualPositionInGrid(this).x * 2;
-        generatePhysicsBody(x, y);
+        generatePhysicsBody(x, y, colliderType, collidingWith);
 
         ship.attachChild(this);
         this.attachChild(spatial);
@@ -132,7 +134,7 @@ public abstract class BasicModule extends Node implements ContactListener {
     public void otherModuleRemoved(BasicModule module, Point p) {
     }
 
-    private void generatePhysicsBody(int x, int y) {
+    private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();
         square.setAsBox(1, 1);
 
@@ -140,6 +142,8 @@ public abstract class BasicModule extends Node implements ContactListener {
         fDef.shape = square;
         fDef.density = 1.0f;
         fDef.friction = 0.6f;
+        fDef.filter.categoryBits = colliderType;
+        fDef.filter.maskBits = collidingWith;
         //fDef.restitution = 0.5f;
 
         // set body                        
