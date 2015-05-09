@@ -40,6 +40,14 @@ public class TestShipDesigns {
     ArrayList<String> shield;
     ArrayList<String> weapon;
     
+    public int CATEGORY_PLAYER = 1;
+    public int CATEGORY_ENEMY = 2;
+    public int CATEGORY_SCENERY = 2;
+    
+    public int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY;
+    public int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY;
+    public int MASK_SCENERY = -1;
+    
     public TestShipDesigns(Main main) {
         this.main = main;
         
@@ -90,7 +98,9 @@ public class TestShipDesigns {
 
     public BasicShip createTestShip1() {
         BasicShip s = new BasicShip(main);
-
+        
+        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
+        
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(-1, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(1, 0));
@@ -108,7 +118,9 @@ public class TestShipDesigns {
 
     public BasicShip createTestTargetShip() {
         BasicShip s = new BasicShip(main);
-
+        
+        s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
+        
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 9));
         s.addModuleAtFromOffset(new Armor(), new Point(0, 8));
         s.addModuleAtFromOffset(new Armor(), new Point(0, 7));
@@ -125,6 +137,8 @@ public class TestShipDesigns {
     public BasicShip createStickShip() {
         BasicShip s = new BasicShip(main);
 
+        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
+        
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 0));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 0));

@@ -19,8 +19,8 @@ public class Cockpit extends BasicModule {
     }
     
     @Override
-    public void onPlaced(BasicShip ship) {
-        super.onPlaced(ship);
+    public void onPlaced(BasicShip ship, int colliderType, int collidingWith) {
+        super.onPlaced(ship, colliderType, collidingWith);
         ship.cockpit = this;
     }
     
