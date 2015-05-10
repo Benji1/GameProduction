@@ -8,7 +8,7 @@
     <controlDefinition name="part-panel">
         <panel childLayout="center">
             <panel childLayout="center" id="$parentId">
-                <control visibleToMouse="true" id="$draggableId" name="draggable" childLayout="center">
+                <control visibleToMouse="true" id="$draggableId" name="custom-draggable" childLayout="center">
                     <panel backgroundImage="Interface/Images/Parts.png" imageMode="$sprite" width="80%" height="80%"/>
                 </control>
             </panel>            
@@ -17,7 +17,7 @@
         </panel>
     </controlDefinition>
     <controlDefinition name="empty-slot">
-        <control name="droppable" childLayout="center">
+        <control name="custom-droppable" childLayout="center" id="$droppableId">
             <panel backgroundImage="Interface/Images/Parts.png" imageMode="sprite:100,100,0" width="100" height="100"/>
         </control>
     </controlDefinition>
