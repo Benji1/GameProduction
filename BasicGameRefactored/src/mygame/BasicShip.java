@@ -207,7 +207,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
             System.arraycopy(modules[i], 0, ms[i], 0, modules[i].length);
         }
 
-        int shipNumber = 1;
+        int shipNumber = 1; // where 0 is is null
 
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
@@ -221,22 +221,24 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         //System.out.println();
 
         // if seperated in more than one ship
-        if (shipNumber > 1) {
-            ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
-
-            for (int k = 2; k <= shipNumber; k++) {
+        if (shipNumber > 2) { // more than one ship (cause it starts with one and gets a ++ at the end of the loop)
+            for (int k = 3; k <= shipNumber; k++) {
                 BasicShip newShip = new BasicShip(app);
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
-                        if (alreadyAddedModules[i][j] == k) {
+                        if (alreadyAddedModules[i][j] == k-1) {
                             BasicModule b = modules[i][j];
                             removeModuleAt(new Point(i, j));
                             newShip.getModuleFromOtherShip(b, new Point(i, j));
                         }
                     }
                 }
+//                System.out.println("New Ship:");
+//                newShip.print();
             }
+//            System.out.println("Old Ship:");
+//            this.print();
         }
     }
 

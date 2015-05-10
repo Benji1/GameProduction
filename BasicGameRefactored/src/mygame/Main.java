@@ -80,7 +80,7 @@ public class Main extends SimpleApplication implements ActionListener {
         TestShipDesigns tsd = new TestShipDesigns(this);
         playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
-        tsd.createTestTargetShip();
+        tsd.createTestTargetShip2();
     }
 
     private void initCamera() {
@@ -249,14 +249,14 @@ public class Main extends SimpleApplication implements ActionListener {
         for (BasicShip s : ships) {
             s.update(delta);
         }
-        
+        //System.out.println(ships.size());
         updateableManager.update(delta);
         for(Body b: bodiesToRemove) {
             //System.out.println(b);
             PhysicsWorld.world.destroyBody(b);
         }
         bodiesToRemove.clear();
-        
+
         phyicsUpdate(delta);
     }
 

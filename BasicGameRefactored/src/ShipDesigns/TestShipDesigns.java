@@ -40,6 +40,8 @@ public class TestShipDesigns {
     ArrayList<String> shield;
     ArrayList<String> weapon;
     
+    ArrayList<String> testFire;
+    
     public int CATEGORY_PLAYER = 1;
     public int CATEGORY_ENEMY = 2;
     public int CATEGORY_SCENERY = 3;
@@ -94,6 +96,9 @@ public class TestShipDesigns {
         
         weapon = new ArrayList<String>();
         weapon.add("Weapon");
+        
+        testFire = new ArrayList<String>();
+        testFire.add("TestFire");
     }
 
     public BasicShip createTestShip1() {
@@ -142,6 +147,34 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 9));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 7));
+        
+        return s;
+    }
+    
+     public BasicShip createTestTargetShip2() {
+        BasicShip s = new BasicShip(main);
+        
+        s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
+        
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 9));
+        s.addModuleAtFromOffset(new Shield(testFire), new Point(-3, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 9));
+        s.addModuleAtFromOffset(new Shield(testFire), new Point(2, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 7));
+        s.activateModules("TestFire");
         
         return s;
     }
