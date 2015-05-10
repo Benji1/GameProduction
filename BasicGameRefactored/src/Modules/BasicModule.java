@@ -125,8 +125,8 @@ public abstract class BasicModule extends Node implements ContactListener {
         lockToShip();
     }
     
-    public void onMovedShip (BasicShip ship) {
-        this.ship = ship;
+    public void onMovedToOtherShip (BasicShip s) {
+        this.ship = s;
     }
     
     public void onRemove() {

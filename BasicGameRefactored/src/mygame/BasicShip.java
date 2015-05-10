@@ -231,6 +231,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
                             BasicModule b = modules[i][j];
                             removeModuleAt(new Point(i, j));
                             newShip.getModuleFromOtherShip(b, new Point(i, j));
+                        } else {
+                            newShip.removeModuleAt(new Point(i, j));
                         }
                     }
                 }
@@ -245,7 +247,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public void getModuleFromOtherShip(BasicModule module, Point p) {
         modules[p.x][p.y] = module;
 
-        module.onMovedShip(this);
+        module.onMovedToOtherShip(this);
         informOtherModulesOfAddedModule(module, p);
     }
 

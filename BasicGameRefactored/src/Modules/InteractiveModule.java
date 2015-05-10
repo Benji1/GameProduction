@@ -76,6 +76,13 @@ public abstract class InteractiveModule extends BasicModule {
         addAlreadyExistingEgens();
     }
     
+    @Override
+    public void onMovedToOtherShip(BasicShip s) {
+        super.onMovedToOtherShip(s);
+        eGens = new ArrayList<EnergyGenerator>();
+        addAlreadyExistingEgens();
+    }
+    
      @Override
     public void onRemove() {
         super.onRemove();
