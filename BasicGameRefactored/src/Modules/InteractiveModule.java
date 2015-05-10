@@ -23,12 +23,11 @@ public abstract class InteractiveModule extends BasicModule {
     protected ColorRGBA colorActive;
     protected Material materialActive;
     protected ArrayList<String> hotkeys;
-
     protected ArrayList<EnergyGenerator> eGens;
     protected float energyReceived;
     protected float energyConsumption;
     protected float energyAvailableInPercent;
-    
+
     public InteractiveModule(ArrayList<String> hotkeys) {
         this.hotkeys = hotkeys;
     }
@@ -43,16 +42,16 @@ public abstract class InteractiveModule extends BasicModule {
             }
         }
     }
-    
-     private void calculateEnergyConsumption(float delta) {
+
+    private void calculateEnergyConsumption(float delta) {
         energyConsumption = energyConsumptionPerSecond * delta;
         if (energyConsumption > 0) {
-            if(eGens.size() > 0) {
+            if (eGens.size() > 0) {
                 EnergyGenerator mostEnergy = getEnergyGeneratorWithMostEnergy();
-                if(mostEnergy.getEnergy() >= energyConsumption) {
+                if (mostEnergy.getEnergy() >= energyConsumption) {
                     mostEnergy.reduceEnergy(energyConsumption);
                     energyReceived = energyConsumption;
-                    
+
                 }
             }
         }
@@ -69,27 +68,27 @@ public abstract class InteractiveModule extends BasicModule {
         materialActive.setBoolean("UseMaterialColors", true);
         materialActive.setColor("Ambient", colorActive);
         materialActive.setColor("Diffuse", colorActive);
-        
+
         ship.interactiveModules.add(this);
-        
+
         eGens = new ArrayList<EnergyGenerator>();
         addAlreadyExistingEgens();
     }
-    
+
     @Override
     public void onMovedToOtherShip(BasicShip s) {
         super.onMovedToOtherShip(s);
         eGens = new ArrayList<EnergyGenerator>();
         addAlreadyExistingEgens();
     }
-    
-     @Override
+
+    @Override
     public void onRemove() {
         super.onRemove();
         ship.interactiveModules.remove(this);
     }
-    
-       // button pressed
+
+    // button pressed
     public void activate() {
         if (!disabled) {
             active = true;
@@ -107,7 +106,7 @@ public abstract class InteractiveModule extends BasicModule {
     }
 
     protected abstract void onActive();
-    
+
     public void disable() {
         disabled = true;
         deactivate();
@@ -116,17 +115,17 @@ public abstract class InteractiveModule extends BasicModule {
     public ArrayList<String> getHotkeys() {
         return hotkeys;
     }
-    
+
     protected EnergyGenerator getEnergyGeneratorWithMostEnergy() {
         EnergyGenerator mostEnergy = eGens.get(0);
-        for(EnergyGenerator eg: eGens) {
-            if(eg.getEnergy() > mostEnergy.getEnergy()) {
+        for (EnergyGenerator eg : eGens) {
+            if (eg.getEnergy() > mostEnergy.getEnergy()) {
                 mostEnergy = eg;
             }
         }
         return mostEnergy;
     }
-    
+
     @Override
     public void otherModulePlaced(BasicModule module, Point p) {
         super.otherModulePlaced(module, p);
@@ -134,44 +133,44 @@ public abstract class InteractiveModule extends BasicModule {
             eGens.add((EnergyGenerator) module);
         }
     }
-    
+
     @Override
     public void otherModuleRemoved(BasicModule module, Point p) {
         super.otherModulePlaced(module, p);
-        if(module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
+        if (module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
             eGens.remove((EnergyGenerator) module);
         }
     }
-    
+
     protected boolean withinRadius(EnergyGenerator eg) {
         Point myPos = ship.getActualPositionInGrid(this);
         Point eGenPos = ship.getActualPositionInGrid(eg);
-        if(Math.abs(myPos.x - eGenPos.x) <= eg.getRadius() && Math.abs(myPos.y - eGenPos.y) <= eg.getRadius()) {
+        if (Math.abs(myPos.x - eGenPos.x) <= eg.getRadius() && Math.abs(myPos.y - eGenPos.y) <= eg.getRadius()) {
             //material.setColor("Ambient", ColorRGBA.Green);
             //material.setColor("Diffuse", ColorRGBA.Green);
             return true;
         }
         return false;
     }
-    
+
     protected void addAlreadyExistingEgens() {
         for (int i = 0; i <= ship.modules.length; i++) {
             for (int j = 0; j <= ship.modules[0].length; j++) {
                 BasicModule module = ship.getModule(new Point(i, j));
-                if(module != null && module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
-                     eGens.add((EnergyGenerator) module);
+                if (module != null && module instanceof EnergyGenerator && withinRadius((EnergyGenerator) module)) {
+                    eGens.add((EnergyGenerator) module);
                 }
             }
         }
     }
-    
+
     protected boolean hasEnoughEnergyForAction() {
         boolean enough = false;
-        
+
         if (energyConsumptionPerAction > 0) {
-            if(eGens.size() > 0) {
+            if (eGens.size() > 0) {
                 EnergyGenerator mostEnergy = getEnergyGeneratorWithMostEnergy();
-                if(mostEnergy.getEnergy() >= energyConsumptionPerAction) {
+                if (mostEnergy.getEnergy() >= energyConsumptionPerAction) {
                     mostEnergy.reduceEnergy(energyConsumptionPerAction);
                     enough = true;
                 }

@@ -21,7 +21,7 @@
     "Shield": {
         "MaxShieldPower": 700,
         "RegenRate": 40,
-        "EnergyConsumptionPerSecond": 500,
+        "EnergyConsumptionPerSecond": 50,
     },
     "LaserGun": {
         "Firerate": 0.3,

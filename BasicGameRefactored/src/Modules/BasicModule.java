@@ -78,6 +78,10 @@ public abstract class BasicModule extends Node implements ContactListener {
     public Body getBody() {
         return body;
     }
+    
+    public BasicShip getShip() {
+        return ship;
+    }
 
     public void update(float tpf) {
         Vector3f bodyPos = new Vector3f(

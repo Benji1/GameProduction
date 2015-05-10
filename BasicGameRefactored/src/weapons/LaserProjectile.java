@@ -5,6 +5,8 @@
 package weapons;
 
 import Modules.BasicModule;
+import Modules.Shield;
+import ShipDesigns.TestShipDesigns;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -26,25 +28,25 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.contacts.Contact;
 
 public class LaserProjectile extends Projectile implements ContactListener {
-    
+
     protected Body body;
     protected Spatial spatial;
     protected Material material;
-    
+
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
         this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
         this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);
 
-        createBox(spawnPoint);  
-    }   
-    
+        createBox(spawnPoint);
+    }
+
     private void createBox(Vec2 spawnPoint) {
         Box box = new Box(0.9f, 0.1f, 0.1f);
         spatial = new Geometry("Box", box);
         material = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-        
-        material.setBoolean("UseMaterialColors",true);
+
+        material.setBoolean("UseMaterialColors", true);
         material.setColor("Ambient", ColorRGBA.Red);
         material.setColor("Diffuse", ColorRGBA.Red);
 
@@ -55,49 +57,51 @@ public class LaserProjectile extends Projectile implements ContactListener {
 
         generatePhysicsBody(spawnPoint.x, spawnPoint.y);
     }
-    
+
     private void generatePhysicsBody(float x, float y) {
         PolygonShape rect = new PolygonShape();
         rect.setAsBox(0.9f, 0.1f);
-        
+
         FixtureDef fDef = new FixtureDef();
         fDef.shape = rect;
         fDef.density = 1.0f;
         fDef.friction = 0.0f;
-        
+        fDef.filter.categoryBits = TestShipDesigns.CATEGORY_PROJECTILE;
+        fDef.filter.maskBits = TestShipDesigns.MASK_PROJECTILE;
+
         // set body                        
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
-        bDef.angle = (float)Math.atan2(direction.y, direction.x);
+        bDef.angle = (float) Math.atan2(direction.y, direction.x);
         bDef.type = BodyType.DYNAMIC;
-        
+
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
         PhysicsWorld.world.setContactListener(this);
         body.applyForce(direction.mul(startForce), body.getPosition());
-    }    
-    
+    }
+
     protected void updateBoxPosition() {
         Vector3f bodyPos = new Vector3f(
-                (float)body.getWorldPoint(body.getLocalCenter()).x, 
-                0.0f, 
-                (float)body.getWorldPoint(body.getLocalCenter()).y);      
-        
+                (float) body.getWorldPoint(body.getLocalCenter()).x,
+                0.0f,
+                (float) body.getWorldPoint(body.getLocalCenter()).y);
+
         float angleRad = body.getAngle();
         Quaternion q = new Quaternion();
         q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-        
+
         spatial.setLocalTranslation(bodyPos);
-        spatial.setLocalRotation(q); 
+        spatial.setLocalRotation(q);
     }
-    
+
     @Override
     public void update(float delta) {
         super.update(delta);
         updateBoxPosition();
     }
-    
+
     @Override
     public void die() {
         super.die();
@@ -105,29 +109,48 @@ public class LaserProjectile extends Projectile implements ContactListener {
         this.detachChild(spatial);
         app.bodiesToRemove.add(body);
         //this.removeFromParent();
-        
+
     }
 
     public void beginContact(Contact cntct) {
-        if(cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
+        if (cntct.getFixtureA().getBody().getUserData() instanceof ShieldCollider) {
+            handleShieldColliderCollision((ShieldCollider) cntct.getFixtureA().getBody().getUserData());
+        }
+        if (cntct.getFixtureB().getBody().getUserData() instanceof ShieldCollider) {
+            handleShieldColliderCollision((ShieldCollider) cntct.getFixtureB().getBody().getUserData());
+        }
+
+        if (cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
             handleBasicModuleCollision((BasicModule) cntct.getFixtureA().getBody().getUserData());
         }
-        if(cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
+
+        if (cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
             handleBasicModuleCollision((BasicModule) cntct.getFixtureB().getBody().getUserData());
         }
     }
-    
+
     private void handleBasicModuleCollision(BasicModule b) {
-        b.takeDamage(100);
+
+        if (b instanceof Shield) {
+            // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
+            //  thus destroying the shield module, although it should not
+        } else {
+            b.takeDamage(100);
+        }
+        die();
+    }
+
+    private void handleShieldColliderCollision(ShieldCollider s) {
+        s.putDamgeToShieldModule(100f);
         die();
     }
 
     public void endContact(Contact cntct) {
     }
 
-    public void preSolve(Contact cntct, Manifold mnfld) {      
+    public void preSolve(Contact cntct, Manifold mnfld) {
     }
 
-    public void postSolve(Contact cntct, ContactImpulse ci) {        
+    public void postSolve(Contact cntct, ContactImpulse ci) {
     }
 }

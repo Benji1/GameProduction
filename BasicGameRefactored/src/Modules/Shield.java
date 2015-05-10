@@ -7,21 +7,19 @@ package Modules;
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
 import java.util.ArrayList;
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
-import org.jbox2d.dynamics.contacts.Contact;
+import weapons.ShieldCollider;
 
 /**
  *
  * @author 1337
  */
 public class Shield extends InteractiveModule {
-    
+
     protected float maxShieldPower = cr.getFromMap(cr.getBaseMap("Shield"), "MaxShieldPower", float.class);
     protected float shieldPower = maxShieldPower;
     protected float shieldRegenRate = cr.getFromMap(cr.getBaseMap("Shield"), "RegenRate", float.class);
     protected float delta;
+    protected ShieldCollider sc;
 
     public Shield(ArrayList<String> hotkeys) {
         super(hotkeys);
@@ -33,6 +31,41 @@ public class Shield extends InteractiveModule {
 
     protected void onActive() {
         shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate * delta, maxShieldPower);
+
+        ColorRGBA c = new ColorRGBA();
+        c.interpolate(ColorRGBA.DarkGray, colorActive, shieldPower / maxShieldPower);
+
+        materialActive.setColor("Ambient", c);
+        materialActive.setColor("Diffuse", c);
+
+        sc.update(delta);
+
+        if (shieldPower <= 0) {
+            this.deactivate();
+        }
+    }
+
+    @Override
+    public void activate() {
+        super.activate();
+        sc = new ShieldCollider(this);
+    }
+
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        if (sc != null) {
+            sc.die();
+            sc = null;
+        }
+    }
+
+    @Override
+    public void onRemove() {
+        super.onRemove();
+        sc.die();
+        sc = null;
+        ship.interactiveModules.remove(this);
     }
 
     @Override
@@ -41,18 +74,7 @@ public class Shield extends InteractiveModule {
         this.delta = tpf;
     }
 
-    private class ShieldCollider implements ContactListener {
-
-        public void beginContact(Contact cntct) {
-        }
-
-        public void endContact(Contact cntct) {
-        }
-
-        public void preSolve(Contact cntct, Manifold mnfld) {
-        }
-
-        public void postSolve(Contact cntct, ContactImpulse ci) {
-        }
+    public void takeDamageOnShield(float amount) {
+        this.shieldPower -= amount;
     }
 }

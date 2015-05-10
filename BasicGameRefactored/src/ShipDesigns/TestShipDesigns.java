@@ -42,13 +42,17 @@ public class TestShipDesigns {
     
     ArrayList<String> testFire;
     
-    public int CATEGORY_PLAYER = 1;
-    public int CATEGORY_ENEMY = 2;
-    public int CATEGORY_SCENERY = 3;
+    public static final int CATEGORY_PLAYER = 1;
+    public static final int CATEGORY_ENEMY = 2;
+    public static final int CATEGORY_SCENERY = 3;
+    public static final int CATEGORY_PROJECTILE = 4;
+    public static final int CATEGORY_SHIELD = 5;
     
-    public int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY;
-    public int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY;
-    public int MASK_SCENERY = -1;
+    public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
+    public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
+    public static final int MASK_SCENERY = -1;
+    public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
+    public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
     
     public TestShipDesigns(Main main) {
         this.main = main;
@@ -115,8 +119,12 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Thruster(left, FacingDirection.RIGHT), new Point(-1, -1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
-        s.addModuleAtFromOffset(new Shield(shield), new Point(-1, 1));
-        s.addModuleAtFromOffset(new Storage(), new Point(1, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-2, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(2, 1));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 0));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(2, 0));
         
         return s;
     }
