@@ -125,7 +125,12 @@ public abstract class BasicModule extends Node implements ContactListener {
         lockToShip();
     }
     
+    public void onMovedShip (BasicShip ship) {
+        this.ship = ship;
+    }
+    
     public void onRemove() {
+        ship.removeModuleAt(ship.getActualPositionInGrid(this));
     }
 
     public void otherModulePlaced(BasicModule module, Point p) {
@@ -145,7 +150,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         fDef.filter.categoryBits = colliderType;
         fDef.filter.maskBits = collidingWith;
         //fDef.restitution = 0.5f;
-
+        
         // set body                        
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
@@ -161,7 +166,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         onRemove();
         this.detachChild(spatial);
         ship.getApp().bodiesToRemove.add(body);
-        ship.removeModuleAt(ship.getActualPositionInGrid(this));
+        ship.sperateInNewShips();
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 

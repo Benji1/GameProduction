@@ -41,7 +41,7 @@ public class Main extends SimpleApplication implements ActionListener {
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
     private GUI gui;
-    private ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
+    public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
     
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
@@ -80,8 +80,7 @@ public class Main extends SimpleApplication implements ActionListener {
         TestShipDesigns tsd = new TestShipDesigns(this);
         playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
-        ships.add(playersShip);
-        ships.add(tsd.createTestTargetShip());
+        tsd.createTestTargetShip();
     }
 
     private void initCamera() {

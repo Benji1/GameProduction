@@ -122,14 +122,26 @@ public class TestShipDesigns {
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 9));
-        s.addModuleAtFromOffset(new Armor(), new Point(0, 8));
-        s.addModuleAtFromOffset(new Armor(), new Point(0, 7));
-        s.addModuleAtFromOffset(new Armor(), new Point(1, 9));
-        s.addModuleAtFromOffset(new Armor(), new Point(1, 8));
-        s.addModuleAtFromOffset(new Armor(), new Point(1, 7));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, 9));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, 8));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 7));
         
         return s;
     }

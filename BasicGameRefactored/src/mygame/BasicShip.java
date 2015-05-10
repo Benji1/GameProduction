@@ -23,13 +23,13 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public int shipWidth = 22;
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
-
     public Cockpit cockpit;
     public int colliderType, collidingWith;
 
     public BasicShip(Main app) {
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
+        app.ships.add(this);
     }
 
     @Override
@@ -53,13 +53,16 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         colliderType = type;
         collidingWith = with;
     }
-    
-    public void addModuleAtFromOffset(BasicModule module, Point offset) {
-        Point p = offsetToActual(offset);
+
+    public void addModuleAt(BasicModule module, Point p) {
         modules[p.x][p.y] = module;
-        
+
         module.onPlaced(this);
         informOtherModulesOfAddedModule(module, p);
+    }
+
+    public void addModuleAtFromOffset(BasicModule module, Point offset) {
+        addModuleAt(module, offsetToActual(offset));
     }
 
     private void informOtherModulesOfAddedModule(BasicModule module, Point p) {
@@ -74,9 +77,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public void removeModuleAt(Point p) {
         if (p != null) {
-        informOtherModulesOfRemovedModule(p);
-        modules[p.x][p.y] = null;
-        //sperateInNewShips();
+            informOtherModulesOfRemovedModule(p);
+            modules[p.x][p.y] = null;
         }
     }
 
@@ -198,50 +200,81 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     }
 
     public void sperateInNewShips() {
-        ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
-
-        boolean[][] alreadyAddedModules = new boolean[shipHeight][shipWidth];
+        int[][] alreadyAddedModules = new int[shipHeight][shipWidth];
         BasicModule[][] ms = new BasicModule[shipHeight][shipWidth];
 
         for (int i = 0; i < modules.length; i++) {
             System.arraycopy(modules[i], 0, ms[i], 0, modules[i].length);
         }
 
-        if (cockpit != null) {
-            floodFill(alreadyAddedModules, ms, getActualPositionInGrid(cockpit));
+        int shipNumber = 1;
+
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[i].length; j++) {
+                if (modules[i][j] != null && alreadyAddedModules[i][j] == 0) {
+                    floodFill(shipNumber, alreadyAddedModules, ms, new Point(i, j));
+                    shipNumber++;
+                }
+            }
         }
-        printBool(alreadyAddedModules);
-        System.out.println();
+        //printInt(alreadyAddedModules);
+        //System.out.println();
+
+        // if seperated in more than one ship
+        if (shipNumber > 1) {
+            ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
+
+            for (int k = 2; k <= shipNumber; k++) {
+                BasicShip newShip = new BasicShip(app);
+                newShip.setColliderTypeAndWith(colliderType, collidingWith);
+                for (int i = 0; i < modules.length; i++) {
+                    for (int j = 0; j < modules[i].length; j++) {
+                        if (alreadyAddedModules[i][j] == k) {
+                            BasicModule b = modules[i][j];
+                            removeModuleAt(new Point(i, j));
+                            newShip.getModuleFromOtherShip(b, new Point(i, j));
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    public void floodFill(boolean[][] alreadyAdded, BasicModule[][] ms, Point start) {
-        if(ms[start.x][start.y] != null && !alreadyAdded[start.x][start.y]) {
-            
+    public void getModuleFromOtherShip(BasicModule module, Point p) {
+        modules[p.x][p.y] = module;
+
+        module.onMovedShip(this);
+        informOtherModulesOfAddedModule(module, p);
+    }
+
+    public void floodFill(int shipNumber, int[][] alreadyAdded, BasicModule[][] ms, Point start) {
+        if (ms[start.x][start.y] != null && alreadyAdded[start.x][start.y] < shipNumber) {
+
             ms[start.x][start.y] = modules[start.x][start.y];
-            alreadyAdded[start.x][start.y] = true;
+            alreadyAdded[start.x][start.y] = shipNumber;
             if (start.x - 1 > 0) {
-                floodFill(alreadyAdded, ms, new Point(start.x - 1, start.y));
+                floodFill(shipNumber, alreadyAdded, ms, new Point(start.x - 1, start.y));
             }
             if (start.x + 1 < ms[start.y].length) {
-                floodFill(alreadyAdded, ms, new Point(start.x + 1, start.y));
+                floodFill(shipNumber, alreadyAdded, ms, new Point(start.x + 1, start.y));
             }
             if (start.y - 1 > 0) {
-                floodFill(alreadyAdded, ms, new Point(start.x, start.y - 1));
+                floodFill(shipNumber, alreadyAdded, ms, new Point(start.x, start.y - 1));
             }
             if (start.y + 1 < ms.length) {
-                floodFill(alreadyAdded, ms, new Point(start.x, start.y + 1));
+                floodFill(shipNumber, alreadyAdded, ms, new Point(start.x, start.y + 1));
             }
         }
     }
-    
-    public void printBool(boolean[][] b) {
+
+    public void printInt(int[][] b) {
         for (int i = 0; i < b.length; i++) {
             for (int j = 0; j < b[i].length; j++) {
                 String s;
-                if(!b[i][j]) {
+                if (b[i][j] < 1) {
                     s = "-";
                 } else {
-                    s = "x";
+                    s = b[i][j] + "";
                 }
                 System.out.print(s + " ");
             }
