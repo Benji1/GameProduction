@@ -74,6 +74,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
         bDef.position.set(x, y);
         bDef.angle = (float) Math.atan2(direction.y, direction.x);
         bDef.type = BodyType.DYNAMIC;
+        bDef.bullet = true;
 
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
@@ -129,9 +130,15 @@ public class LaserProjectile extends Projectile implements ContactListener {
         }
     }
 
-    private void handleBasicModuleCollision(BasicModule b) {
-
+    public void handleBasicModuleCollision(BasicModule b) {
         if (b instanceof Shield) {
+            Shield s = (Shield) b;
+            if(s.getShieldCollider() != null) {
+                // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
+            //  thus destroying the shield module, although it should not
+            }else {
+                s.takeDamage(100);
+            }
             // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
             //  thus destroying the shield module, although it should not
         } else {
@@ -140,7 +147,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
         die();
     }
 
-    private void handleShieldColliderCollision(ShieldCollider s) {
+    public void handleShieldColliderCollision(ShieldCollider s) {
         s.putDamgeToShieldModule(100f);
         die();
     }

@@ -28,6 +28,10 @@ public class Shield extends InteractiveModule {
         color = ColorRGBA.Blue;
         colorActive = ColorRGBA.Cyan;
     }
+    
+    public ShieldCollider getShieldCollider  () {
+        return sc;
+    }
 
     protected void onActive() {
         shieldPower = fillNotOverLimit(shieldPower, shieldRegenRate * delta, maxShieldPower);
@@ -63,8 +67,10 @@ public class Shield extends InteractiveModule {
     @Override
     public void onRemove() {
         super.onRemove();
-        sc.die();
-        sc = null;
+        if(sc != null) {
+            sc.die();
+            sc = null;
+        }
         ship.interactiveModules.remove(this);
     }
 
