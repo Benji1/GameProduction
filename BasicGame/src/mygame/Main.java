@@ -210,6 +210,7 @@ public class Main extends SimpleApplication implements ActionListener {
     	this.u = new Universe(this);
     	
         UniverseGenerator.debugSystem(this, u);
+        //UniverseGenerator.generateUniverse(this, u);
     }
 
     private void initLight() {
@@ -259,12 +260,12 @@ public class Main extends SimpleApplication implements ActionListener {
             	System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
                 if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
                     camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-                    this.u.toggleUniverseDebug();
+                    //this.u.toggleUniverseDebug();
                     guiNode.attachChild(this.textShipPos);
                     guiNode.attachChild(this.textNewChunk);
                 } else {
                     camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-                    this.u.toggleUniverseDebug();
+                    //this.u.toggleUniverseDebug();
                     guiNode.detachChild(this.textShipPos);
                     guiNode.detachChild(this.textNewChunk);
                 }
