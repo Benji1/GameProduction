@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty-controls>
     <controlDefinition name="custom-draggable" childRootId="#draggableContent" controller="gui.dragAndDrop.DraggableControl">
-        <interact onClick="dragStart()" onClickMouseMove="drag()" onRelease="dragStop()" />
+        <interact onClick="dragStart()" onClickMouseMove="drag()" onRelease="dragStop()"/>
         <panel id="#draggableContent"/>
     </controlDefinition>
     <controlDefinition name="custom-droppable" childRootId="#droppableContent" controller="gui.dragAndDrop.DroppableControl">

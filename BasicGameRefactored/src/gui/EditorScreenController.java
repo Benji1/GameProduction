@@ -35,6 +35,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     private int partIdCounter = 0;
     private HashMap<Point , ModuleType> shipTiles = new HashMap<Point, ModuleType>();
+    private int[][] directions = new int[][] {{1,0},{0,1},{-1,0},{0,-1},{0,0}};
+    //private int[][] directions = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{0,0}};
     
     public void bind(Nifty nifty, Screen screen) {
         //System.out.println("bind " + this.getClass().getSimpleName());
@@ -47,17 +49,10 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         partIdCounter = 0;
         // reload inventory
         clearPartsPanel();
-        //clearSlotPanel();
+        clearSlotsPanel();
         
         setupPartsPanel();
-        //setupSlotPanel();
-        
-        // just for testing
-        for (int i=1; i<7; i++) {
-            Element testDrop = screen.findElementByName("slot-"+i);
-            DroppableControl dropable = testDrop.getControl(DroppableControl.class);
-            dropable.addFilter(this);
-        }
+        setupSlotsPanel();
     }
 
     public void onEndScreen() {
@@ -78,6 +73,10 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     public void exitMenu() {
         nifty.gotoScreen("start");
+    }
+    
+    public void rotatePart(String id) {
+        System.out.println(id);
     }
     
     @NiftyEventSubscriber(pattern="part-panel-.*") 
@@ -116,6 +115,37 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 newDraggable.setParent(parent);
 
                 // TODO: counter-- of that module type in gui
+            } else {
+                String id2 = dragControl.getOriginalParent().getId();
+                System.out.println(id2);
+                int x = Integer.parseInt(id2.substring(id2.indexOf("X") + 1, id2.indexOf("Y")));
+                int y = Integer.parseInt(id2.substring(id2.indexOf("Y") + 1, id2.indexOf("#")));
+                shipTiles.remove(new Point(x, y));
+                
+                for (int i = 0; i < directions.length; ++i) {
+                    int gridX = x + directions[i][0];
+                    int gridY = y + directions[i][1];
+                    Element element = screen.findElementByName("slotX" + gridX + "Y" + gridY);
+                    if (element != null) {
+                        if (!shipTiles.containsKey(new Point(gridX, gridY))) {
+                            boolean hasNeighbor = false;
+                            for (int j = 0; j < directions.length; ++j) {
+                                int neighborX = gridX + directions[j][0];
+                                int neighborY = gridY + directions[j][1];
+                                Element neighbor = screen.findElementByName("slotX" + neighborX + "Y" + neighborY);
+                                if (neighbor != null && shipTiles.containsKey(new Point(neighborX, neighborY))) {
+                                    hasNeighbor = true;
+                                    break;
+                                }
+                            }
+                            if (i == directions.length - 1 && shipTiles.isEmpty())
+                                break;
+                            if (!hasNeighbor) {
+                                element.markForRemoval();
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -138,8 +168,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         }
     }
     
-    private void clearSlotPanel() {
-        Element slotPanel = screen.findElementByName("slot-conatiner");
+    private void clearSlotsPanel() {
+        Element slotPanel = screen.findElementByName("slots-container");
         for (Element slot : slotPanel.getElements()) {
             slot.markForRemoval();
         }
@@ -190,7 +220,26 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 emptyPanel.build(nifty, screen, partsPanel);
             }
         }
-    }    
+    }
+    
+    private void setupSlotsPanel() {
+        buildEmptySlot(0, 0);
+    }
+    
+    private void buildEmptySlot(final int x, final int y) {
+        final int gridItemSize = 100;
+        Element slotsPanel = screen.findElementByName("slots-container");
+        ControlBuilder slotPanel = new ControlBuilder("empty-slot") {{
+            parameter("droppableId", "slotX"+x+"Y"+y);
+            parameter("width", gridItemSize+"px");
+            parameter("height", gridItemSize+"px");
+            parameter("x", x*gridItemSize+"px");
+            parameter("y", y*gridItemSize+"px");
+        }};
+        Element element = slotPanel.build(nifty, screen, slotsPanel);
+        DroppableControl dropable = element.getControl(DroppableControl.class);
+        dropable.addFilter(this);
+    }
 
     public boolean accept(Droppable dropSource, Draggable draggedItem, Droppable dropTarget) {
         // custom drag&drop handling since nifty seems to have some bugs with setting the parents of objects
@@ -214,6 +263,12 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         
         dragCopy.setParent(targetParent);
         
+        String id = targetParent.getId();
+        int x = Integer.parseInt(id.substring(id.indexOf("X") + 1, id.indexOf("Y")));
+        int y = Integer.parseInt(id.substring(id.indexOf("Y") + 1, id.indexOf("#")));
+        shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(parentNr)+2));
+        buildNeighborSlots(x, y);
+        
         // if there was already an element, move it to the source parent
         if (targetParent.getElements().size() > 2) {    // getElements always contains one element that is null, for some strange reason; + the element that was just moved
 
@@ -225,20 +280,32 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     Element elementToMove = targetParent.getElements().get(1);
 
                     elementToMove.markForMove(sourceParent);
+                    String id2 = sourceParent.getId();
+                    x = Integer.parseInt(id2.substring(id2.indexOf("X") + 1, id2.indexOf("Y")));
+                    y = Integer.parseInt(id2.substring(id2.indexOf("Y") + 1, id2.indexOf("#")));
+                    final String moduleId = elementToMove.getId().substring(11, elementToMove.getId().lastIndexOf("-"));
+                    shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(moduleId)+2));
+                    buildNeighborSlots(x, y);
 
-                    // TODO: switch elements in hash map
                 } else {
                     // delete element at target in gui
                     targetParent.getElements().get(1).markForRemoval();
                     // TODO: inventory++
-
-                    // TODO: delete element at target in hash map
                 }
             }
-        } else {
-            // TODO: add element to hash map
         }
         
         return false;   // prevent default drag&drop
+    }
+
+    private void buildNeighborSlots(int x, int y) {
+        for (int i = 0; i < directions.length - 1; ++i) {
+            int gridX = x + directions[i][0];
+            int gridY = y + directions[i][1];
+            Element element = screen.findElementByName("slotX" + gridX + "Y" + gridY);
+            if (element == null) {
+                buildEmptySlot(x + directions[i][0], y + directions[i][1]);
+            }
+        }
     }
 }

@@ -41,13 +41,7 @@
                     <onStartScreen name="move" mode="in" direction="right" length="200" startDelay="0" inherit="true"/>
                     <onEndScreen name="move" mode="out" direction="right" length="200" startDelay="0" inherit="true"/>
                 </effect>
-                <panel id="slot-conatiner" childLayout="absolute" height="230px" width="450px">
-                    <control name="empty-slot" width="100" height="100" droppableId="slot-1" x="120" y="10"/>
-                    <control name="empty-slot" width="100" height="100" droppableId="slot-2" x="230" y="10"/>
-                    <control name="empty-slot" width="100" height="100" droppableId="slot-3" x="340" y="10"/>
-                    <control name="empty-slot" width="100" height="100" droppableId="slot-4" x="120" y="120"/>
-                    <control name="empty-slot" width="100" height="100" droppableId="slot-5" x="230" y="120"/>
-                    <control name="empty-slot" width="100" height="100" droppableId="slot-6" x="340" y="120"/>
+                <panel id="slots-container" childLayout="absolute" width="100" height="100">
                 </panel>
             </panel>
         </layer>
