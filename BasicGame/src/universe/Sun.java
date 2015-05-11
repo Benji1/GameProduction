@@ -35,7 +35,7 @@ public class Sun extends Abs_ChunkNode {
 		model.setMaterial(sphereMat);
 		this.attachChild(model);
 		Quaternion rotation = new Quaternion();
-		rotation.fromAngles(90, 0, 0);
+		rotation.fromAngles(1.2f, 0, 0);
 		model.setLocalRotation(rotation);
 		light = new PointLight();
 		light.setColor((new ColorRGBA(1f, 0.9f,0.6f,0f)).mult(3f));

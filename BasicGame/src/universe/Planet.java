@@ -57,7 +57,7 @@ public class Planet extends Abs_ChunkNode {
 		this.model.setMesh(shape);
 		this.orbit = orbit;
 		Quaternion rotation = new Quaternion();
-		rotation.fromAngles(90, 0, 0);
+		rotation.fromAngles(1.2f, 0, 0);
 		this.setLocalRotation(rotation);
 	}
 	
