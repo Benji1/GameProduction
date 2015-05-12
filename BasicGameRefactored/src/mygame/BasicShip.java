@@ -10,6 +10,8 @@ import Modules.InteractiveModule;
 import Modules.Storage;
 import java.awt.Point;
 import java.util.ArrayList;
+import services.ServiceManager;
+import services.editor.IShipChangedListener;
 import services.updater.IUpdateable;
 import universe.Abs_ChunkNode;
 
@@ -17,8 +19,11 @@ import universe.Abs_ChunkNode;
  *
  * @author 1337
  */
-public class BasicShip extends Abs_ChunkNode implements IUpdateable {
+public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChangedListener {
 
+    private static int idCounter = 0;
+    
+    private int shipId;
     public int shipHeight = 22;
     public int shipWidth = 22;
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
@@ -30,6 +35,9 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
         app.ships.add(this);
+        
+        this.shipId = idCounter++;
+        ServiceManager.getEditorManager().registerAsShipChangedListener(this);
     }
 
     @Override
@@ -284,5 +292,18 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
             }
             System.out.println();
         }
+    }
+
+    public void onShipChanged(BasicModule[][] modules) {
+        System.out.println("ship changed! " + shipId);
+        for (int x=0; x<modules.length; x++) {
+            for (int y=0; y<modules[0].length; y++) {
+                System.out.println(x+"/"+y+": " + modules[x][y]);
+            }
+        }
+    }
+
+    public int getShipId() {
+        return shipId;
     }
 }

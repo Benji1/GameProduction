@@ -7,6 +7,7 @@ package services;
 import services.updater.UpdateableManager;
 import java.util.HashMap;
 import services.config.ConfigReader;
+import services.editor.EditorManager;
 
 public class ServiceManager {
     
@@ -17,6 +18,7 @@ public class ServiceManager {
         services = new HashMap<Class<? extends Service>, Service>() {{
             put(UpdateableManager.class, new UpdateableManager());
             put(ConfigReader.class, new ConfigReader());
+            put(EditorManager.class, new EditorManager());
         }};
         
         initServices();
@@ -38,6 +40,9 @@ public class ServiceManager {
     }
     public static ConfigReader getConfigReader() {
         return getService(ConfigReader.class);
+    }
+    public static EditorManager getEditorManager() {
+        return getService(EditorManager.class);
     }
     
 }

@@ -4,6 +4,13 @@
  */
 package gui;
 
+import Modules.Armor;
+import Modules.BasicModule;
+import Modules.Cockpit;
+import Modules.EnergyGenerator;
+import Modules.FacingDirection;
+import Modules.LaserGun;
+import Modules.Thruster;
 import gui.dragAndDrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
@@ -22,13 +29,37 @@ import gui.dragAndDrop.Droppable;
 import gui.dragAndDrop.DroppableControl;
 import gui.dragAndDrop.DroppableDropFilter;
 import gui.dragAndDrop.DroppableDroppedEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import services.ServiceManager;
 
 /**
  *
  * @author Moritz
  */
 public class EditorScreenController implements ScreenController, DroppableDropFilter {
+    
+    //****** test keyboard mappings
+    ArrayList<String> fwd;
+    ArrayList<String> fwdAndLeft;
+    ArrayList<String> fwdAndRight;
+    ArrayList<String> fwdAndLeftAndRight;
+    
+    ArrayList<String> right;
+    ArrayList<String> left;
+    
+    ArrayList<String> bckwd;
+    ArrayList<String> bckwdAndLeft;
+    ArrayList<String> bckwdAndRight;
+    ArrayList<String> bckwdAndLeftAndRight;
+    
+    ArrayList<String> shield;
+    ArrayList<String> weapon;
+    
+    ArrayList<String> testFire;
+    //*****************************
     
     Nifty nifty;
     Screen screen;
@@ -42,21 +73,25 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         //System.out.println("bind " + this.getClass().getSimpleName());
         this.nifty = nifty;
         this.screen = screen;
+        
+        setupTestKeyboardMappings();
     }
 
     public void onStartScreen() {
         //System.out.println("onStartScreen " + this.getClass().getSimpleName());
         partIdCounter = 0;
-        // reload inventory
-        clearPartsPanel();
-        clearSlotsPanel();
         
+        // reload inventory       
         setupPartsPanel();
         setupSlotsPanel();
     }
 
     public void onEndScreen() {
         //System.out.println("onEndScreen " + this.getClass().getSimpleName());
+        buildShip();
+        
+        clearPartsPanel();
+        clearSlotsPanel();
     }
     
     public void switchToMap() {
@@ -73,6 +108,55 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     public void exitMenu() {
         nifty.gotoScreen("start");
+    }
+    
+    private void setupTestKeyboardMappings() {
+        fwd = new ArrayList<String>();
+        fwd.add("Up");
+        
+        fwdAndLeft = new ArrayList<String>();
+        fwdAndLeft.add("Up");
+        fwdAndLeft.add("Left");
+        
+        fwdAndRight = new ArrayList<String>();
+        fwdAndRight.add("Up");
+        fwdAndRight.add("Right");
+        
+        fwdAndLeftAndRight = new ArrayList<String>();
+        fwdAndLeftAndRight.add("Up");
+        fwdAndLeftAndRight.add("Left");
+        fwdAndLeftAndRight.add("Right");
+        
+        right = new ArrayList<String>();
+        right.add("Right");
+        
+        left = new ArrayList<String>();
+        left.add("Left");
+        
+        bckwd = new ArrayList<String>();
+        bckwd.add("Down");
+        
+        bckwdAndLeft = new ArrayList<String>();
+        bckwdAndLeft.add("Down");
+        bckwdAndLeft.add("Left");
+        
+        bckwdAndRight = new ArrayList<String>();
+        bckwdAndRight.add("Down");
+        bckwdAndRight.add("Right");
+        
+        bckwdAndLeftAndRight = new ArrayList<String>();
+        bckwdAndLeftAndRight.add("Down");
+        bckwdAndLeftAndRight.add("Left");
+        bckwdAndLeftAndRight.add("Right");
+        
+        shield = new ArrayList<String>();
+        shield.add("Shield");
+        
+        weapon = new ArrayList<String>();
+        weapon.add("Weapon");
+        
+        testFire = new ArrayList<String>();
+        testFire.add("TestFire");
     }
     
     public void rotatePart(String id) {
@@ -306,6 +390,64 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             if (element == null) {
                 buildEmptySlot(x + directions[i][0], y + directions[i][1]);
             }
+        }
+    }
+    
+    private void buildShip() {
+        if (!shipTiles.isEmpty()) {
+            // calculate size of array
+            int minX = 0, maxX = 0, minY = 0, maxY = 0;
+            for (Map.Entry pair : shipTiles.entrySet()) {
+                int x = ((Point)pair.getKey()).x;
+                int y = ((Point)pair.getKey()).y;
+
+                if (x < minX)   minX = x;
+                if (x > maxX)   maxX = x;
+                if (y < minY)   minY = y;
+                if (y > maxY)   maxY = y;
+            }
+
+            // create new module array and fill it
+            BasicModule[][] modules = new BasicModule[maxX-minX+1][maxY-minY+1];
+            
+            int xOffset = minX*-1;
+            int yOffset = minY*-1;
+            
+            for (Map.Entry pair : shipTiles.entrySet()) {
+                ModuleType type = ((ModuleType)pair.getValue());
+                int x = ((Point)pair.getKey()).x;
+                int y = ((Point)pair.getKey()).y;
+                switch(type) {
+                    case COCKPIT:
+                        //System.out.println("setting cockpit at " + (x+xOffset)+"/"+(y+yOffset));
+                        modules[x+xOffset][y+yOffset] = new Cockpit();
+                        break;
+                    case THRUSTER:
+                        //System.out.println("setting thruster at " + (x+xOffset)+"/"+(y+yOffset));
+                        modules[x+xOffset][y+yOffset] = new Thruster(fwd, FacingDirection.BACKWARD);
+                        break;
+                    case ENERGY_GENERATOR:
+                        //System.out.println("setting energy at " + (x+xOffset)+"/"+(y+yOffset));
+                        modules[x+xOffset][y+yOffset] = new EnergyGenerator();
+                        break;
+                    case ARMOR:
+                        //System.out.println("setting armor at " + (x+xOffset)+"/"+(y+yOffset));
+                        modules[x+xOffset][y+yOffset] = new Armor();
+                        break;
+                    case WEAPON:
+                        //System.out.println("setting weapon at " + (x+xOffset)+"/"+(y+yOffset));
+                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, FacingDirection.BACKWARD);
+                        break;
+                    case ARMOR_DIAGONAL:
+                        //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
+                        modules[x+xOffset][y+yOffset] = new Armor();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            ServiceManager.getEditorManager().notifyShipChangedListeners(modules, 0);
         }
     }
 }
