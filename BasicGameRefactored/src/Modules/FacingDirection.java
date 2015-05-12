@@ -27,4 +27,14 @@ public enum FacingDirection {
         }
          return facingVector;
     }
+    
+    private static FacingDirection[] vals = values();
+    public FacingDirection next()
+    {
+        return vals[(this.ordinal()+1) % vals.length];
+    }
+    public FacingDirection previous()
+    {
+        return vals[(this.ordinal()+vals.length-1) % vals.length];
+    }
 }
