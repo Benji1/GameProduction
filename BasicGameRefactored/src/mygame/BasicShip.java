@@ -294,11 +294,23 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         }
     }
 
-    public void onShipChanged(BasicModule[][] modules) {
+    public void onShipChanged(BasicModule[][] modulesNewShip) {
         System.out.println("ship changed! " + shipId);
-        for (int x=0; x<modules.length; x++) {
-            for (int y=0; y<modules[0].length; y++) {
-                System.out.println(x+"/"+y+": " + modules[x][y]);
+        
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[i].length; j++) {
+                if (modules[i][j] != null) {
+                    modules[i][j].destroyWithoutSeperation();
+                }
+            }
+        }
+        modules = new BasicModule[modulesNewShip.length][modulesNewShip[0].length];
+
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[i].length; j++) {
+                if(modulesNewShip[i][j] != null) {
+                    addModuleAt(modulesNewShip[i][j], new Point(i,j));
+                }  
             }
         }
     }

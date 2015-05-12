@@ -173,6 +173,14 @@ public abstract class BasicModule extends Node implements ContactListener {
         ship.sperateInNewShips();
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
+    
+     public void destroyWithoutSeperation() {
+        onRemove();
+        this.detachChild(spatial);
+        ship.getApp().bodiesToRemove.add(body);
+        //ship.sperateInNewShips();
+        // SPAWN WITH DROPABILITY OR JUST DESTROY
+    }
 
     // HELPER METHOD MAYBE SOMEWHERE ELSE WOULD BE A BETTER PLACE
     public static float fillNotOverLimit(float actualValue, float increase, float limit) {
