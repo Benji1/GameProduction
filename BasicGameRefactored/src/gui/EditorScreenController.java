@@ -202,7 +202,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 // TODO: counter-- of that module type in gui
             } else {
                 String id2 = dragControl.getOriginalParent().getId();
-                System.out.println(id2);
+                //System.out.println(id2);
                 int x = Integer.parseInt(id2.substring(id2.indexOf("X") + 1, id2.indexOf("Y")));
                 int y = Integer.parseInt(id2.substring(id2.indexOf("Y") + 1, id2.indexOf("#")));
                 shipTiles.remove(new Point(x, y));

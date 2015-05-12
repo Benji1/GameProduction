@@ -119,8 +119,8 @@ public abstract class BasicModule extends Node implements ContactListener {
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
-        int x = ship.getActualPositionInGrid(this).y * 2;
-        int y = ship.getActualPositionInGrid(this).x * 2;
+        int x = ship.getActualPositionInGrid(this).x * 2;
+        int y = ship.getActualPositionInGrid(this).y * 2;
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
 
         ship.attachChild(this);

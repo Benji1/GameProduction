@@ -113,16 +113,16 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(-1, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(1, 0));
-        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(0, 2)); // Backwards is strange
-        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, -2));
-        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.LEFT), new Point(1, -1));
-        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.RIGHT), new Point(-1, -1));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(0, -2)); // Backwards is strange
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.LEFT), new Point(1, 1));
+        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.RIGHT), new Point(-1, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
-        s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
-        s.addModuleAtFromOffset(new Armor(), new Point(-2, 1));
-        s.addModuleAtFromOffset(new Armor(), new Point(2, 1));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, -1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-2, -1));
+        s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
         s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 0));
         s.addModuleAtFromOffset(new Shield(shield), new Point(2, 0));
         
@@ -134,27 +134,27 @@ public class TestShipDesigns {
         
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
-        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, 7));
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(3, -7));
         
         return s;
     }
@@ -164,24 +164,24 @@ public class TestShipDesigns {
         
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
-        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 9));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 9));
-        s.addModuleAtFromOffset(new Shield(testFire), new Point(-3, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, 7));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 9));
-        s.addModuleAtFromOffset(new Shield(testFire), new Point(2, 8));
-        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, 7));
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(1, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -9));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -9));
+        s.addModuleAtFromOffset(new Shield(testFire), new Point(-3, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -7));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -9));
+        s.addModuleAtFromOffset(new Shield(testFire), new Point(2, -8));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -7));
         s.activateModules("TestFire");
         
         return s;
@@ -198,17 +198,17 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-2, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(2, 0));
         
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, -1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, -1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-1, -1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, -1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-2, -1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(-2, 1));
         
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, 1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(1, 1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-1, 1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(2, 1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-2, 1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(1, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(-2, -1));
         
         return s;
     }
