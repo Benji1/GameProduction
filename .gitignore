@@ -25,3 +25,6 @@ hs_err_pid*
 /BasicGameRefactored/nbproject/private/
 /BasicGameRefactored/build/
 /BasicGameRefactored/dist/
+
+# annoying files
+/BenjiPrototype/nbproject/private/
