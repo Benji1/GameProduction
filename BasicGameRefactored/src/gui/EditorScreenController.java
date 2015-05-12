@@ -19,6 +19,7 @@ import de.lessvoid.nifty.builder.ElementBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
+import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import gui.dragAndDrop.Draggable;
@@ -244,6 +245,11 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     @NiftyEventSubscriber(pattern="slot-.*")
     public void onDroppableDropped(String id, DroppableDroppedEvent event) {
          //System.out.println("dropped: " + event.getTarget().getElement().getConstraintX() + "/" + event.getTarget().getElement().getConstraintY());        
+    }
+    
+    @NiftyEventSubscriber(pattern="part-panel-.*")
+    public void onRightMouseButtonClicked(String id, NiftyMouseSecondaryClickedEvent event) {
+        System.out.println("woohoo! element with id " + id + " was clicked");
     }
     
     private void clearPartsPanel() {
