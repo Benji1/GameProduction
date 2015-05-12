@@ -22,7 +22,6 @@ import universe.Abs_ChunkNode;
 public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChangedListener {
 
     private static int idCounter = 0;
-    
     private int shipId;
     public int shipHeight = 22;
     public int shipWidth = 22;
@@ -35,7 +34,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
         app.ships.add(this);
-        
+
         this.shipId = idCounter++;
         ServiceManager.getEditorManager().registerAsShipChangedListener(this);
     }
@@ -176,7 +175,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     }
 
     private Point offsetToActual(Point offset) {
-        return new Point(modules.length / 2 - offset.y, modules.length / 2 + offset.x);
+        return new Point(modules.length / 2 - offset.x, modules.length / 2 + offset.y);
     }
 
     public ArrayList<InteractiveModule> getInteractiveModules() {
@@ -235,7 +234,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
-                        if (alreadyAddedModules[i][j] == k-1) {
+                        if (alreadyAddedModules[i][j] == k - 1) {
                             BasicModule b = modules[i][j];
                             removeModuleAt(new Point(i, j));
                             newShip.getModuleFromOtherShip(b, new Point(i, j));
@@ -295,8 +294,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     }
 
     public void onShipChanged(BasicModule[][] modulesNewShip) {
-        System.out.println("ship changed! " + shipId);
-        
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
                 if (modules[i][j] != null) {
@@ -309,8 +306,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
                 if(modulesNewShip[i][j] != null) {
-                    addModuleAt(modulesNewShip[i][j], new Point(i,j));
-                }  
+                    addModuleAt(modulesNewShip[i][j], new Point(i, j));
+                }
             }
         }
     }
