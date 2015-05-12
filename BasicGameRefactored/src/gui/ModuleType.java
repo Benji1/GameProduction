@@ -6,12 +6,12 @@ package gui;
 
 public enum ModuleType {
 
-    COCKPIT(2),
-    THRUSTER(3),
-    ENERGY_GENERATOR(4),
-    ARMOR(5),
-    WEAPON(6),
-    ARMOR_DIAGONAL(7);
+    COCKPIT(0),
+    THRUSTER(1),
+    ENERGY_GENERATOR(2),
+    ARMOR(3),
+    WEAPON(4),
+    ARMOR_DIAGONAL(5);
     
     private final int value;
     

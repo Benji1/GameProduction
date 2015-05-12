@@ -108,7 +108,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         width("80%");
                         height("80%");
                         // crap cause can't acces imagemode property of other panel
-                        imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)+2));
+                        imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)*4));
                     }});
                 }}.build(nifty, screen, parent);
 
@@ -199,7 +199,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             int y = gridOffset * (i/numOfCols+1) + gridItemSize * (i/numOfCols);
             
             if (i < numOfDifferentItems) {
-                int tileImgId = (i%numOfDifferentItems)+2;
+                int tileImgId = (i%numOfDifferentItems)*4;
                 String numOfItems;
                 
                 if (numOfEachItem[i] < 10)
@@ -257,7 +257,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 backgroundImage("Interface/Images/Parts.png");
                 width("80%");
                 height("80%");
-                imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)+2));
+                imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)*4));
             }});
         }}.build(nifty, screen, targetParent);
         
@@ -266,7 +266,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         String id = targetParent.getId();
         int x = Integer.parseInt(id.substring(id.indexOf("X") + 1, id.indexOf("Y")));
         int y = Integer.parseInt(id.substring(id.indexOf("Y") + 1, id.indexOf("#")));
-        shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(parentNr)+2));
+        shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(parentNr)));
         buildNeighborSlots(x, y);
         
         // if there was already an element, move it to the source parent
@@ -284,7 +284,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     x = Integer.parseInt(id2.substring(id2.indexOf("X") + 1, id2.indexOf("Y")));
                     y = Integer.parseInt(id2.substring(id2.indexOf("Y") + 1, id2.indexOf("#")));
                     final String moduleId = elementToMove.getId().substring(11, elementToMove.getId().lastIndexOf("-"));
-                    shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(moduleId)+2));
+                    shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(moduleId)));
                     buildNeighborSlots(x, y);
 
                 } else {
