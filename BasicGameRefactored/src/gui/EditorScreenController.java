@@ -92,6 +92,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         
         clearPartsPanel();
         clearSlotsPanel();
+        shipTiles.clear();
     }
     
     public void switchToMap() {
@@ -447,6 +448,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 }
             }
 
+            // TODO: get ID of current ship, atm its 0 because the player ship gets created before all other test ships
             ServiceManager.getEditorManager().notifyShipChangedListeners(modules, 0);
         }
     }
