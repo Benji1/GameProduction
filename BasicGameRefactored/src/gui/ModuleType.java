@@ -4,6 +4,8 @@
  */
 package gui;
 
+import Modules.FacingDirection;
+
 public enum ModuleType {
 
     COCKPIT(0),
@@ -30,6 +32,5 @@ public enum ModuleType {
             }
         }
     	return null;
-    }
-    
+    }    
 }

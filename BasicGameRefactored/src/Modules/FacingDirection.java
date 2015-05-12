@@ -12,27 +12,27 @@ import org.jbox2d.common.Vec2;
  */
 public enum FacingDirection {
     FORWARD,
+    RIGHT,
     BACKWARD,
-    LEFT,
-    RIGHT;
+    LEFT;
     
     public static Vec2 getDirectionVector(FacingDirection fd) {
-        Vec2 facingVector;
-         switch(fd) {
-            case FORWARD: facingVector = new Vec2(0, 1); break;
-            case BACKWARD: facingVector = new Vec2(0, -1); break;
-            case LEFT: facingVector = new Vec2(-1, 0); break;
-            case RIGHT: facingVector = new Vec2(1, 0); break;
-            default: facingVector = new Vec2(0, 1);
+        switch (fd) {
+            case FORWARD: return new Vec2(0, 1);
+            case RIGHT: return new Vec2(1, 0);
+            case BACKWARD: return new Vec2(0, -1);
+            case LEFT: return new Vec2(-1, 0);
+            default: return new Vec2(0, 1);
         }
-         return facingVector;
     }
     
     private static FacingDirection[] vals = values();
+    
     public FacingDirection next()
     {
         return vals[(this.ordinal()+1) % vals.length];
     }
+    
     public FacingDirection previous()
     {
         return vals[(this.ordinal()+vals.length-1) % vals.length];

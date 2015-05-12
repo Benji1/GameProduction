@@ -20,6 +20,7 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
+import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import gui.dragAndDrop.Draggable;
@@ -62,11 +63,35 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     ArrayList<String> testFire;
     //*****************************
     
+    private class OrientedModule {
+        public ModuleType moduleType;
+        public FacingDirection facingDirection;
+        public OrientedModule(ModuleType moduleType) {
+            this.moduleType = moduleType;
+            this.facingDirection = FacingDirection.FORWARD;
+        }
+        public void rotateRight() {
+            facingDirection = facingDirection.next();
+        }
+        public void rotateLeft() {
+            facingDirection = facingDirection.previous();
+        }
+        public int getSpriteNumber() {
+            switch (facingDirection) {
+                case FORWARD: return moduleType.getValue() * 4;
+                case RIGHT: return moduleType.getValue() * 4 + 1;
+                case BACKWARD: return moduleType.getValue() * 4 + 2;
+                case LEFT: return moduleType.getValue() * 4 + 3;
+                default: return moduleType.getValue() * 4;
+            }
+        }
+    }
+    
     Nifty nifty;
     Screen screen;
     
     private int partIdCounter = 0;
-    private HashMap<Point , ModuleType> shipTiles = new HashMap<Point, ModuleType>();
+    private HashMap<Point , OrientedModule> shipTiles = new HashMap<Point, OrientedModule>();
     private int[][] directions = new int[][] {{1,0},{0,1},{-1,0},{0,-1},{0,0}};
     //private int[][] directions = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{0,0}};
     
@@ -249,7 +274,28 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     @NiftyEventSubscriber(pattern="part-panel-.*")
     public void onRightMouseButtonClicked(String id, NiftyMouseSecondaryClickedEvent event) {
-        System.out.println("woohoo! element with id " + id + " was clicked");
+        String parentId = event.getElement().getParent().getId();
+        int x = Integer.parseInt(parentId.substring(parentId.indexOf("X") + 1, parentId.indexOf("Y")));
+        int y = Integer.parseInt(parentId.substring(parentId.indexOf("Y") + 1, parentId.indexOf("#")));
+        System.out.println(x + " " + y);
+        OrientedModule module = shipTiles.get(new Point(x, y));
+        if (module != null) {
+            module.rotateRight();
+            
+            final int spriteNumber = module.getSpriteNumber();
+            event.getElement().markForRemoval();
+            
+            Element rotated = new DraggableBuilder(id) {{
+                visibleToMouse(true);
+                childLayout(ElementBuilder.ChildLayoutType.Center);
+                panel(new PanelBuilder() {{
+                    backgroundImage("Interface/Images/Parts.png");
+                    width("80%");
+                    height("80%");
+                    imageMode("sprite:100,100," + spriteNumber);
+                }});
+            }}.build(nifty, screen, event.getElement().getParent());
+        }
     }
     
     private void clearPartsPanel() {
@@ -357,7 +403,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         String id = targetParent.getId();
         int x = Integer.parseInt(id.substring(id.indexOf("X") + 1, id.indexOf("Y")));
         int y = Integer.parseInt(id.substring(id.indexOf("Y") + 1, id.indexOf("#")));
-        shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(parentNr)));
+        shipTiles.put(new Point(x, y), new OrientedModule(ModuleType.getType(Integer.parseInt(parentNr))));
         buildNeighborSlots(x, y);
         
         // if there was already an element, move it to the source parent
@@ -375,7 +421,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     x = Integer.parseInt(id2.substring(id2.indexOf("X") + 1, id2.indexOf("Y")));
                     y = Integer.parseInt(id2.substring(id2.indexOf("Y") + 1, id2.indexOf("#")));
                     final String moduleId = elementToMove.getId().substring(11, elementToMove.getId().lastIndexOf("-"));
-                    shipTiles.put(new Point(x, y), ModuleType.getType(Integer.parseInt(moduleId)));
+                    shipTiles.put(new Point(x, y), new OrientedModule(ModuleType.getType(Integer.parseInt(moduleId))));
                     buildNeighborSlots(x, y);
 
                 } else {
