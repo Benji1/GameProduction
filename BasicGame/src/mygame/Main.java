@@ -61,6 +61,7 @@ import universe.UniverseGenerator;
 public class Main extends SimpleApplication implements ActionListener {
 
     private CameraNode camNode;
+    //master change
     public BasicShip s;
     public BasicShip targetS;
     private Universe u;
