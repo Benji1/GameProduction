@@ -275,26 +275,29 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     @NiftyEventSubscriber(pattern="part-panel-.*")
     public void onRightMouseButtonClicked(String id, NiftyMouseSecondaryClickedEvent event) {
         String parentId = event.getElement().getParent().getId();
-        int x = Integer.parseInt(parentId.substring(parentId.indexOf("X") + 1, parentId.indexOf("Y")));
-        int y = Integer.parseInt(parentId.substring(parentId.indexOf("Y") + 1, parentId.indexOf("#")));
-        System.out.println(x + " " + y);
-        OrientedModule module = shipTiles.get(new Point(x, y));
-        if (module != null) {
-            module.rotateRight();
-            
-            final int spriteNumber = module.getSpriteNumber();
-            event.getElement().markForRemoval();
-            
-            Element rotated = new DraggableBuilder(id) {{
-                visibleToMouse(true);
-                childLayout(ElementBuilder.ChildLayoutType.Center);
-                panel(new PanelBuilder() {{
-                    backgroundImage("Interface/Images/Parts.png");
-                    width("80%");
-                    height("80%");
-                    imageMode("sprite:100,100," + spriteNumber);
-                }});
-            }}.build(nifty, screen, event.getElement().getParent());
+
+        if (parentId.startsWith("slot")) {
+            int x = Integer.parseInt(parentId.substring(parentId.indexOf("X") + 1, parentId.indexOf("Y")));
+            int y = Integer.parseInt(parentId.substring(parentId.indexOf("Y") + 1, parentId.indexOf("#")));
+            //System.out.println(x + " " + y);
+            OrientedModule module = shipTiles.get(new Point(x, y));
+            if (module != null) {
+                module.rotateRight();
+
+                final int spriteNumber = module.getSpriteNumber();
+                event.getElement().markForRemoval();
+
+                Element rotated = new DraggableBuilder(id) {{
+                    visibleToMouse(true);
+                    childLayout(ElementBuilder.ChildLayoutType.Center);
+                    panel(new PanelBuilder() {{
+                        backgroundImage("Interface/Images/Parts.png");
+                        width("80%");
+                        height("80%");
+                        imageMode("sprite:100,100," + spriteNumber);
+                    }});
+                }}.build(nifty, screen, event.getElement().getParent());
+            }
         }
     }
     
@@ -467,17 +470,17 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             int yOffset = minY*-1;
             
             for (Map.Entry pair : shipTiles.entrySet()) {
-                ModuleType type = ((ModuleType)pair.getValue());
+                OrientedModule type = ((OrientedModule)pair.getValue());
                 int x = ((Point)pair.getKey()).x;
                 int y = ((Point)pair.getKey()).y;
-                switch(type) {
+                switch(type.moduleType) {
                     case COCKPIT:
                         //System.out.println("setting cockpit at " + (x+xOffset)+"/"+(y+yOffset));
                         modules[x+xOffset][y+yOffset] = new Cockpit();
                         break;
                     case THRUSTER:
                         //System.out.println("setting thruster at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Thruster(fwd, FacingDirection.BACKWARD);
+                        modules[x+xOffset][y+yOffset] = new Thruster(fwd, type.facingDirection);
                         break;
                     case ENERGY_GENERATOR:
                         //System.out.println("setting energy at " + (x+xOffset)+"/"+(y+yOffset));
@@ -489,7 +492,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case WEAPON:
                         //System.out.println("setting weapon at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, FacingDirection.BACKWARD);
+                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection.next().next());
                         break;
                     case ARMOR_DIAGONAL:
                         //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
