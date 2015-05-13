@@ -59,7 +59,7 @@ import universe.UniverseGenerator;
  * @author normenhansen
  */
 public class Main extends SimpleApplication implements ActionListener {
-
+	//a test
     private CameraNode camNode;
     public BasicShip s;
     public BasicShip targetS;
