@@ -10,7 +10,7 @@
         "MaxStorage": 5
     },
     "Thruster": {
-        "ForceMagnitude": 200,
+        "ForceMagnitude": 300,
         "EnergyConsumptionPerSecond": 10
     },
     "EnergyGenerator": {
@@ -28,7 +28,7 @@
         "EnergyConsumptionPerAction": 50
     },
     "LaserProjectile": {
-        "InitialAcceleration": 500,
+        "InitialAcceleration": 1000,
         "Lifetime": 2.0,
     },
     "ConfigExamples": {

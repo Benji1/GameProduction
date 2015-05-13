@@ -4,7 +4,6 @@
  */
 package weapons;
 
-import Modules.BasicModule;
 import static Modules.BasicModule.fillNotOverLimit;
 import Modules.Shield;
 import ShipDesigns.TestShipDesigns;
@@ -28,7 +27,7 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.contacts.Contact;
-import org.jbox2d.dynamics.joints.WeldJointDef;
+import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 /**
  *
@@ -137,7 +136,7 @@ public class ShieldCollider extends Node implements ContactListener {
     }
 
     private void lockToShield() {
-        WeldJointDef wjDef = new WeldJointDef();
+        RevoluteJointDef wjDef = new RevoluteJointDef();
         wjDef.initialize(s.getBody(), this.body, s.getBody().getPosition());
         wjDef.collideConnected = false;
         PhysicsWorld.world.createJoint(wjDef);
