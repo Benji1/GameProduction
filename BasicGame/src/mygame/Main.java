@@ -50,6 +50,7 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
+import universe.Background;
 import universe.Universe;
 import universe.UniverseGenerator;
 
@@ -59,19 +60,11 @@ import universe.UniverseGenerator;
  * @author normenhansen
  */
 public class Main extends SimpleApplication implements ActionListener {
-    private CameraNode camNode;
+    public CameraNode camNode;
     public BasicShip s;
     public BasicShip targetS;
     private Universe u;
-    private Geometry background;
-    private Geometry parallaxTopRight;
-    private Geometry parallaxTopLeft;
-    private Geometry parallaxBottomRight;
-    private Geometry parallaxBottomLeft;
-    private Geometry parallaxTopRight2;
-    private Geometry parallaxTopLeft2;
-    private Geometry parallaxBottomRight2;
-    private Geometry parallaxBottomLeft2;
+    private Background background;
     private List<Body> bodies = new ArrayList<Body>();
     private List<Updateable> updateables = new ArrayList<Updateable>();
     public BitmapText textShipPos;
@@ -107,7 +100,8 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initKeys();
         this.initHUD();
         this.initCamera();
-        this.initBackground();
+        this.background = new Background(this);
+        this.background.initBackground();
         this.gui = new GUI(this);
     }
 
@@ -233,86 +227,7 @@ public class Main extends SimpleApplication implements ActionListener {
         //UniverseGenerator.generateUniverse(this, u);
     }
     
-    private void initBackground(){
-    	Quad bg = new Quad(300, 300);
-    	Material bgMat = new Material(this.assetManager, 
-				"Common/MatDefs/Misc/Unshaded.j3md");
-		bgMat.setColor("Color", (ColorRGBA.White).mult(0.5f));
-		bgMat.setTexture("ColorMap", this.assetManager.loadTexture("textures/background.jpg"));
-    	Material pMat = new Material(this.assetManager, 
-				"Common/MatDefs/Misc/Unshaded.j3md");
-    	pMat.setColor("Color", (ColorRGBA.White).mult(0.8f));
-    	pMat.setTexture("ColorMap", this.assetManager.loadTexture("textures/stars.png"));
-    	pMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-    	Material pMat2 = new Material(this.assetManager, 
-				"Common/MatDefs/Misc/Unshaded.j3md");
-    	pMat2.setColor("Color", (ColorRGBA.White).mult(0.6f));
-    	pMat2.setTexture("ColorMap", this.assetManager.loadTexture("textures/stars_small.png"));
-    	pMat2.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-		background = new Geometry("background", bg);
-		parallaxTopRight = new Geometry("parallaxTop", bg);
-		parallaxTopRight.setQueueBucket(Bucket.Transparent);
-		parallaxTopLeft = new Geometry("parallaxBottom", bg);
-		parallaxTopLeft.setQueueBucket(Bucket.Transparent);
-		parallaxBottomRight = new Geometry("parallaxLeft", bg);
-		parallaxBottomRight.setQueueBucket(Bucket.Transparent);
-		parallaxBottomLeft = new Geometry("parallaxRight", bg);
-		parallaxBottomLeft.setQueueBucket(Bucket.Transparent);
-		parallaxTopRight2 = new Geometry("parallaxTop2", bg);
-		parallaxTopRight2.setQueueBucket(Bucket.Transparent);
-		parallaxTopLeft2 = new Geometry("parallaxBottom2", bg);
-		parallaxTopLeft2.setQueueBucket(Bucket.Transparent);
-		parallaxBottomRight2 = new Geometry("parallaxLeft2", bg);
-		parallaxBottomRight2.setQueueBucket(Bucket.Transparent);
-		parallaxBottomLeft2 = new Geometry("parallaxRight2", bg);
-		parallaxBottomLeft2.setQueueBucket(Bucket.Transparent);
-		
-		background.setMaterial(bgMat);
-		parallaxTopRight.setMaterial(pMat);
-		parallaxTopLeft.setMaterial(pMat);
-		parallaxBottomRight.setMaterial(pMat);
-		parallaxBottomLeft.setMaterial(pMat);
-		parallaxTopRight2.setMaterial(pMat2);
-		parallaxTopLeft2.setMaterial(pMat2);
-		parallaxBottomRight2.setMaterial(pMat2);
-		parallaxBottomLeft2.setMaterial(pMat2);
-		//this.camNode.attachChild(bgm);
-		this.rootNode.attachChild(background);
-		this.rootNode.attachChild(parallaxTopRight);
-		this.rootNode.attachChild(parallaxBottomRight);
-		this.rootNode.attachChild(parallaxBottomLeft);
-		this.rootNode.attachChild(parallaxTopLeft);
-		this.rootNode.attachChild(parallaxTopRight2);
-		this.rootNode.attachChild(parallaxBottomRight2);
-		this.rootNode.attachChild(parallaxBottomLeft2);
-		this.rootNode.attachChild(parallaxTopLeft2);
-		background.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxTopRight.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxTopLeft.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxBottomRight.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxBottomLeft.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxTopRight2.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxTopLeft2.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxBottomRight2.rotate((float) Math.PI *1.5f, 0, 0);
-		parallaxBottomLeft2.rotate((float) Math.PI *1.5f, 0, 0);
-		background.setLocalTranslation(-150,-50,150);
-		parallaxTopRight.setLocalTranslation(-150,-49,150);
-    }
-    
-    private void updateBackground(){
-    	float scrolling = 10f;
-    	float scrollingf = 20f;
-    	background.setLocalTranslation(this.camNode.getWorldTranslation().x-150, -50, this.camNode.getWorldTranslation().z+150);
-    	parallaxTopRight.setLocalTranslation(   this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrolling)%600+600)%600 +150, -48, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrolling)+300)%600+600)%600+450);
-    	parallaxTopLeft.setLocalTranslation(    this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrolling-300)%600+600)%600 +150, -48, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrolling)+300)%600+600)%600+450);
-    	parallaxBottomRight.setLocalTranslation(this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrolling)%600+600)%600 +150, -48, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrolling))%600+600)%600+450);
-    	parallaxBottomLeft.setLocalTranslation( this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrolling-300)%600+600)%600 +150, -48, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrolling))%600+600)%600+450);
-    	parallaxTopRight2.setLocalTranslation(this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrollingf)%600+600)%600 +150, -49, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrollingf)+300)%600+600)%600+450);
-    	parallaxTopLeft2.setLocalTranslation(this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrollingf)+300)%600+600)%600+450);
-    	parallaxBottomRight2.setLocalTranslation(this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrollingf)%600+600)%600 +150, -49, this.camNode.getWorldTranslation().z - (((this.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
-    	parallaxBottomLeft2.setLocalTranslation(this.camNode.getWorldTranslation().x - ((this.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, this.camNode.getWorldTranslation().z -  (((this.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
-   
-    }
+
 
     private void initLight() {
     	AmbientLight ambient = new AmbientLight();
@@ -405,7 +320,7 @@ public class Main extends SimpleApplication implements ActionListener {
         
         // update camera position
         camNode.setLocalTranslation(new Vector3f(this.s.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.s.getLocalTranslation().z + 0.1f));
-        this.updateBackground();
+        this.background.updateBackground();
     }
 
     @Override
