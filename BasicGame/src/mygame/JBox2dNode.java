@@ -33,9 +33,9 @@ public class JBox2dNode extends Abs_ChunkNode {
 		
 		// update pos
 		this.bodyPos.set(
-                (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).x, 
+                (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).x -this.parent.getWorldTranslation().x, 
                 this.getLocalTranslation().y, 
-                (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).y);
+                (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).y-this.parent.getWorldTranslation().z);
         this.setLocalTranslation(bodyPos);
          
         // update rotation
