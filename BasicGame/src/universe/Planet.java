@@ -12,6 +12,7 @@ import mygame.Main;
 public class Planet extends Abs_ChunkNode {
     //change
 	Geometry model;
+        //other change
 	SolarSystem system;
 	float distance = 0;
 	float orbit = 0;
