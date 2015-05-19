@@ -6,7 +6,6 @@ import com.jme3.math.Quaternion;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
-
 import mygame.Main;
 
 public class Planet extends Abs_ChunkNode {

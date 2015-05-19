@@ -29,6 +29,7 @@ public class Cockpit extends BasicModule {
     public void onRemove() {
         super.onRemove();
         ship.cockpit = null;
+        // TODO SET NEW PHYSICS CENTER OR FIND BETTER SOLUTION
     }
 
     @Override

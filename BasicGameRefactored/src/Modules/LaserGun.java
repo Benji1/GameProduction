@@ -25,7 +25,7 @@ public class LaserGun extends Weapon {
     @Override
     protected void fire() {
         Vec2 fireDirection = body.getWorldVector(orientation);
-        LaserProjectile p = new LaserProjectile(body.getPosition().add(new Vec2(2f * fireDirection.x, 2f * fireDirection.y)), fireDirection, ship.getApp());
+        LaserProjectile p = new LaserProjectile(body.getWorldPoint(body.getLocalCenter()).add(new Vec2(2f * fireDirection.x, 2f * fireDirection.y)), fireDirection, ship.getApp());
     }
     
     @Override

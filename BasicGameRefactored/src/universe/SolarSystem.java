@@ -21,7 +21,7 @@ public class SolarSystem extends Abs_ChunkNode {
 		sun = new Sun(app, this);
 		this.attachChild(sun);
 		int numPlanets = (int)(Math.random()*9+5);
-		System.out.println(numPlanets);
+		//System.out.println(numPlanets);
 		this.radius = (float) (((Math.random()*(MaxRadius-MinRadius))+MinRadius)*numPlanets);
 		//this.radius = numPlanets*MaxRadius;
 		planets = new Planet[numPlanets];
@@ -30,7 +30,7 @@ public class SolarSystem extends Abs_ChunkNode {
 			planets[i] = new Planet(app, this);
 			this.attachChild(planets[i]);
 			float distance = (float) ((radRemain/(float)(numPlanets-i))*((Math.random()*0.75f)+0.25f)) + this.radius-radRemain;
-			System.out.println(distance);
+			//System.out.println(distance);
 			radRemain += (radius - radRemain) - distance;
 			planets[i].setTransform(distance, (float) (Math.random()*360f));
 			

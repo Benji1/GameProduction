@@ -233,6 +233,7 @@ public class BasicShip extends JBox2dNode implements IUpdateable, IShipChangedLi
         // if seperated in more than one ship
         if (shipNumber > 2) { // more than one ship (cause it starts with one and gets a ++ at the end of the loop)
             for (int k = 3; k <= shipNumber; k++) {
+                // XXX
                 BasicShip newShip = new BasicShip(app, name + "" + idCounter);
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {

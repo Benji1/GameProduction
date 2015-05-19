@@ -9,14 +9,11 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.control.CameraControl;
-import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
 import java.util.ArrayList;
@@ -230,13 +227,16 @@ public class Main extends SimpleApplication implements ActionListener {
     @Override
     public void simpleUpdate(float delta) { 
         phyicsUpdate(delta);
-        this.u.update(delta);
         
-        for (BasicShip s : ships) {
+        
+         for (BasicShip s : ships) {
             s.update(delta);
         }
         //System.out.println(ships.size());
         updateableManager.update(delta);
+        
+        
+        
         for(Body b: bodiesToRemove) {
             //System.out.println(b);
             PhysicsWorld.world.destroyBody(b);
@@ -244,7 +244,7 @@ public class Main extends SimpleApplication implements ActionListener {
         bodiesToRemove.clear();
 
        
-        
+        this.u.update(delta);
         this.background.updateBackground();
         // update camera position
         camNode.setLocalTranslation(new Vector3f(this.playersShip.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.getLocalTranslation().z + 0.1f));

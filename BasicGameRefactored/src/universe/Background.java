@@ -1,7 +1,6 @@
 package universe;
 
 import mygame.Main;
-
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
@@ -105,5 +104,4 @@ public class Background {
     	parallaxBottomLeft2.setLocalTranslation(app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, app.camNode.getWorldTranslation().z -  (((app.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
    
     }
-    
 }
