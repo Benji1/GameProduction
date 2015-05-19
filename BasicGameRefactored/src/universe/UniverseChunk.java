@@ -54,6 +54,17 @@ public class UniverseChunk {
      ************ METHODS  ************
      **********************************/
     
+     public void update(float tpf) {
+    	for(Abs_ChunkNode n : this.shipEntities)
+    		n.update(tpf);
+    	for(Abs_ChunkNode n : this.debrisEntities)
+    		n.update(tpf);
+    	for(Abs_ChunkNode n : this.asteroidEntities)
+    		n.update(tpf);
+    	//for(Abs_ChunkNode n : this.universeEntities)
+    	//	n.update(tpf);
+    }
+    
     public void addShipEntity(Abs_ChunkNode n) {
         this.shipEntities.add(n);
     }

@@ -22,6 +22,7 @@ import gui.GUI;
 import java.util.ArrayList;
 import org.jbox2d.dynamics.Body;
 import services.updater.UpdateableManager;
+import universe.Background;
 import universe.Universe;
 import universe.UniverseGenerator;
 
@@ -32,8 +33,9 @@ import universe.UniverseGenerator;
  */
 public class Main extends SimpleApplication implements ActionListener {
 
-    private CameraNode camNode;
+    public CameraNode camNode;
     private Universe u;
+    private Background background;
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
     protected float shipSpeed = 0;
@@ -47,7 +49,7 @@ public class Main extends SimpleApplication implements ActionListener {
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
-
+    
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(60);
@@ -66,13 +68,14 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
-        this.u = new Universe(this);
-        this.initShip();
         this.initWorld();
+        this.initShip();
         this.initLight();
-        this.initCamera();
         this.initKeys();
         this.initHUD();
+        this.initCamera();
+        this.background = new Background(this);
+        this.background.initBackground();
         this.gui = new GUI(this);
     }
 
@@ -89,13 +92,11 @@ public class Main extends SimpleApplication implements ActionListener {
 
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        this.playersShip.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+        this.rootNode.attachChild(camNode);
+        camNode.setLocalTranslation(new Vector3f(this.playersShip.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.playersShip.getLocalTranslation().z + 0.1f));
+        
         camNode.lookAt(this.playersShip.getLocalTranslation(), Vector3f.UNIT_Y);
-
-        // Does not work quite right
-        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
-    }
+       }
 
     private void initKeys() {
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
@@ -125,26 +126,9 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initWorld() {
-        //UniverseGenerator.generateUniverse(this, u);
-        UniverseGenerator.debugSystem(this, u);
+        this.u = new Universe(this);
         
-        Box box1 = new Box(1, 1, 1);
-        Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat1.setColor("Diffuse", ColorRGBA.Blue);
-        mat1.setColor("Specular", ColorRGBA.Blue);
-
-
-        for (int i = 0; i < 1000; i++) {
-            Geometry blue = new Geometry("Box", box1);
-            blue.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, -15, ((float) Math.random() - 0.5f) * 1000));
-            blue.setMaterial(mat1);
-            rootNode.attachChild(blue);
-
-            Geometry blue2 = new Geometry("Box", box1);
-            blue2.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, 10, ((float) Math.random() - 0.5f) * 1000));
-            blue2.setMaterial(mat1);
-            rootNode.attachChild(blue2);
-        }
+        UniverseGenerator.debugSystem(this, u);
     }
 
     private void initLight() {
@@ -219,14 +203,15 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
+                System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
                 if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
                     camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-                    this.u.toggleUniverseDebug();
+                    //this.u.toggleUniverseDebug();
                     guiNode.attachChild(this.textShipPos);
                     guiNode.attachChild(this.textNewChunk);
                 } else {
                     camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-                    this.u.toggleUniverseDebug();
+                    //this.u.toggleUniverseDebug();
                     guiNode.detachChild(this.textShipPos);
                     guiNode.detachChild(this.textNewChunk);
                 }
@@ -243,7 +228,8 @@ public class Main extends SimpleApplication implements ActionListener {
     }
     
     @Override
-    public void simpleUpdate(float delta) {
+    public void simpleUpdate(float delta) { 
+        phyicsUpdate(delta);
         this.u.update(delta);
         
         for (BasicShip s : ships) {
@@ -257,7 +243,11 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         bodiesToRemove.clear();
 
-        phyicsUpdate(delta);
+       
+        
+        this.background.updateBackground();
+        // update camera position
+        camNode.setLocalTranslation(new Vector3f(this.playersShip.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.getLocalTranslation().z + 0.1f));
     }
 
     @Override

@@ -22,6 +22,7 @@ public class Cockpit extends BasicModule {
     public void onPlaced(BasicShip ship) {
         super.onPlaced(ship);
         ship.cockpit = this;
+        ship.setPhysicsCenter(this.body);
     }
     
     @Override
@@ -33,6 +34,7 @@ public class Cockpit extends BasicModule {
     @Override
     public void update(float delta) {
         super.update(delta);
+        //this.ship.setLocalTranslation(this.getLocalTranslation());
     }
 
     @Override

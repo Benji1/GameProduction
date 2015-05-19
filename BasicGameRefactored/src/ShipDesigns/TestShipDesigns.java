@@ -106,7 +106,7 @@ public class TestShipDesigns {
     }
 
     public BasicShip createTestShip1() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "PlayerShip");
         
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
@@ -130,7 +130,7 @@ public class TestShipDesigns {
     }
 
     public BasicShip createTestTargetShip() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "TargetShip");
         
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
@@ -160,7 +160,7 @@ public class TestShipDesigns {
     }
     
      public BasicShip createTestTargetShip2() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "TargetShip");
         
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
@@ -188,7 +188,7 @@ public class TestShipDesigns {
     }
     
     public BasicShip createStickShip() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "PlayerShip");
 
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         

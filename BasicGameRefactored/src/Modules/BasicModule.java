@@ -82,17 +82,12 @@ public abstract class BasicModule extends Node implements ContactListener {
     public BasicShip getShip() {
         return ship;
     }
+    
+    public Spatial getSpatial() {
+    	return this.spatial;
+    }
 
     public void update(float tpf) {
-        Vector3f bodyPos = new Vector3f(
-                (float) body.getWorldPoint(body.getLocalCenter()).x, 0.0f, (float) body.getWorldPoint(body.getLocalCenter()).y);
-
-        spatial.setLocalTranslation(bodyPos);
-
-        float angleRad = body.getAngle();
-        Quaternion q = new Quaternion();
-        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-        spatial.setLocalRotation(q);
     }
 
     public void takeDamage(int amount) {
@@ -123,6 +118,19 @@ public abstract class BasicModule extends Node implements ContactListener {
         int y = ship.getActualPositionInGrid(this).y * 2;
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
 
+        
+        // position jme node
+        Vector3f bodyPos = new Vector3f(
+                (float)body.getWorldPoint(body.getLocalCenter()).x, 
+                0.0f, 
+                (float)body.getWorldPoint(body.getLocalCenter()).y);
+
+		this.setLocalTranslation(bodyPos);
+		 
+		float angleRad = body.getAngle();
+		Quaternion q = new Quaternion();
+		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+		this.setLocalRotation(q);
         ship.attachChild(this);
         this.attachChild(spatial);
         

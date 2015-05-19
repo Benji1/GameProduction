@@ -19,7 +19,7 @@ import universe.Abs_ChunkNode;
  *
  * @author 1337
  */
-public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChangedListener {
+public class BasicShip extends JBox2dNode implements IUpdateable, IShipChangedListener {
 
     private static int idCounter = 0;
     private int shipId;
@@ -30,8 +30,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public Cockpit cockpit;
     public int colliderType, collidingWith;
 
-    public BasicShip(Main app) {
-        super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
+    public BasicShip(Main app, String name) {
+        super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
         app.ships.add(this);
 
@@ -50,6 +50,9 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
                 }
             }
         }
+        
+        //if(this.name.equals("PlayerShip"))
+        //	System.out.println(this.getLocalTranslation().toString() + " / " + this.physicsCenter.getPosition().toString());
     }
 
     public Main getApp() {
@@ -230,7 +233,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         // if seperated in more than one ship
         if (shipNumber > 2) { // more than one ship (cause it starts with one and gets a ++ at the end of the loop)
             for (int k = 3; k <= shipNumber; k++) {
-                BasicShip newShip = new BasicShip(app);
+                BasicShip newShip = new BasicShip(app, name + "" + idCounter);
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
