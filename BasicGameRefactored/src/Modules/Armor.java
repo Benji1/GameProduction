@@ -13,6 +13,7 @@ import com.jme3.math.ColorRGBA;
 public class Armor extends BasicModule {
 
     public Armor() {
+        super();
         moduleName = "Armor";
         color = ColorRGBA.Gray;
         

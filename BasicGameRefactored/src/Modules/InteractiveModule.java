@@ -29,6 +29,7 @@ public abstract class InteractiveModule extends BasicModule {
     protected float energyAvailableInPercent;
 
     public InteractiveModule(ArrayList<String> hotkeys) {
+        super();
         this.hotkeys = hotkeys;
     }
 

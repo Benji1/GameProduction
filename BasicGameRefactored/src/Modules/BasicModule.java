@@ -15,6 +15,7 @@ import com.jme3.scene.shape.Box;
 import services.config.ConfigReader;
 import java.awt.Point;
 import mygame.BasicShip;
+import mygame.JBox2dNode;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -32,7 +33,7 @@ import services.ServiceManager;
  *
  * @author 1337
  */
-public abstract class BasicModule extends Node implements ContactListener {
+public abstract class BasicModule extends JBox2dNode implements ContactListener {
 
     // RIGIDBODY OBJECT (MASS, COLLIDER)
     // GRAPHICAL STUFF
@@ -51,6 +52,7 @@ public abstract class BasicModule extends Node implements ContactListener {
     public int group = 0;
 
     public BasicModule() {
+        super();
     }
 
     private void lockToShip() {
@@ -87,7 +89,9 @@ public abstract class BasicModule extends Node implements ContactListener {
     	return this.spatial;
     }
 
+    @Override
     public void update(float tpf) {
+        super.update(tpf);
     }
 
     public void takeDamage(int amount) {
@@ -117,20 +121,21 @@ public abstract class BasicModule extends Node implements ContactListener {
         int x = ship.getActualPositionInGrid(this).x * 2;
         int y = ship.getActualPositionInGrid(this).y * 2;
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
-
+        
+        setPhysicsCenter(body);
         
         // position jme node
-        Vector3f bodyPos = new Vector3f(
-                (float)body.getWorldPoint(body.getLocalCenter()).x, 
-                0.0f, 
-                (float)body.getWorldPoint(body.getLocalCenter()).y);
-
-		this.setLocalTranslation(bodyPos);
-		 
-		float angleRad = body.getAngle();
-		Quaternion q = new Quaternion();
-		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-		this.setLocalRotation(q);
+//        Vector3f bodyPos = new Vector3f(
+//                (float)body.getWorldPoint(body.getLocalCenter()).x, 
+//                0.0f, 
+//                (float)body.getWorldPoint(body.getLocalCenter()).y);
+//
+//		this.setLocalTranslation(bodyPos);
+//		 
+//		float angleRad = body.getAngle();
+//		Quaternion q = new Quaternion();
+//		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+//		this.setLocalRotation(q);
         ship.attachChild(this);
         this.attachChild(spatial);
         

@@ -19,7 +19,7 @@ import universe.Abs_ChunkNode;
  *
  * @author 1337
  */
-public class BasicShip extends JBox2dNode implements IUpdateable, IShipChangedListener {
+public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChangedListener {
 
     private static int idCounter = 0;
     private int shipId;

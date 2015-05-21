@@ -17,6 +17,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
+import mygame.JBox2dNode;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -47,6 +48,7 @@ public class ShieldCollider extends Node implements ContactListener {
     protected float shieldRadius = 5;
     
     public ShieldCollider(Shield s) {
+        super();
         this.s = s;
 
         Sphere sphere = new Sphere(32, 32, shieldRadius);
@@ -61,22 +63,24 @@ public class ShieldCollider extends Node implements ContactListener {
 
         spatial.setMaterial(material);
         generatePhysicsBody();
-
-        s.attachChild(this);
+        
         this.attachChild(spatial);
+        s.attachChild(this);
         lockToShield();
     }
 
     public void update(float tpf) {
-        Vector3f bodyPos = new Vector3f(
-                (float) body.getWorldPoint(body.getLocalCenter()).x, 0.0f, (float) body.getWorldPoint(body.getLocalCenter()).y);
-
-        spatial.setLocalTranslation(bodyPos);
-
-        float angleRad = body.getAngle();
-        Quaternion q = new Quaternion();
-        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-        spatial.setLocalRotation(q);
+        //super.update(tpf);
+        
+//        Vector3f bodyPos = new Vector3f(
+//                (float) body.getWorldPoint(body.getLocalCenter()).x, 0.0f, (float) body.getWorldPoint(body.getLocalCenter()).y);
+//
+//        spatial.setLocalTranslation(bodyPos);
+//
+//        float angleRad = body.getAngle();
+//        Quaternion q = new Quaternion();
+//        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+//        spatial.setLocalRotation(q);
 
         shieldDmg = fillNotOverLimit(shieldDmg, shieldDmgRegen * tpf, shieldDmgMax);
 
@@ -133,6 +137,8 @@ public class ShieldCollider extends Node implements ContactListener {
         body.createFixture(fDef);
         body.setUserData(this);
         PhysicsWorld.world.setContactListener(this);
+        
+        //setPhysicsCenter(body);
     }
 
     private void lockToShield() {

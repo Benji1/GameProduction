@@ -90,9 +90,11 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(this.playersShip.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.playersShip.getLocalTranslation().z + 0.1f));
+        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1280f), this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
         
-        camNode.lookAt(this.playersShip.getLocalTranslation(), Vector3f.UNIT_Y);
+            if(this.playersShip.cockpit != null) {
+                camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+            }
        }
 
     private void initKeys() {
@@ -247,7 +249,8 @@ public class Main extends SimpleApplication implements ActionListener {
         this.u.update(delta);
         this.background.updateBackground();
         // update camera position
-        camNode.setLocalTranslation(new Vector3f(this.playersShip.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.getLocalTranslation().z + 0.1f));
+
+        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
     }
 
     @Override

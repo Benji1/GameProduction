@@ -4,17 +4,16 @@ import org.jbox2d.dynamics.Body;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
 import universe.Abs_ChunkNode;
 
-public class JBox2dNode extends Abs_ChunkNode {
+public class JBox2dNode extends Node {
 	protected Body physicsCenter;
 	private Vector3f bodyPos;
 	private Quaternion bodyAngle;
 	
-	public JBox2dNode(Main app, String name, Abs_ChunkNode.ChunkNodeType type) {
-		super(app, name, type);
-		
+	public JBox2dNode() {
 		this.bodyPos = Vector3f.ZERO;
 		this.bodyAngle = new Quaternion();
 	}
@@ -27,9 +26,7 @@ public class JBox2dNode extends Abs_ChunkNode {
 		return this.physicsCenter;
 	}
 	
-	@Override
 	public void update(float tpf) {
-		super.update(tpf);
 		
 		// update pos
      		this.bodyPos.set(

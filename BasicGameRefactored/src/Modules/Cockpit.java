@@ -14,6 +14,7 @@ import mygame.BasicShip;
 public class Cockpit extends BasicModule {
 
     public Cockpit() {
+        super();
         moduleName = "Cockpit";
         color = ColorRGBA.White;
     }
@@ -22,12 +23,11 @@ public class Cockpit extends BasicModule {
     public void onPlaced(BasicShip ship) {
         super.onPlaced(ship);
         ship.cockpit = this;
-        ship.setPhysicsCenter(this.body);
     }
     
     @Override
     public void onRemove() {
-        super.onRemove();
+        super.onRemove();      
         ship.cockpit = null;
         // TODO SET NEW PHYSICS CENTER OR FIND BETTER SOLUTION
     }

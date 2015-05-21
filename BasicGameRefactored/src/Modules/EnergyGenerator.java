@@ -19,6 +19,7 @@ public class EnergyGenerator extends BasicModule {
     private int radius = cr.getFromMap(cr.getBaseMap("EnergyGenerator"), "Radius", int.class);
     
     public EnergyGenerator() {
+        super();
         moduleName = "E-Gen";
         color = ColorRGBA.Yellow;
     }
