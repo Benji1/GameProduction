@@ -5,13 +5,15 @@
 package weapons;
 
 import com.jme3.scene.Node;
+import mygame.JBox2dNode;
 import mygame.Main;
 import services.updater.IUpdateable;
 import org.jbox2d.common.Vec2;
 import services.ServiceManager;
 import services.config.ConfigReader;
+import universe.Abs_ChunkNode;
 
-public abstract class Projectile extends Node implements IUpdateable {
+public abstract class Projectile extends JBox2dNode {
     
     protected float startForce;
     protected float lifetime;       // in seconds
@@ -23,11 +25,13 @@ public abstract class Projectile extends Node implements IUpdateable {
     ConfigReader cr = ServiceManager.getConfigReader();
     
     public Projectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
+        // XXX DEBRIS IS OF COURSE FALSE
+        super(app, "Projectile", Abs_ChunkNode.ChunkNodeType.Debris);
         this.app = app;
         this.direction = fireDirection;
         
         lifetimeCounter = 0;      
-        ServiceManager.getUpdateableManager().addUpdateable(this);
+        //ServiceManager.getUpdateableManager().addUpdateable(this);
     }
         
     public void update(float tpf) {
@@ -42,7 +46,7 @@ public abstract class Projectile extends Node implements IUpdateable {
     }
     
     protected void die() {
-        ServiceManager.getUpdateableManager().removeUpdateable(this);
+        //ServiceManager.getUpdateableManager().removeUpdateable(this);
     }
     
 }

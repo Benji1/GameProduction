@@ -9,8 +9,8 @@ import universe.Abs_ChunkNode;
 
 public class JBox2dNode extends Abs_ChunkNode {
 	protected Body physicsCenter;
-	private Vector3f bodyPos;
-	private Quaternion bodyAngle;
+	protected Vector3f bodyPos;
+	protected Quaternion bodyAngle;
 	
 	public JBox2dNode(Main app, String name, Abs_ChunkNode.ChunkNodeType type) {
 		super(app, name, type);
@@ -31,15 +31,20 @@ public class JBox2dNode extends Abs_ChunkNode {
 	public void update(float tpf) {
 		super.update(tpf);
 		
-		// update pos
-     		this.bodyPos.set(
-                (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).x, 
-                this.getLocalTranslation().y, 
-                (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).y);
-        this.setLocalTranslation(bodyPos);
-         
-        // update rotation
-        this.bodyAngle.fromAngleAxis(-this.physicsCenter.getAngle(), new Vector3f(0f, 1f, 0f));
-        this.setLocalRotation(this.bodyAngle);
+                if(this.physicsCenter != null) {
+                            // update pos
+                            this.bodyPos.set(
+                            (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).x, 
+                            this.getLocalTranslation().y, 
+                            (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).y);
+                    this.setLocalTranslation(bodyPos);
+
+                    // update rotation
+                    this.bodyAngle.fromAngleAxis(-this.physicsCenter.getAngle(), new Vector3f(0f, 1f, 0f));
+                    this.setLocalRotation(this.bodyAngle);
+                } else {
+                    // XXX
+                    System.out.println("Cant update this pos and rotation anymore");
+                }
 	}
 }

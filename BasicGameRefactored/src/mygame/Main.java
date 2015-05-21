@@ -229,9 +229,9 @@ public class Main extends SimpleApplication implements ActionListener {
         phyicsUpdate(delta);
         
         
-         for (BasicShip s : ships) {
-            s.update(delta);
-        }
+         //for (BasicShip s : ships) {
+        //    s.update(delta);
+        //}
         //System.out.println(ships.size());
         updateableManager.update(delta);
         

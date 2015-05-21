@@ -52,10 +52,10 @@ public class LaserProjectile extends Projectile implements ContactListener {
 
         spatial.setMaterial(material);
 
+        generatePhysicsBody(spawnPoint.x, spawnPoint.y);
+        
         app.getRootNode().attachChild(this);
         this.attachChild(spatial);
-
-        generatePhysicsBody(spawnPoint.x, spawnPoint.y);
     }
 
     private void generatePhysicsBody(float x, float y) {
@@ -81,20 +81,21 @@ public class LaserProjectile extends Projectile implements ContactListener {
         body.setUserData(this);
         PhysicsWorld.world.setContactListener(this);
         body.applyForce(direction.mul(startForce), body.getPosition());
+        setPhysicsCenter(body);
     }
 
     protected void updateBoxPosition() {
-        Vector3f bodyPos = new Vector3f(
-                (float) body.getWorldPoint(body.getLocalCenter()).x,
-                0.0f,
-                (float) body.getWorldPoint(body.getLocalCenter()).y);
-
-        float angleRad = body.getAngle();
-        Quaternion q = new Quaternion();
-        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+//        Vector3f bodyPos = new Vector3f(
+//                (float) body.getWorldPoint(body.getLocalCenter()).x,
+//                0.0f,
+//                (float) body.getWorldPoint(body.getLocalCenter()).y);
+//
+//        float angleRad = body.getAngle();
+//        Quaternion q = new Quaternion();
+//        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 
         spatial.setLocalTranslation(bodyPos);
-        spatial.setLocalRotation(q);
+        spatial.setLocalRotation(bodyAngle);
     }
 
     @Override
