@@ -10,6 +10,7 @@ import Modules.Cockpit;
 import Modules.EnergyGenerator;
 import Modules.FacingDirection;
 import Modules.LaserGun;
+import Modules.Shield;
 import Modules.Thruster;
 import gui.dragAndDrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.Nifty;
@@ -496,7 +497,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case ARMOR_DIAGONAL:
                         //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Armor();
+                        modules[x+xOffset][y+yOffset] = new Shield(shield);
                         break;
                     default:
                         break;
