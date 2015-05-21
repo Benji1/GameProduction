@@ -211,7 +211,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("Shield") && !keyPressed) {
             // TODO: improve bool test
-            if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
+            if (playersShip.getInteractiveModulesWithHotkey("Shield").size() > 0 && playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
                 if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
                     playersShip.deactivateModules("Shield");
                     targetShip.deactivateModules("Shield");
@@ -274,8 +274,10 @@ public class Main extends SimpleApplication implements ActionListener {
         this.u.update(delta);
         this.background.updateBackground();
         // update camera position
-
-        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
+        
+        if(this.playersShip != null && this.playersShip.cockpit != null) {
+            camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
+        }
     }
 
     @Override
