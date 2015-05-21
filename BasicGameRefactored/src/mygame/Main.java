@@ -9,11 +9,15 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
+import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class Main extends SimpleApplication implements ActionListener {
     private GUI gui;
     public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
+    public BasicShip targetShip;
     
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
@@ -80,7 +85,22 @@ public class Main extends SimpleApplication implements ActionListener {
         TestShipDesigns tsd = new TestShipDesigns(this);
         playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
-        tsd.createTestTargetShip2();
+        targetShip = tsd.createTestTargetShip2();
+        
+        Spatial spatial;
+        Material material;    
+        
+        Box box = new Box(1, 0.4f, 1);
+        spatial = new Geometry("Box", box);
+        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+
+        ColorRGBA color = ColorRGBA.Blue;
+        material.setBoolean("UseMaterialColors", true);
+        material.setColor("Ambient", color);
+        material.setColor("Diffuse", color);
+
+        spatial.setMaterial(material);
+        this.rootNode.attachChild(spatial);
     }
 
     private void initCamera() {
@@ -194,10 +214,15 @@ public class Main extends SimpleApplication implements ActionListener {
             if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
                 if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
                     playersShip.deactivateModules("Shield");
+                    targetShip.deactivateModules("Shield");
                 } else {
                     playersShip.activateModules("Shield");
+                    targetShip.activateModules("Shield");
                 }
             }
+            
+            
+            
         }
 
         if (name.equals("ToggleUniverseDebug")) {

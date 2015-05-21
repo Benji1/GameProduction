@@ -56,6 +56,8 @@ public class LaserProjectile extends Projectile implements ContactListener {
         this.attachChild(spatial);
 
         generatePhysicsBody(spawnPoint.x, spawnPoint.y);
+        setPhysicsCenter(body);
+        
     }
 
     private void generatePhysicsBody(float x, float y) {
@@ -100,7 +102,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     @Override
     public void update(float delta) {
         super.update(delta);
-        updateBoxPosition();
+        //updateBoxPosition();
     }
 
     @Override

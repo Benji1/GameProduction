@@ -177,12 +177,12 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -7));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -9));
-        s.addModuleAtFromOffset(new Shield(testFire), new Point(-3, -8));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(-3, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -7));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -9));
-        s.addModuleAtFromOffset(new Shield(testFire), new Point(2, -8));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(2, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -7));
-        s.activateModules("TestFire");
+        //s.activateModules("Shield");
         
         return s;
     }

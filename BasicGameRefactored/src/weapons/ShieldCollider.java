@@ -82,6 +82,8 @@ public class ShieldCollider extends Node implements ContactListener {
 //        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 //        spatial.setLocalRotation(q);
 
+        System.out.println(this.localTransform.toString());
+        
         shieldDmg = fillNotOverLimit(shieldDmg, shieldDmgRegen * tpf, shieldDmgMax);
 
         ColorRGBA c = new ColorRGBA();
