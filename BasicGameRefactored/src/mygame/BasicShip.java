@@ -12,13 +12,14 @@ import java.awt.Point;
 import java.util.ArrayList;
 import services.ServiceManager;
 import services.editor.IShipChangedListener;
+import services.updater.IUpdateable;
 import universe.Abs_ChunkNode;
 
 /**
  *
  * @author 1337
  */
-public class BasicShip extends JBox2dNode implements IShipChangedListener {
+public class BasicShip extends JBox2dNode implements IUpdateable, IShipChangedListener {
 
     private static int idCounter = 0;
     private int shipId;
@@ -32,7 +33,7 @@ public class BasicShip extends JBox2dNode implements IShipChangedListener {
     public BasicShip(Main app, String name) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
-        //app.ships.add(this);
+        app.ships.add(this);
 
         this.shipId = idCounter++;
         ServiceManager.getEditorManager().registerAsShipChangedListener(this);
