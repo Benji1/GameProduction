@@ -5,6 +5,11 @@
             <text id="#text" style="#text" text="$label" font="Interface/Fonts/Agency-FB-Bold-36.fnt"/>
         </panel>
     </controlDefinition>
+    <controlDefinition name="select-button" style="nifty-button" controller="de.lessvoid.nifty.controls.button.ButtonControl" inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping">
+        <panel style="#panel" focusable="true">
+            <text id="#text" style="#text" text="$label" font="Interface/Fonts/Agency-FB-Bold-24.fnt"/>
+        </panel>
+    </controlDefinition>
     <controlDefinition name="part-panel">
         <panel childLayout="center">
             <panel childLayout="center" id="$parentId">

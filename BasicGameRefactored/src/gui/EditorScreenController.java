@@ -108,7 +108,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         partIdCounter = 0;
         
         // reload inventory       
-        setupPartsPanel();
+        setupPartsPanel("Cockpit");
         setupSlotsPanel();
     }
 
@@ -315,13 +315,43 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         }
     }
     
-    private void setupPartsPanel() {
+    private void setupPartsPanel(String blockType) {
         Element partsPanel = screen.findElementByName("parts-container");
         
-        // should be able to get this info from the inventory later on
-        int numOfDifferentItems = 6;
-        int[] numOfEachItem = new int[] {1, 8, 3, 20, 14, 8};        
+        // TODO: change this later on - quick & crappy solution cause we need to change
+        // this later on anyways once we have the inventory stuff
+        int numOfDifferentItems = 0;
+        int[] numOfEachItem = new int[0];
+        int[] tileImgIds = new int[0];
+        int[] parentIds = new int[0];
         
+        if (blockType.equals("Armor")) {
+            numOfDifferentItems = 2;
+            numOfEachItem = new int[] {12, 3};
+            tileImgIds = new int[] {12, 20};
+            parentIds = new int[] {3, 5};
+        } else if (blockType.equals("Weapon")) {
+            numOfDifferentItems = 1;
+            numOfEachItem = new int[] {8};
+            tileImgIds = new int[] {16};
+            parentIds = new int[] {4};
+        } else if (blockType.equals("Thruster")) {
+            numOfDifferentItems = 1;
+            numOfEachItem = new int[] {2};
+            tileImgIds = new int[] {4};
+            parentIds = new int[] {1};
+        } else if (blockType.equals("Cockpit")) {
+            numOfDifferentItems = 1;
+            numOfEachItem = new int[] {1};
+            tileImgIds = new int[] {0};
+            parentIds = new int[] {0};
+        } else if (blockType.equals("Energy")) {
+            numOfDifferentItems = 1;
+            numOfEachItem = new int[] {4};
+            tileImgIds = new int[] {8};
+            parentIds = new int[] {2};
+        }
+         
         int numOfCols = 4;
         int numOfBgPanels = (int) (Math.ceil(numOfDifferentItems/(numOfCols*1f))) * numOfCols;
         final int gridItemSize = 100;  
@@ -339,7 +369,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             int y = gridOffset * (i/numOfCols+1) + gridItemSize * (i/numOfCols);
             
             if (i < numOfDifferentItems) {
-                int tileImgId = (i%numOfDifferentItems)*4;
+                //int tileImgId = (i%numOfDifferentItems)*4;
                 String numOfItems;
                 
                 if (numOfEachItem[i] < 10)
@@ -347,12 +377,12 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 else 
                     numOfItems = "x"+numOfEachItem[i];
                 
-                partPanel.parameter("parentId", "panel-parent-"+i);
-                partPanel.parameter("draggableId", "part-panel-"+i+"-"+partIdCounter++);
+                partPanel.parameter("parentId", "panel-parent-"+parentIds[i]);
+                partPanel.parameter("draggableId", "part-panel-"+parentIds[i]+"-"+partIdCounter++);
                 partPanel.parameter("label", numOfItems);
                 partPanel.parameter("x", x+"px");
                 partPanel.parameter("y", y+"px");
-                partPanel.parameter("sprite", "sprite:100,100,"+tileImgId);
+                partPanel.parameter("sprite", "sprite:100,100,"+tileImgIds[i]);
                 partPanel.build(nifty, screen, partsPanel);
             } else {
                 emptyPanel.parameter("x", x+"px");
@@ -506,5 +536,26 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             // TODO: get ID of current ship, atm its 0 because the player ship gets created before all other test ships
             ServiceManager.getEditorManager().notifyShipChangedListeners(modules, 0);
         }
+    }
+    
+    public void selectCockpit() {
+        clearPartsPanel();
+        setupPartsPanel("Cockpit");
+    }
+    public void selectArmor() {
+        clearPartsPanel();
+        setupPartsPanel("Armor");
+    }
+    public void selectWeapon() {
+        clearPartsPanel();
+        setupPartsPanel("Weapon");
+    }
+    public void selectEnergy() {
+        clearPartsPanel();
+        setupPartsPanel("Energy");
+    }
+    public void selectThruster() {
+        clearPartsPanel();
+        setupPartsPanel("Thruster");
     }
 }
