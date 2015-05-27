@@ -51,6 +51,8 @@ public abstract class InteractiveModule extends BasicModule {
         if (active) {
             calculateEnergyConsumption();
             onActive();
+        }  else {
+            this.body.setLinearDamping(0.8f);
         }
     }
 
