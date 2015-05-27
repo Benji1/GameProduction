@@ -4,7 +4,10 @@
  */
 package Modules;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.texture.Texture;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 
@@ -31,5 +34,15 @@ public class Thruster extends InteractiveModule {
     protected void onActive() {
         Vec2 forceDirection = body.getWorldVector(orientation).mul(forceMagnitude);
         body.applyForce(forceDirection, body.getPosition());
+    }
+    
+    @Override
+     protected void create3DBody() {
+         AssetManager a = ship.getApp().getAssetManager();
+         spatial = a.loadModel("3dmodels/thruster.obj");
+         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+         Texture t = a.loadTexture("3dmodels/thruster_ao.png");
+         material.setTexture("DiffuseMap", t);
+         spatial.setMaterial(material);
     }
 }

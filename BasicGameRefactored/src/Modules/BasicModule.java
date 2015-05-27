@@ -109,15 +109,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
         
-        Box box = new Box(1, 0.4f, 1);
-        spatial = new Geometry("Box", box);
-        material = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-        material.setBoolean("UseMaterialColors", true);
-        material.setColor("Ambient", color);
-        material.setColor("Diffuse", color);
-
-        spatial.setMaterial(material);
+        create3DBody();
         int x = ship.getActualPositionInGrid(this).x * 2;
         int y = ship.getActualPositionInGrid(this).y * 2;
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
@@ -136,11 +128,25 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 //		Quaternion q = new Quaternion();
 //		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 //		this.setLocalRotation(q);
-        ship.attachChild(this);
         this.attachChild(spatial);
+        ship.attachChild(this);
+       
         
         lockToShip();
     }
+    
+    protected void create3DBody() {
+        Box box = new Box(1, 0.4f, 1);
+        spatial = new Geometry("Box", box);
+        material = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+
+        material.setBoolean("UseMaterialColors", true);
+        material.setColor("Ambient", color);
+        material.setColor("Diffuse", color);
+
+        spatial.setMaterial(material);
+    }
+    
     
     public void onMovedToOtherShip (BasicShip s) {
         this.ship = s;
@@ -181,7 +187,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public void destroy() {
         onRemove();
-        this.detachChild(spatial);
+        this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
         ship.sperateInNewShips();
         // SPAWN WITH DROPABILITY OR JUST DESTROY
