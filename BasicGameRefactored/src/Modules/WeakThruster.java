@@ -12,13 +12,13 @@ import org.jbox2d.common.Vec2;
  *
  * @author 1337
  */
-public class Thruster extends InteractiveModule {
+public class WeakThruster extends InteractiveModule {
 
     protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
-    protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDamping", float.class);
+    protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDampingWeak", float.class);
     protected Vec2 orientation;
 
-    public Thruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
+    public WeakThruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys);
         moduleName = "Thruster";
         energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Thruster"), "EnergyConsumptionPerSecond", float.class);

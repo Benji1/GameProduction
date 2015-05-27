@@ -10,8 +10,8 @@ import Modules.EnergyGenerator;
 import Modules.FacingDirection;
 import Modules.LaserGun;
 import Modules.Shield;
-import Modules.Storage;
 import Modules.Thruster;
+import Modules.WeakThruster;
 import java.awt.Point;
 import java.util.ArrayList;
 import mygame.BasicShip;
@@ -212,4 +212,24 @@ public class TestShipDesigns {
         
         return s;
     }
+    
+    public BasicShip createBasicShip() {
+        BasicShip s = new BasicShip(main, "PlayerShip");
+
+        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
+        
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
+        
+ //       s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new WeakThruster(left, FacingDirection.RIGHT), new Point(-1, 2));
+        s.addModuleAtFromOffset(new WeakThruster(right, FacingDirection.LEFT), new Point(1, 2));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(-1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(1, 0)); // Backwards is strange
+ 
+        return s;
+    }    
 }

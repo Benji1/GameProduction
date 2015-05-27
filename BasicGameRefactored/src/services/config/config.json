@@ -11,7 +11,9 @@
     },
     "Thruster": {
         "ForceMagnitude": 300,
-        "EnergyConsumptionPerSecond": 10
+        "EnergyConsumptionPerSecond": 10,
+        "LinearDamping": 0.5,
+        "LinearDampingWeak": 2
     },
     "EnergyGenerator": {
         "EnergyGeneratedPerSecond": 20,

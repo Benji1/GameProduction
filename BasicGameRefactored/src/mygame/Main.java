@@ -83,8 +83,9 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initShip() {
         TestShipDesigns tsd = new TestShipDesigns(this);
-        playersShip = tsd.createTestShip1();
+        //playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
+        playersShip = tsd.createBasicShip();
         targetShip = tsd.createTestTargetShip2();
         
         Spatial spatial;
