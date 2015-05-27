@@ -58,7 +58,7 @@
                     <onStartScreen name="move" mode="in" direction="right" length="200" startDelay="0" inherit="true"/>
                     <onEndScreen name="move" mode="out" direction="right" length="200" startDelay="0" inherit="true"/>
                 </effect>
-                <panel id="clip-container" childClip="true" height="100%" width="100%"childLayout="center" >
+                <panel id="clip-container" childClip="true" height="100%" width="100%"childLayout="center" visibleToMouse="true" >
                     <panel id="slots-container" childLayout="absolute" width="100" height="100">
                     </panel>
                 </panel>

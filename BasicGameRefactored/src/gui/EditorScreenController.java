@@ -20,6 +20,7 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
+import de.lessvoid.nifty.elements.events.NiftyMouseWheelEvent;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -299,6 +300,15 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 }}.build(nifty, screen, event.getElement().getParent());
             }
         }
+    }
+    
+    @NiftyEventSubscriber(id="clip-container")
+    public void onMouseWheelChanged(String id, NiftyMouseWheelEvent event) {
+        if (event.getMouseWheel() > 0) {
+            // zoomed up
+        } else if (event.getMouseWheel() < 0) {
+            // zoomed down
+        }        
     }
     
     private void clearPartsPanel() {
