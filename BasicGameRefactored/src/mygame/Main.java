@@ -83,9 +83,9 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initShip() {
         TestShipDesigns tsd = new TestShipDesigns(this);
-        //playersShip = tsd.createTestShip1();
+        playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
-        playersShip = tsd.createBasicShip();
+        //playersShip = tsd.createBasicShip();
         targetShip = tsd.createTestTargetShip2();
         
         Spatial spatial;
@@ -102,6 +102,9 @@ public class Main extends SimpleApplication implements ActionListener {
 
         spatial.setMaterial(material);
         this.rootNode.attachChild(spatial);
+        
+        System.out.println(this.rootNode.getLocalTranslation());
+        System.out.println(spatial.getLocalTranslation());
     }
 
     private void initCamera() {
@@ -228,14 +231,14 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
-                System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
-                if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
-                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+                //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
+                if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
+                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
                     guiNode.attachChild(this.textShipPos);
                     guiNode.attachChild(this.textNewChunk);
                 } else {
-                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
+                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
                     guiNode.detachChild(this.textShipPos);
                     guiNode.detachChild(this.textNewChunk);
@@ -253,7 +256,25 @@ public class Main extends SimpleApplication implements ActionListener {
     }
     
     @Override
-    public void simpleUpdate(float delta) { 
+    public void simpleUpdate(float delta) {
+        
+        
+        Spatial spatial;
+        Material material;    
+        
+        Box box = new Box(1, 0.4f, 1);
+        spatial = new Geometry("Box", box);
+        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+
+        ColorRGBA color = ColorRGBA.Blue;
+        material.setBoolean("UseMaterialColors", true);
+        material.setColor("Ambient", color);
+        material.setColor("Diffuse", color);
+
+        spatial.setMaterial(material);
+        this.rootNode.attachChild(spatial);
+        
+        
         phyicsUpdate(delta);
         
         

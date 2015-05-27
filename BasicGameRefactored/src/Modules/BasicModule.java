@@ -128,9 +128,9 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 //		Quaternion q = new Quaternion();
 //		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 //		this.setLocalRotation(q);
+        spatial.setLocalTranslation(0, 0, 0);
         this.attachChild(spatial);
         ship.attachChild(this);
-       
         
         lockToShip();
     }

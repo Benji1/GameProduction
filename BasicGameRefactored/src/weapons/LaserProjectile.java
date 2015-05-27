@@ -38,10 +38,10 @@ public class LaserProjectile extends Projectile implements ContactListener {
         this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
         this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);
 
-        createBox(spawnPoint);
+        createBox(spawnPoint, fireDirection);
     }
 
-    private void createBox(Vec2 spawnPoint) {
+    private void createBox(Vec2 spawnPoint, Vec2 fireDirection) {
         Box box = new Box(0.9f, 0.1f, 0.1f);
         spatial = new Geometry("Box", box);
         material = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
@@ -52,8 +52,18 @@ public class LaserProjectile extends Projectile implements ContactListener {
 
         spatial.setMaterial(material);
 
+        
+        
+        app.getRootNode().attachChild(spatial);
         app.getRootNode().attachChild(this);
-        this.attachChild(spatial);
+        
+        spatial.setLocalTranslation(0, 0, 0);
+        this.setLocalTranslation(0, 0, 0);
+        //Quaternion q = new Quaternion();
+        
+        //q.fromAngleAxis(-(float) Math.atan2(fireDirection.y, fireDirection.x), new Vector3f(0f, 1f, 0f));
+        //this.setLocalRotation(q);
+        //spatial.setLocalRotation(q);
 
         generatePhysicsBody(spawnPoint.x, spawnPoint.y);
         setPhysicsCenter(body);
@@ -102,6 +112,9 @@ public class LaserProjectile extends Projectile implements ContactListener {
     @Override
     public void update(float delta) {
         super.update(delta);
+       
+        //spatial.setLocalTranslation(0,0,0);
+        //spatial.setLocalRotation(getBodyAngle());
         //updateBoxPosition();
     }
 

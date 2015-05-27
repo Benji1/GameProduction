@@ -10,11 +10,14 @@ import ShipDesigns.TestShipDesigns;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
+import mygame.JBox2dNode;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -61,9 +64,21 @@ public class ShieldCollider extends Node implements ContactListener {
         spatial.setMaterial(material);
         generatePhysicsBody();
         
-        this.attachChild(spatial);
-        s.attachChild(this);
-        lockToShield();
+         
+//        Quaternion bodyAngle = new Quaternion();
+        // update rotation
+//        bodyAngle.fromAngleAxis(-this.body.getAngle(), new Vector3f(0f, 1f, 0f));
+//        this.setLocalRotation(bodyAngle);
+        
+        
+        s.getShip().getApp().getRootNode().attachChild(spatial);
+        s.getShip().getApp().getRootNode().attachChild(this);
+        
+        //this.setLocalTranslation(0,0,0);
+        spatial.setLocalTranslation(0, 0, 0);
+        System.out.println(s.getShip().getApp().getRootNode().getLocalTranslation());
+        System.out.println(spatial.getLocalTranslation());
+        //lockToShield();
     }
 
     public void update(float tpf) {
@@ -79,7 +94,7 @@ public class ShieldCollider extends Node implements ContactListener {
 //        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 //        spatial.setLocalRotation(q);
 
-        System.out.println(this.localTransform.toString());
+        //System.out.println(this.localTransform.toString());
         
         shieldDmg = fillNotOverLimit(shieldDmg, shieldDmgRegen * tpf, shieldDmgMax);
 

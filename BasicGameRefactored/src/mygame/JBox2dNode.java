@@ -1,12 +1,9 @@
 package mygame;
 
 import org.jbox2d.dynamics.Body;
-
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-
-import universe.Abs_ChunkNode;
 
 public class JBox2dNode extends Node {
 	protected Body physicsCenter;
@@ -25,6 +22,14 @@ public class JBox2dNode extends Node {
 	public Body getPhysicsCenter() {
 		return this.physicsCenter;
 	}
+        
+        public Vector3f getBodyPos() {
+            return bodyPos;
+        }
+        
+        public Quaternion getBodyAngle() {
+            return bodyAngle;
+        }
 	
 	public void update(float tpf) {
 		
