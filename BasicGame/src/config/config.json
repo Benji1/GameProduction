@@ -10,7 +10,7 @@
         "MaxStorage": 5
     },
     "Thruster": {
-        "ForceMagnitude": 200,
+        "ForceMagnitude": 500,
         "EnergyConsumptionPerSecond": 10,
         "TestLayeredConfig": {
             "EvenDeeperLayer": "MegaDeeeeeeep"
