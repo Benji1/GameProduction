@@ -36,7 +36,6 @@ public class Thruster extends InteractiveModule {
         Vec2 forceDirection = body.getWorldVector(orientation).mul(forceMagnitude);
         body.applyForce(forceDirection, body.getPosition());
     }
-<<<<<<< HEAD
    
     @Override
     public void update(float delta) {
@@ -44,16 +43,15 @@ public class Thruster extends InteractiveModule {
         if (!active) {
             this.body.setLinearDamping(linearDampingFactor);
         }
-=======
+    }
     
     @Override
-     protected void create3DBody() {
-         AssetManager a = ship.getApp().getAssetManager();
-         spatial = a.loadModel("3dmodels/thruster.obj");
-         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
-         Texture t = a.loadTexture("3dmodels/thruster_ao.png");
-         material.setTexture("DiffuseMap", t);
-         spatial.setMaterial(material);
->>>>>>> origin/mergeThaStuff
+    protected void create3DBody() {
+        AssetManager a = ship.getApp().getAssetManager();
+        spatial = a.loadModel("3dmodels/thruster.obj");
+        material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t = a.loadTexture("3dmodels/thruster_ao.png");
+        material.setTexture("DiffuseMap", t);
+        spatial.setMaterial(material);
     }
 }
