@@ -22,8 +22,8 @@
         </panel>
     </controlDefinition>
     <controlDefinition name="empty-slot">
-        <control name="custom-droppable" childLayout="center" id="$droppableId">
-            <panel backgroundImage="Interface/Images/PartFrames.png" imageMode="sprite:100,100,0" width="100" height="100"/>
+        <control name="custom-droppable" childLayout="center" id="$droppableId" width="100" height="100">
+            <panel backgroundImage="Interface/Images/PartFrames.png" imageMode="sprite:100,100,0" width="100%" height="100%"/>
         </control>
     </controlDefinition>
     <controlDefinition name="empty-panel">
