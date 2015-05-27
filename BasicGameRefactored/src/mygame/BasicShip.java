@@ -265,7 +265,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public void floodFill(int shipNumber, int[][] alreadyAdded, BasicModule[][] ms, Point start) {
         if (ms[start.x][start.y] != null && alreadyAdded[start.x][start.y] < shipNumber) {
 
-            ms[start.x][start.y] = modules[start.x][start.y];
             alreadyAdded[start.x][start.y] = shipNumber;
             if (start.x - 1 > 0) {
                 floodFill(shipNumber, alreadyAdded, ms, new Point(start.x - 1, start.y));
