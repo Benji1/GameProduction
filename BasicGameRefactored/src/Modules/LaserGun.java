@@ -4,7 +4,10 @@
  */
 package Modules;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.material.Material;
+import com.jme3.texture.Texture;
 import java.util.ArrayList;
 import mygame.BasicShip;
 import org.jbox2d.common.Vec2;
@@ -46,5 +49,15 @@ public class LaserGun extends Weapon {
     @Override
     public void update(float delta) {
     	super.update(delta);
+    }
+    
+    @Override
+    protected void create3DBody() {
+         AssetManager a = ship.getApp().getAssetManager();
+         spatial = a.loadModel("3dmodels/gun.obj");
+         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+         Texture t = a.loadTexture("3dmodels/gun_ao.png");
+         material.setTexture("DiffuseMap", t);
+         spatial.setMaterial(material);
     }
 }
