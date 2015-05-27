@@ -53,11 +53,14 @@ public class LaserGun extends Weapon {
     
     @Override
     protected void create3DBody() {
-         AssetManager a = ship.getApp().getAssetManager();
-         spatial = a.loadModel("3dmodels/gun.obj");
-         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
-         Texture t = a.loadTexture("3dmodels/gun_ao.png");
-         material.setTexture("DiffuseMap", t);
-         spatial.setMaterial(material);
+        super.create3DBody();
+        AssetManager a = ship.getApp().getAssetManager();
+        spatial = a.loadModel("3dmodels/gun.obj");
+        material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t = a.loadTexture("3dmodels/gun_ao.png");
+        material.setTexture("DiffuseMap", t);
+        spatial.setMaterial(material);
+
+        materialActive.setTexture("DiffuseMap", t);
     }
 }

@@ -62,9 +62,10 @@ public class EnergyGenerator extends BasicModule {
          spatial = a.loadModel("3dmodels/generator.obj");
          material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
          Texture t = a.loadTexture("3dmodels/generator_ao.png");
+         material.setBoolean("UseMaterialColors", true);
          material.setTexture("DiffuseMap", t);
          spatial.setMaterial(material);
-         
+
          Spatial spatial2 = a.loadModel("3dmodels/armor.obj");
          this.attachChild(spatial2);
          Material material2 = new Material(a, "Common/MatDefs/Light/Lighting.j3md");

@@ -65,15 +65,20 @@ public abstract class InteractiveModule extends BasicModule {
     @Override
     public void onPlaced(BasicShip ship) {
         super.onPlaced(ship);
-        materialActive = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-        materialActive.setBoolean("UseMaterialColors", true);
-        materialActive.setColor("Ambient", colorActive);
-        materialActive.setColor("Diffuse", colorActive);
 
         ship.interactiveModules.add(this);
 
         eGens = new ArrayList<EnergyGenerator>();
         addAlreadyExistingEgens();
+    }
+    
+    
+    @Override
+    protected void create3DBody() {
+        materialActive = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        materialActive.setBoolean("UseMaterialColors", true);
+        materialActive.setColor("Ambient", colorActive);
+        materialActive.setColor("Diffuse", colorActive);
     }
 
     @Override

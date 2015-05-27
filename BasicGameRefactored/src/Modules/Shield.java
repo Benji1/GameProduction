@@ -32,8 +32,8 @@ public class Shield extends InteractiveModule {
         color = ColorRGBA.Blue;
         colorActive = ColorRGBA.Cyan;
     }
-    
-    public ShieldCollider getShieldCollider  () {
+
+    public ShieldCollider getShieldCollider() {
         return sc;
     }
 
@@ -71,7 +71,7 @@ public class Shield extends InteractiveModule {
     @Override
     public void onRemove() {
         super.onRemove();
-        if(sc != null) {
+        if (sc != null) {
             sc.die();
             sc = null;
         }
@@ -87,21 +87,24 @@ public class Shield extends InteractiveModule {
     public void takeDamageOnShield(float amount) {
         this.shieldPower -= amount;
     }
-    
+
     @Override
     protected void create3DBody() {
-         AssetManager a = ship.getApp().getAssetManager();
-         spatial = a.loadModel("3dmodels/shield_generator.obj");
-         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
-         Texture t = a.loadTexture("3dmodels/shield_generator_ao.png");
-         material.setTexture("DiffuseMap", t);
-         spatial.setMaterial(material);
-         
-         Spatial spatial2 = a.loadModel("3dmodels/armor.obj");
-         this.attachChild(spatial2);
-         Material material2 = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
-         Texture t2 = a.loadTexture("3dmodels/armor_ao.png");
-         material2.setTexture("DiffuseMap", t2);
-         spatial2.setMaterial(material2);
+        super.create3DBody();
+        AssetManager a = ship.getApp().getAssetManager();
+        spatial = a.loadModel("3dmodels/shield_generator.obj");
+        material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t = a.loadTexture("3dmodels/shield_generator_ao.png");
+        material.setTexture("DiffuseMap", t);
+        spatial.setMaterial(material);
+
+        materialActive.setTexture("DiffuseMap", t);
+
+        Spatial spatial2 = a.loadModel("3dmodels/armor.obj");
+        this.attachChild(spatial2);
+        Material material2 = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t2 = a.loadTexture("3dmodels/armor_ao.png");
+        material2.setTexture("DiffuseMap", t2);
+        spatial2.setMaterial(material2);
     }
 }
