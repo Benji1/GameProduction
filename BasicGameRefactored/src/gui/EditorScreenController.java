@@ -23,6 +23,7 @@ import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseWheelEvent;
 import de.lessvoid.nifty.elements.render.ElementRenderer;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.tools.SizeValue;
@@ -235,6 +236,10 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 newDraggable.setParent(parent);
 
                 // TODO: counter-- of that module type in gui
+                TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter").getRenderer(TextRenderer.class);
+                int count = Integer.parseInt(textRenderer.getOriginalText().substring(1));
+                if (count > 0) --count;
+                textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
             } else {
                 String id2 = dragControl.getOriginalParent().getId();
                 //System.out.println(id2);
@@ -269,16 +274,20 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             }
         }
         SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
-        event.getDraggable().getElement().setConstraintWidth(sizeValue);
-        event.getDraggable().getElement().setConstraintHeight(sizeValue);
-        event.getDraggable().getElement().getElements().get(0).setConstraintWidth(new SizeValue("100%"));
-        event.getDraggable().getElement().getElements().get(0).setConstraintHeight(new SizeValue("100%"));
+        Element dragged = event.getDraggable().getElement();
+        dragged.setConstraintWidth(sizeValue);
+        dragged.setConstraintHeight(sizeValue);
+        dragged.getElements().get(0).setConstraintWidth(new SizeValue("100%"));
+        dragged.getElements().get(0).setConstraintHeight(new SizeValue("100%"));
     }
     
     @NiftyEventSubscriber(pattern="part-panel-.*") 
     public void onDragCanceled(String id, DraggableDragCanceledEvent event) {  
         event.getDraggable().getElement().markForRemoval();
         // TODO: ++ to counter of that module type in gui
+        /*TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(id.substring(11, id.lastIndexOf("-")))).toString() + "-counter").getRenderer(TextRenderer.class);
+        int count = Integer.parseInt(textRenderer.getOriginalText().substring(1)) + 1;
+        textRenderer.setText("x" + (count < 10 ? "0" : "") + count);*/
     }
     
     @NiftyEventSubscriber(pattern="slot-.*")
@@ -423,6 +432,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 partPanel.parameter("x", x+"px");
                 partPanel.parameter("y", y+"px");
                 partPanel.parameter("sprite", "sprite:100,100,"+tileImgIds[i]);
+                partPanel.parameter("counterId", ModuleType.getType(parentIds[i]).toString() + "-counter");
                 partPanel.build(nifty, screen, partsPanel);
             } else {
                 emptyPanel.parameter("x", x+"px");
