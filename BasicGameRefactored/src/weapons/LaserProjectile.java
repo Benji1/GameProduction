@@ -57,12 +57,12 @@ public class LaserProjectile extends Projectile implements ContactListener {
         app.getRootNode().attachChild(spatial);
         app.getRootNode().attachChild(this);
         
-        spatial.setLocalTranslation(0, 0, 0);
+        spatial.setLocalTranslation(new Vector3f(spawnPoint.x, 0, spawnPoint.y));
         this.setLocalTranslation(0, 0, 0);
-        //Quaternion q = new Quaternion();
+        Quaternion q = new Quaternion();
         
-        //q.fromAngleAxis(-(float) Math.atan2(fireDirection.y, fireDirection.x), new Vector3f(0f, 1f, 0f));
-        //this.setLocalRotation(q);
+        q.fromAngleAxis(-(float) Math.atan2(fireDirection.y, fireDirection.x), new Vector3f(0f, 1f, 0f));
+        spatial.setLocalRotation(q);
         //spatial.setLocalRotation(q);
 
         generatePhysicsBody(spawnPoint.x, spawnPoint.y);
@@ -115,7 +115,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
        
         //spatial.setLocalTranslation(0,0,0);
         //spatial.setLocalRotation(getBodyAngle());
-        //updateBoxPosition();
+        updateBoxPosition();
     }
 
     @Override

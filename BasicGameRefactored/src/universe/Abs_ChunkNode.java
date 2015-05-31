@@ -76,7 +76,7 @@ public abstract class Abs_ChunkNode extends Node {
      **********************************/
     
     public void update(float tpf) {
-    	this.posCurChunk.set(this.getLocalTranslation().x % (this.chunkX * Universe.CHUNK_SIZE / 2f), this.posCurChunk.y, this.getLocalTranslation().z % (this.chunkZ * Universe.CHUNK_SIZE / 2f));
+    	this.posCurChunk = new Vector3f(this.getLocalTranslation().x % (this.chunkX * Universe.CHUNK_SIZE / 2f), this.posCurChunk.y, this.getLocalTranslation().z % (this.chunkZ * Universe.CHUNK_SIZE / 2f));
     	this.recalcChunkPos();
     }
     

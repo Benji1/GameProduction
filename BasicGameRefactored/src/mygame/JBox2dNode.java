@@ -34,7 +34,7 @@ public class JBox2dNode extends Node {
 	public void update(float tpf) {
 		
 		// update pos
-     		this.bodyPos.set(
+     		this.bodyPos = new Vector3f(
                 (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).x, 
                 this.getLocalTranslation().y, 
                 (float)this.physicsCenter.getWorldPoint(this.physicsCenter.getLocalCenter()).y);
