@@ -112,6 +112,10 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         create3DBody();
         int x = ship.getActualPositionInGrid(this).x * 2;
         int y = ship.getActualPositionInGrid(this).y * 2;
+        if(ship != null && ship.cockpitPos != null){
+        		x += ship.cockpitPos.x;
+        		y += ship.cockpitPos.z;
+        }
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
         
         setPhysicsCenter(body);

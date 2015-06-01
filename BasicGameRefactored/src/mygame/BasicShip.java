@@ -8,8 +8,12 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
+
 import java.awt.Point;
 import java.util.ArrayList;
+
+import com.jme3.math.Vector3f;
+
 import services.ServiceManager;
 import services.editor.IShipChangedListener;
 import services.updater.IUpdateable;
@@ -28,6 +32,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
     public Cockpit cockpit;
+    public Vector3f cockpitPos;
     public int colliderType, collidingWith;
 
     public BasicShip(Main app, String name) {
@@ -297,6 +302,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     }
 
     public void onShipChanged(BasicModule[][] modulesNewShip) {
+        this.cockpitPos = this.cockpit.getBodyPos().clone();
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
                 if (modules[i][j] != null) {
