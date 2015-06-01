@@ -10,14 +10,11 @@ import ShipDesigns.TestShipDesigns;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
-import mygame.JBox2dNode;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -63,39 +60,13 @@ public class ShieldCollider extends Node implements ContactListener {
 
         spatial.setMaterial(material);
         generatePhysicsBody();
-        
-         
-//        Quaternion bodyAngle = new Quaternion();
-        // update rotation
-//        bodyAngle.fromAngleAxis(-this.body.getAngle(), new Vector3f(0f, 1f, 0f));
-//        this.setLocalRotation(bodyAngle);
-        
-        
-        s.getShip().getApp().getRootNode().attachChild(spatial);
-        s.getShip().getApp().getRootNode().attachChild(this);
-        
-        //this.setLocalTranslation(0,0,0);
-        spatial.setLocalTranslation(0, 0, 0);
-        System.out.println(s.getShip().getApp().getRootNode().getLocalTranslation());
-        System.out.println(spatial.getLocalTranslation());
-        //lockToShield();
+
+        this.attachChild(spatial);
+        s.attachChild(this);
+        lockToShield();
     }
 
     public void update(float tpf) {
-        //super.update(tpf);
-        
-//        Vector3f bodyPos = new Vector3f(
-//                (float) body.getWorldPoint(body.getLocalCenter()).x, 0.0f, (float) body.getWorldPoint(body.getLocalCenter()).y);
-//
-//        spatial.setLocalTranslation(bodyPos);
-//
-//        float angleRad = body.getAngle();
-//        Quaternion q = new Quaternion();
-//        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-//        spatial.setLocalRotation(q);
-
-        //System.out.println(this.localTransform.toString());
-        
         shieldDmg = fillNotOverLimit(shieldDmg, shieldDmgRegen * tpf, shieldDmgMax);
 
         ColorRGBA c = new ColorRGBA();
@@ -131,18 +102,13 @@ public class ShieldCollider extends Node implements ContactListener {
         circle.m_p.set(0, 0);
         circle.m_radius = shieldRadius;
 
-        //PolygonShape square = new PolygonShape();
-        //square.setAsBox(1, 1);
-
         FixtureDef fDef = new FixtureDef();
         fDef.shape = circle;
         fDef.density = 0.0f;
         fDef.friction = 0.0f;
         fDef.filter.categoryBits = TestShipDesigns.CATEGORY_SHIELD;
         fDef.filter.maskBits = TestShipDesigns.MASK_SHIELD;
-        //fDef.restitution = 0.5f;
-
-        // set body                        
+        
         BodyDef bDef = new BodyDef();
         bDef.position.set(s.getBody().getWorldCenter().x, s.getBody().getWorldCenter().y);
         bDef.type = BodyType.DYNAMIC;
@@ -151,8 +117,6 @@ public class ShieldCollider extends Node implements ContactListener {
         body.createFixture(fDef);
         body.setUserData(this);
         PhysicsWorld.world.setContactListener(this);
-        
-        //setPhysicsCenter(body);
     }
 
     private void lockToShield() {
