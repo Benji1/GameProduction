@@ -28,7 +28,6 @@ public class Storage extends BasicModule {
             itemsInStorage.add(item);
             return true;
         }
-
         return false;
     }
     

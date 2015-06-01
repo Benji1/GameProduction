@@ -63,11 +63,9 @@ public class LaserProjectile extends Projectile implements ContactListener {
         
         q.fromAngleAxis(-(float) Math.atan2(fireDirection.y, fireDirection.x), new Vector3f(0f, 1f, 0f));
         spatial.setLocalRotation(q);
-        //spatial.setLocalRotation(q);
 
         generatePhysicsBody(spawnPoint.x, spawnPoint.y);
         setPhysicsCenter(body);
-        
     }
 
     private void generatePhysicsBody(float x, float y) {
@@ -112,9 +110,6 @@ public class LaserProjectile extends Projectile implements ContactListener {
     @Override
     public void update(float delta) {
         super.update(delta);
-       
-        //spatial.setLocalTranslation(0,0,0);
-        //spatial.setLocalRotation(getBodyAngle());
         updateBoxPosition();
     }
 
@@ -122,10 +117,9 @@ public class LaserProjectile extends Projectile implements ContactListener {
     public void die() {
         super.die();
         //System.out.println("Should be dead now");
-        this.detachChild(spatial);
         app.bodiesToRemove.add(body);
-        //this.removeFromParent();
-
+        spatial.removeFromParent();
+        this.removeFromParent();
     }
 
     public void beginContact(Contact cntct) {

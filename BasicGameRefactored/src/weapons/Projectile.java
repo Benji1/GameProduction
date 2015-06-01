@@ -48,5 +48,4 @@ public abstract class Projectile extends JBox2dNode implements IUpdateable {
     protected void die() {
         ServiceManager.getUpdateableManager().removeUpdateable(this);
     }
-    
 }

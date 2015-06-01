@@ -55,9 +55,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
                 }
             }
         }
-        
-        //if(this.name.equals("PlayerShip"))
-        //	System.out.println(this.getLocalTranslation().toString() + " / " + this.physicsCenter.getPosition().toString());
     }
 
     public Main getApp() {

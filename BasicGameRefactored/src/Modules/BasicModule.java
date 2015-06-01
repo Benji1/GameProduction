@@ -6,10 +6,7 @@ package Modules;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import services.config.ConfigReader;
@@ -35,9 +32,6 @@ import services.ServiceManager;
  */
 public abstract class BasicModule extends JBox2dNode implements ContactListener {
 
-    // RIGIDBODY OBJECT (MASS, COLLIDER)
-    // GRAPHICAL STUFF
-    // DIRECTION THE BLOCK FACES
     ConfigReader cr = ServiceManager.getConfigReader();
     protected int maxHealth = cr.getFromMap(cr.getBaseMap("Basic"), "MaxHealth", int.class);
     protected int health = maxHealth;
@@ -117,22 +111,8 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         		y += ship.cockpitPos.z;
         }
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
-        
         setPhysicsCenter(body);
         
-        // position jme node
-//        Vector3f bodyPos = new Vector3f(
-//                (float)body.getWorldPoint(body.getLocalCenter()).x, 
-//                0.0f, 
-//                (float)body.getWorldPoint(body.getLocalCenter()).y);
-//
-//		this.setLocalTranslation(bodyPos);
-//		 
-//		float angleRad = body.getAngle();
-//		Quaternion q = new Quaternion();
-//		q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-//		this.setLocalRotation(q);
-        spatial.setLocalTranslation(0, 0, 0);
         this.attachChild(spatial);
         ship.attachChild(this);
         
@@ -176,9 +156,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         fDef.friction = 0.6f;
         fDef.filter.categoryBits = colliderType;
         fDef.filter.maskBits = collidingWith;
-        //fDef.restitution = 0.5f;
-        
-        // set body                        
+                             
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
@@ -199,9 +177,8 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
      public void destroyWithoutSeperation() {
         onRemove();
-        this.detachChild(spatial);
+        spatial.removeFromParent();
         ship.getApp().bodiesToRemove.add(body);
-        //ship.sperateInNewShips();
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 
