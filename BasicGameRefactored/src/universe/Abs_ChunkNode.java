@@ -1,7 +1,10 @@
 package universe;
 
+import netclient.GameProductionClient;
+
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+
 import mygame.Main;
 
 /**
@@ -24,7 +27,7 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CLASS FIELDS  *********
      **********************************/
 	
-    protected Main app;  				// the main game class
+    protected GameProductionClient app;  				// the main game class
     private ChunkNodeType type;		// the type of the Node
     private int chunkX;            	// the current chunkX
     private int chunkZ;            	// the current chunkZ
@@ -42,7 +45,7 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Abs_ChunkNode(Main app, String name, ChunkNodeType t, int chunkX, int chunkZ, Vector3f posInChunk) {
+    public Abs_ChunkNode(GameProductionClient app, String name, ChunkNodeType t, int chunkX, int chunkZ, Vector3f posInChunk) {
     	super(name);
     	
         this.app = app;
@@ -54,14 +57,14 @@ public abstract class Abs_ChunkNode extends Node {
         this.posCurChunk = new Vector3f(posInChunk.x % (Universe.CHUNK_SIZE / 2), posInChunk.y, posInChunk.z % (Universe.CHUNK_SIZE / 2));
         this.lastAbsPos = this.getLocalTranslation();
         
-        this.app.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
+        this.app.gameRunState.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
     }
     
-    public Abs_ChunkNode(Main app, String name, ChunkNodeType t, int chunkX, int chunkZ) {
+    public Abs_ChunkNode(GameProductionClient app, String name, ChunkNodeType t, int chunkX, int chunkZ) {
         this(app, name, t, chunkX, chunkZ, Vector3f.ZERO);
     }
     
-    public Abs_ChunkNode(Main app, String name, ChunkNodeType t) {
+    public Abs_ChunkNode(GameProductionClient app, String name, ChunkNodeType t) {
         this(app, name, t, 0, 0, Vector3f.ZERO);
     }
     
@@ -88,38 +91,38 @@ public abstract class Abs_ChunkNode extends Node {
             this.chunkX++;
             this.chunkXLast++;
             this.posCurChunk.x = -(Universe.CHUNK_SIZE / 2);
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         } else if(this.posCurChunk.x < -(Universe.CHUNK_SIZE / 2)) {
             this.chunkX--;
             this.chunkXLast--;
             this.posCurChunk.x = Universe.CHUNK_SIZE / 2;
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         }
         
         if(this.posCurChunk.z > Universe.CHUNK_SIZE / 2) {
             this.chunkZ++;
             this.chunkZLast++;
             this.posCurChunk.z = -(Universe.CHUNK_SIZE / 2);
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         } else if(this.posCurChunk.z < -(Universe.CHUNK_SIZE / 2)) {
             this.chunkZ--;
             this.chunkZLast--;
             this.posCurChunk.z = Universe.CHUNK_SIZE / 2;
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         }
         
-        this.app.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
+        this.app.gameRunState.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
         
         // check universe if we discovered a new chunk
         if(this.discoveredNewChunk(this.chunkX, this.chunkZ))
-            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "Discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
     }
     
     private boolean discoveredNewChunk(int chunkX, int chunkZ) {
-        if(this.app.getUniverse().getChunk(chunkX, chunkZ).visited == true)
+        if(this.app.gameRunState.getUniverse().getChunk(chunkX, chunkZ).visited == true)
             return false;
         
-        this.app.getUniverse().getChunk(chunkX, chunkZ).visited = true;
+        this.app.gameRunState.getUniverse().getChunk(chunkX, chunkZ).visited = true;
         return true;
     }
     

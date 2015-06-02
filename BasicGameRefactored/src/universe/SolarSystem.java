@@ -1,5 +1,6 @@
 package universe;
 
+import netclient.GameProductionClient;
 import mygame.Main;
 import universe.Abs_ChunkNode.ChunkNodeType;
 
@@ -12,7 +13,7 @@ public class SolarSystem extends Abs_ChunkNode {
 	public float timescale = 100f;
 	public float sizescale = 1f;
 	
-	public SolarSystem(Main app){
+	public SolarSystem(GameProductionClient app){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
 		this.init();
 	}

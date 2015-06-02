@@ -5,10 +5,14 @@
 package weapons;
 
 import com.jme3.scene.Node;
+
 import mygame.JBox2dNode;
 import mygame.Main;
+import netclient.GameProductionClient;
 import services.updater.IUpdateable;
+
 import org.jbox2d.common.Vec2;
+
 import services.ServiceManager;
 import services.config.ConfigReader;
 
@@ -18,12 +22,12 @@ public abstract class Projectile extends JBox2dNode implements IUpdateable {
     protected float lifetime;       // in seconds
     protected float lifetimeCounter;
     
-    protected Main app;
+    protected GameProductionClient app;
     protected Vec2 direction;
     
     ConfigReader cr = ServiceManager.getConfigReader();
     
-    public Projectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
+    public Projectile(Vec2 spawnPoint, Vec2 fireDirection, GameProductionClient app) {
         super();
         this.app = app;
         this.direction = fireDirection;

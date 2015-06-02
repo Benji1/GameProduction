@@ -1,6 +1,8 @@
 package universe;
 
+import netclient.GameProductionClient;
 import mygame.Main;
+
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
@@ -18,9 +20,9 @@ public class Background {
     private Geometry parallaxTopLeft2;
     private Geometry parallaxBottomRight2;
     private Geometry parallaxBottomLeft2;
-    private Main app;
+    private GameProductionClient app;
     
-    public Background(Main app){
+    public Background(GameProductionClient app){
     	this.app = app;
     }
     
@@ -67,16 +69,16 @@ public class Background {
 		parallaxTopLeft2.setMaterial(pMat2);
 		parallaxBottomRight2.setMaterial(pMat2);
 		parallaxBottomLeft2.setMaterial(pMat2);
-		//app.camNode.attachChild(bgm);
-		app.getRootNode().attachChild(background);
-		app.getRootNode().attachChild(parallaxTopRight);
-		app.getRootNode().attachChild(parallaxBottomRight);
-		app.getRootNode().attachChild(parallaxBottomLeft);
-		app.getRootNode().attachChild(parallaxTopLeft);
-		app.getRootNode().attachChild(parallaxTopRight2);
-		app.getRootNode().attachChild(parallaxBottomRight2);
-		app.getRootNode().attachChild(parallaxBottomLeft2);
-		app.getRootNode().attachChild(parallaxTopLeft2);
+		//app.gameRunState.camNode.attachChild(bgm);
+		app.gameRunState.localRootNode.attachChild(background);
+		app.gameRunState.localRootNode.attachChild(parallaxTopRight);
+		app.gameRunState.localRootNode.attachChild(parallaxBottomRight);
+		app.gameRunState.localRootNode.attachChild(parallaxBottomLeft);
+		app.gameRunState.localRootNode.attachChild(parallaxTopLeft);
+		app.gameRunState.localRootNode.attachChild(parallaxTopRight2);
+		app.gameRunState.localRootNode.attachChild(parallaxBottomRight2);
+		app.gameRunState.localRootNode.attachChild(parallaxBottomLeft2);
+		app.gameRunState.localRootNode.attachChild(parallaxTopLeft2);
 		background.rotate((float) Math.PI *1.5f, 0, 0);
 		parallaxTopRight.rotate((float) Math.PI *1.5f, 0, 0);
 		parallaxTopLeft.rotate((float) Math.PI *1.5f, 0, 0);
@@ -93,15 +95,15 @@ public class Background {
     public void updateBackground(){
     	float scrolling = 10f;
     	float scrollingf = 20f;
-    	background.setLocalTranslation(app.camNode.getWorldTranslation().x-150, -50, app.camNode.getWorldTranslation().z+150);
-    	parallaxTopRight.setLocalTranslation(   app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrolling)%600+600)%600 +150, -48, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrolling)+300)%600+600)%600+450);
-    	parallaxTopLeft.setLocalTranslation(    app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrolling-300)%600+600)%600 +150, -48, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrolling)+300)%600+600)%600+450);
-    	parallaxBottomRight.setLocalTranslation(app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrolling)%600+600)%600 +150, -48, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrolling))%600+600)%600+450);
-    	parallaxBottomLeft.setLocalTranslation( app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrolling-300)%600+600)%600 +150, -48, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrolling))%600+600)%600+450);
-    	parallaxTopRight2.setLocalTranslation(app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrollingf)%600+600)%600 +150, -49, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrollingf)+300)%600+600)%600+450);
-    	parallaxTopLeft2.setLocalTranslation(app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrollingf)+300)%600+600)%600+450);
-    	parallaxBottomRight2.setLocalTranslation(app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrollingf)%600+600)%600 +150, -49, app.camNode.getWorldTranslation().z - (((app.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
-    	parallaxBottomLeft2.setLocalTranslation(app.camNode.getWorldTranslation().x - ((app.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, app.camNode.getWorldTranslation().z -  (((app.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
+    	background.setLocalTranslation(app.gameRunState.camNode.getWorldTranslation().x-150, -50, app.gameRunState.camNode.getWorldTranslation().z+150);
+    	parallaxTopRight.setLocalTranslation(   app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrolling)%600+600)%600 +150, -48, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrolling)+300)%600+600)%600+450);
+    	parallaxTopLeft.setLocalTranslation(    app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrolling-300)%600+600)%600 +150, -48, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrolling)+300)%600+600)%600+450);
+    	parallaxBottomRight.setLocalTranslation(app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrolling)%600+600)%600 +150, -48, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrolling))%600+600)%600+450);
+    	parallaxBottomLeft.setLocalTranslation( app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrolling-300)%600+600)%600 +150, -48, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrolling))%600+600)%600+450);
+    	parallaxTopRight2.setLocalTranslation(app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrollingf)%600+600)%600 +150, -49, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrollingf)+300)%600+600)%600+450);
+    	parallaxTopLeft2.setLocalTranslation(app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrollingf)+300)%600+600)%600+450);
+    	parallaxBottomRight2.setLocalTranslation(app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrollingf)%600+600)%600 +150, -49, app.gameRunState.camNode.getWorldTranslation().z - (((app.gameRunState.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
+    	parallaxBottomLeft2.setLocalTranslation(app.gameRunState.camNode.getWorldTranslation().x - ((app.gameRunState.camNode.getWorldTranslation().x/scrollingf-300)%600+600)%600 +150, -49, app.gameRunState.camNode.getWorldTranslation().z -  (((app.gameRunState.camNode.getWorldTranslation().z/scrollingf))%600+600)%600+450);
    
     }
 }

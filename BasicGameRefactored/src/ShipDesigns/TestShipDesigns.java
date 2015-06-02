@@ -12,8 +12,11 @@ import Modules.LaserGun;
 import Modules.Shield;
 import Modules.Thruster;
 import Modules.WeakThruster;
+
 import java.awt.Point;
 import java.util.ArrayList;
+
+import netclient.GameProductionClient;
 import mygame.BasicShip;
 import mygame.Main;
 
@@ -22,7 +25,7 @@ import mygame.Main;
  * @author 1337
  */
 public class TestShipDesigns {
-    Main main;
+	GameProductionClient main;
     
     ArrayList<String> fwd;
     ArrayList<String> fwdAndLeft;
@@ -54,7 +57,7 @@ public class TestShipDesigns {
     public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
     public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
     
-    public TestShipDesigns(Main main) {
+    public TestShipDesigns(GameProductionClient main) {
         this.main = main;
         
         fwd = new ArrayList<String>();

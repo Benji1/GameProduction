@@ -12,7 +12,7 @@ import de.lessvoid.nifty.screen.ScreenController;
  *
  * @author Moritz
  */
-public class StartScreenController implements ScreenController
+public class EmptyScreenController implements ScreenController
 {
     Nifty nifty;
     

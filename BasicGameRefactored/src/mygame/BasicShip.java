@@ -12,6 +12,8 @@ import Modules.Storage;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import netclient.GameProductionClient;
+
 import com.jme3.math.Vector3f;
 
 import services.ServiceManager;
@@ -35,10 +37,10 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
 
-    public BasicShip(Main app, String name) {
+    public BasicShip(GameProductionClient app, String name) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
-        app.getRootNode().attachChild(this);
-        app.ships.add(this);
+        app.gameRunState.localRootNode.attachChild(this);
+        app.gameRunState.ships.add(this);
 
         this.shipId = idCounter++;
         ServiceManager.getEditorManager().registerAsShipChangedListener(this);
@@ -57,7 +59,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         }
     }
 
-    public Main getApp() {
+    public GameProductionClient getApp() {
         return this.app;
     }
 

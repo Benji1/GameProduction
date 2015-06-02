@@ -4,7 +4,10 @@
  */
 package gui;
 
+import netclient.GameProductionClient;
+
 import com.jme3.niftygui.NiftyJmeDisplay;
+
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import mygame.Main;
@@ -12,12 +15,14 @@ import mygame.Main;
 public class GUI {
     
     private Nifty nifty;
-    private Main app;
+    private GameProductionClient app;
     
     private Screen editorScreen;
     private Screen startScreen;
+    private Screen emptyScreen;
+    private Screen exitOverlayScreen;
     
-    public GUI(Main app) {
+    public GUI(GameProductionClient app) {
         this.app = app;
         initNifty();
     }
@@ -28,28 +33,36 @@ public class GUI {
         nifty = niftyDisplay.getNifty();
         app.getGuiViewPort().addProcessor(niftyDisplay);
         app.getFlyByCamera().setDragToRotate(true);
+        
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadStyleFile("Interface/CustomStyles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
         nifty.loadControlFile("Interface/DragAndDrop.xml");
         nifty.loadControlFile("Interface/CustomControls.xml");
+        nifty.fromXml("Interface/StartScreen.xml", "start", this.app.mainMenuState, this.app.gameRunState);
+        nifty.addXml("Interface/ExitOverlayScreen.xml");
         nifty.addXml("Interface/EditorScreen.xml");
-        nifty.addXml("Interface/StartScreen.xml");
+        nifty.addXml("Interface/EmptyScreen.xml");        
         
         editorScreen = nifty.getScreen("editor");
+        emptyScreen = nifty.getScreen("empty");
         startScreen = nifty.getScreen("start");
-        
-        goToStartScreen();
+        exitOverlayScreen = nifty.getScreen("exitOverlay");
     }
     
     public String getCurrentScreenId() {
         return nifty.getCurrentScreen().getScreenId();
     }
-    
     public void goToStartScreen() {
         nifty.gotoScreen(startScreen.getScreenId());
     }
     public void goToEditorScreen() {
         nifty.gotoScreen(editorScreen.getScreenId());
-    }    
+    }   
+    public void goToEmptyScreen() {
+    	nifty.gotoScreen(emptyScreen.getScreenId());
+    }
+    public void goToExitOverlayScreen() {
+    	nifty.gotoScreen(exitOverlayScreen.getScreenId());
+    }
 }

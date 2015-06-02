@@ -3,7 +3,10 @@ package universe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import netclient.GameProductionClient;
 import universe.Abs_ChunkNode.ChunkNodeType;
+
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
@@ -11,6 +14,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+
 import mygame.Main;
 
 /**
@@ -32,7 +36,7 @@ public class Universe {
      ********** CLASS FIELDS  *********
      **********************************/
     
-    private Main app;
+    private GameProductionClient app;
     
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
@@ -49,7 +53,7 @@ public class Universe {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Universe(Main app) {
+    public Universe(GameProductionClient app) {
         this.app = app;
         
         this.universeChunks = new UniverseChunk[UNIVERSE_SIZE][UNIVERSE_SIZE];
@@ -120,7 +124,7 @@ public class Universe {
     		s.update(tpf);
         
     	if(this.isDebug)
-    		this.app.textShipPos.setText("PosChunk: " + this.app.playersShip.getChunkX() + "/" + this.app.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.playersShip.getWorldTranslation().toString());
+    		this.app.gameRunState.textShipPos.setText("PosChunk: " + this.app.gameRunState.playersShip.getChunkX() + "/" + this.app.gameRunState.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.gameRunState.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.gameRunState.playersShip.getWorldTranslation().toString());
     }
     
     public void changedChunkForEntity(Abs_ChunkNode n, int movedX, int movedZ) {
@@ -151,8 +155,8 @@ public class Universe {
     	this.isDebug = !this.isDebug;
     	
     	if(this.isDebug)
-    		this.app.getRootNode().attachChild(this.debugBoxes);
+    		this.app.gameRunState.localRootNode.attachChild(this.debugBoxes);
     	else
-    		this.app.getRootNode().detachChild(this.debugBoxes);
+    		this.app.gameRunState.localRootNode.detachChild(this.debugBoxes);
     }
 }

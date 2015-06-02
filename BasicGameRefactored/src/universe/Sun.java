@@ -1,7 +1,9 @@
 package universe;
 
+import netclient.GameProductionClient;
 import universe.Abs_ChunkNode.ChunkNodeType;
 import mygame.Main;
+
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -16,7 +18,7 @@ public class Sun extends Abs_ChunkNode {
         public float radius;
 	SolarSystem system;
         
-	public Sun(Main app, SolarSystem parent){
+	public Sun(GameProductionClient app, SolarSystem parent){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
 		this.system = parent;
 		this.init();
@@ -39,7 +41,7 @@ public class Sun extends Abs_ChunkNode {
 		light.setColor((new ColorRGBA(1f, 0.9f,0.6f,0f)).mult(3f));
 		light.setRadius(radius*100);
 		light.setPosition(this.getWorldTranslation());
-		app.getRootNode().addLight(light);
+		app.gameRunState.localRootNode.addLight(light);
 	}
 	
 	public void update(float tpf){

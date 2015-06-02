@@ -1,9 +1,26 @@
-package mygame;
+package states;
 
+import java.util.ArrayList;
+
+import netclient.GameProductionClient;
+
+import org.jbox2d.dynamics.Body;
+
+import gui.GUI;
 import services.ServiceManager;
+import services.updater.UpdateableManager;
+import universe.Background;
+import universe.Universe;
+import universe.UniverseGenerator;
+import mygame.BasicShip;
+import mygame.Main;
+import mygame.PhysicsWorld;
 import ShipDesigns.TestShipDesigns;
+
+import com.jme3.app.Application;
 import com.jme3.app.FlyCamAppState;
-import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -12,29 +29,23 @@ import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
-import com.jme3.system.AppSettings;
-import gui.GUI;
-import java.util.ArrayList;
-import org.jbox2d.dynamics.Body;
-import services.updater.UpdateableManager;
-import universe.Background;
-import universe.Universe;
-import universe.UniverseGenerator;
 
-/**
- * test
- *
- * @author normenhansen
- */
-public class Main extends SimpleApplication implements ActionListener {
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 
-    public CameraNode camNode;
+public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController {
+	private GameProductionClient app;
+	public Node localRootNode;
+	
+	public CameraNode camNode;
     private Universe u;
     private Background background;
     public BitmapText textShipPos;
@@ -43,46 +54,23 @@ public class Main extends SimpleApplication implements ActionListener {
     protected float shipRotation = 1.5f;
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
-    private GUI gui;
+
     public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
     public BasicShip targetShip;
-    
+	
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     
-    public static void main(String[] args) {
-        AppSettings settings = new AppSettings(true);
-        settings.setFrameRate(60);
-        settings.setTitle("GameProduction Project");
-        settings.setResolution(1600, 900);
-        settings.setVSync(true);
-        settings.setBitsPerPixel(24);
-        settings.setSamples(16);
-
-        Main app = new Main();
-        app.setSettings(settings);
-        app.setShowSettings(false);
-
-        app.start();
-    }
-
-    @Override
-    public void simpleInitApp() {
-        this.initWorld();
-        this.initShip();
-        this.initLight();
-        this.initKeys();
-        this.initHUD();
-        this.initCamera();
-        this.background = new Background(this);
-        this.background.initBackground();
-        this.gui = new GUI(this);
-    }
+    public GameRunningState() {}
+    
+	public GameRunningState(GameProductionClient app) {
+		this.app = app;
+	}
 
     private void initShip() {
-        TestShipDesigns tsd = new TestShipDesigns(this);
+        TestShipDesigns tsd = new TestShipDesigns(this.app);
         playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
@@ -93,7 +81,7 @@ public class Main extends SimpleApplication implements ActionListener {
         
         Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
-        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        material = new Material(this.app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 
         ColorRGBA color = ColorRGBA.Blue;
         material.setBoolean("UseMaterialColors", true);
@@ -101,20 +89,17 @@ public class Main extends SimpleApplication implements ActionListener {
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
-        this.rootNode.attachChild(spatial);
+        this.localRootNode.attachChild(spatial);
         
-        System.out.println(this.rootNode.getLocalTranslation());
+        System.out.println(this.localRootNode.getLocalTranslation());
         System.out.println(spatial.getLocalTranslation());
     }
 
     private void initCamera() {
-        flyCam.setEnabled(false);
-        stateManager.detach(stateManager.getState(FlyCamAppState.class));
-
-        camNode = new CameraNode("Camera Node", viewPort.getCamera());
+        camNode = new CameraNode("Camera Node", this.app.getViewPort().getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        this.rootNode.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1600f), this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
+        this.localRootNode.attachChild(camNode);
+        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
         
             if(this.playersShip.cockpit != null) {
                 camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
@@ -122,42 +107,43 @@ public class Main extends SimpleApplication implements ActionListener {
        }
 
     private void initKeys() {
-        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
-        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
-        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
-        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
-        inputManager.addMapping("Weapon", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Shield", new KeyTrigger(KeyInput.KEY_F));
-        inputManager.addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
-        inputManager.addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
+        this.app.getInputManager().addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
+        this.app.getInputManager().addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
+        this.app.getInputManager().addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
+        this.app.getInputManager().addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
+        this.app.getInputManager().addMapping("Weapon", new KeyTrigger(KeyInput.KEY_SPACE));
+        this.app.getInputManager().addMapping("Shield", new KeyTrigger(KeyInput.KEY_F));
+        this.app.getInputManager().addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
+        this.app.getInputManager().addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
+        this.app.getInputManager().addMapping("ExitOverlay", new KeyTrigger(KeyInput.KEY_ESCAPE));
 
-        inputManager.addListener(this, "Up", "Left", "Right", "Down", "Weapon", "Shield", "ToggleUniverseDebug", "ToggleEditor");
+        this.app.getInputManager().addListener(this, "Up", "Left", "Right", "Down", "Weapon", "Shield", "ToggleUniverseDebug", "ToggleEditor", "ExitOverlay");
     }
 
     private void initHUD() {
-        this.textShipPos = new BitmapText(guiFont, false);
-        this.textShipPos.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        this.textShipPos = new BitmapText(this.app.defaultFont, false);
+        this.textShipPos.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
         this.textShipPos.setColor(ColorRGBA.Green);                             // font color
         this.textShipPos.setText("POS");             // the text
-        this.textShipPos.setLocalTranslation(0, this.settings.getHeight(), 0); // position
+        this.textShipPos.setLocalTranslation(0, this.app.settings.getHeight(), 0); // position
 
-        this.textNewChunk = new BitmapText(guiFont, false);
-        this.textNewChunk.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        this.textNewChunk = new BitmapText(this.app.defaultFont, false);
+        this.textNewChunk.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
         this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
         this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
-        this.textNewChunk.setLocalTranslation(this.settings.getWidth() - 250, this.settings.getHeight(), 0); // position
+        this.textNewChunk.setLocalTranslation(this.app.settings.getWidth() - 250, this.app.settings.getHeight(), 0); // position
     }
 
     private void initWorld() {
-        this.u = new Universe(this);
+        this.u = new Universe(this.app);
         
-        UniverseGenerator.debugSystem(this, u);
+        UniverseGenerator.debugSystem(this.app, u);
     }
 
     private void initLight() {
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White.mult(1f));
-        rootNode.addLight(ambient);
+        this.localRootNode.addLight(ambient);
     }
 
     boolean up = false, down = false;
@@ -232,39 +218,50 @@ public class Main extends SimpleApplication implements ActionListener {
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
-                if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
-                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
+                if (camNode.getLocalTranslation().y == 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f)) {
+                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.app.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
-                    guiNode.attachChild(this.textShipPos);
-                    guiNode.attachChild(this.textNewChunk);
+                    this.app.getGuiNode().attachChild(this.textShipPos);
+                    this.app.getGuiNode().attachChild(this.textNewChunk);
                 } else {
-                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
+                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
-                    guiNode.detachChild(this.textShipPos);
-                    guiNode.detachChild(this.textNewChunk);
+                    this.app.getGuiNode().detachChild(this.textShipPos);
+                    this.app.getGuiNode().detachChild(this.textNewChunk);
                 }
             }
         }
 
         if (name.equals("ToggleEditor") && !keyPressed) {
-            if (!gui.getCurrentScreenId().equals("editor")) {
-                gui.goToEditorScreen();
+            if (!this.app.gui.getCurrentScreenId().equals("editor")) {
+                this.app.gui.goToEditorScreen();
+                this.app.getInputManager().setCursorVisible(true);
             } else {
-                gui.goToStartScreen();
+                this.app.gui.goToEmptyScreen();
+                this.app.getInputManager().setCursorVisible(false);
+            }
+        }
+        
+        if(name.equals("ExitOverlay") && !keyPressed) {
+        	if (!this.app.gui.getCurrentScreenId().equals("exitOverlay")) {
+                this.app.gui.goToExitOverlayScreen();
+                this.app.getInputManager().setCursorVisible(true);
+            } else {
+                this.app.gui.goToEmptyScreen();
+                this.app.getInputManager().setCursorVisible(false);
             }
         }
     }
     
-    @Override
-    public void simpleUpdate(float delta) {
-        
-        
-        Spatial spatial;
+	
+	@Override
+	public void update(float tpf) {
+		Spatial spatial;
         Material material;    
         
         Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
-        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        material = new Material(this.app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 
         ColorRGBA color = ColorRGBA.Blue;
         material.setBoolean("UseMaterialColors", true);
@@ -272,17 +269,17 @@ public class Main extends SimpleApplication implements ActionListener {
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
-        this.rootNode.attachChild(spatial);
+        this.localRootNode.attachChild(spatial);
         
         
-        phyicsUpdate(delta);
+        phyicsUpdate(tpf);
         
         
          for (BasicShip s : ships) {
-            s.update(delta);
+            s.update(tpf);
         }
         //System.out.println(ships.size());
-        updateableManager.update(delta);
+        updateableManager.update(tpf);
         
         
         
@@ -293,7 +290,7 @@ public class Main extends SimpleApplication implements ActionListener {
         bodiesToRemove.clear();
 
        
-        this.u.update(delta);
+        this.u.update(tpf);
         this.background.updateBackground();
         // update camera position
         
@@ -301,13 +298,37 @@ public class Main extends SimpleApplication implements ActionListener {
             camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
             camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
         }
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
-    }
-
+	}
+	
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
+		super.initialize(stateManager, app);
+		
+		this.localRootNode = new Node("GameRunningNode");
+		
+		this.initWorld();
+        this.initShip();
+        this.initLight();
+        this.initKeys();
+        this.initHUD();
+        this.initCamera();
+        this.background = new Background(this.app);
+        this.background.initBackground();
+        
+        this.app.getRootNode().attachChild(this.localRootNode);
+        
+        this.app.gui.goToEmptyScreen();
+        this.app.getInputManager().setCursorVisible(false);
+	}
+	
+	@Override
+	public void cleanup() {
+		super.cleanup();
+		
+		this.app.getInputManager().clearMappings();
+		this.app.getRootNode().detachChild(this.localRootNode);
+	}
+	
     public Universe getUniverse() {
         return this.u;
     }
@@ -315,4 +336,25 @@ public class Main extends SimpleApplication implements ActionListener {
     public void phyicsUpdate(float delta) {
         PhysicsWorld.world.step(delta, 8, 8);
     }
+
+    /**
+     * Nifty Stuff
+     */
+    
+	@Override
+	public void bind(Nifty arg0, Screen arg1) {
+	}
+
+	@Override
+	public void onEndScreen() {
+	}
+
+	@Override
+	public void onStartScreen() {
+	}
+	
+	public void pressLogOut() {
+		this.app.getStateManager().detach(this.app.gameRunState);
+		this.app.getStateManager().attach(this.app.mainMenuState);
+	}
 }
