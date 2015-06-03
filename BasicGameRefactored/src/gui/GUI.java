@@ -10,7 +10,6 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
-import mygame.Main;
 
 public class GUI {
     

@@ -1,8 +1,6 @@
 package universe;
 
 import netclient.GameProductionClient;
-import mygame.Main;
-
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;

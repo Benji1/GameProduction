@@ -13,7 +13,6 @@ import universe.Background;
 import universe.Universe;
 import universe.UniverseGenerator;
 import mygame.BasicShip;
-import mygame.Main;
 import mygame.PhysicsWorld;
 import ShipDesigns.TestShipDesigns;
 

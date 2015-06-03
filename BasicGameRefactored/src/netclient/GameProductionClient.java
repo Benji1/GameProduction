@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import states.GameRunningState;
 import states.MainMenuState;
-import mygame.Main;
 import netserver.GameProductionServer;
 import netmsg.NetUtil;
 import netmsg.NetUtil.*;

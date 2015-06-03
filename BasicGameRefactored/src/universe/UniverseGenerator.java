@@ -1,7 +1,6 @@
 package universe;
 
 import netclient.GameProductionClient;
-import mygame.Main;
 
 public class UniverseGenerator {
 	private static int[] size = {3,3};

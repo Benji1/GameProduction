@@ -2,8 +2,6 @@ package universe;
 
 import netclient.GameProductionClient;
 import universe.Abs_ChunkNode.ChunkNodeType;
-import mygame.Main;
-
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;

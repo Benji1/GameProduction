@@ -9,8 +9,6 @@ import java.util.logging.Logger;
 import netclient.GameProductionClient;
 import netmsg.NetUtil;
 import netserver.GameProductionServer;
-import mygame.Main;
-
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;

@@ -7,7 +7,6 @@ package weapons;
 import com.jme3.scene.Node;
 
 import mygame.JBox2dNode;
-import mygame.Main;
 import netclient.GameProductionClient;
 import services.updater.IUpdateable;
 

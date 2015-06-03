@@ -1,7 +1,6 @@
 package universe;
 
 import netclient.GameProductionClient;
-import mygame.Main;
 import universe.Abs_ChunkNode.ChunkNodeType;
 
 public class SolarSystem extends Abs_ChunkNode {

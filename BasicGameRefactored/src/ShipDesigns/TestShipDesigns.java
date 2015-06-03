@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import netclient.GameProductionClient;
 import mygame.BasicShip;
-import mygame.Main;
 
 /**
  *
