@@ -8,6 +8,7 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
+import gui.ModuleType;
 import java.awt.Point;
 import java.util.ArrayList;
 import services.ServiceManager;
@@ -161,7 +162,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         // TODO: player returns to base
     }
 
-    public void collectItem(Item item) {
+    public void collectItem(ModuleType item) {
         // check for available item storage
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {

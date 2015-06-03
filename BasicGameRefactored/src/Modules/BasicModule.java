@@ -34,9 +34,6 @@ import services.ServiceManager;
  */
 public abstract class BasicModule extends Node implements ContactListener {
 
-    // RIGIDBODY OBJECT (MASS, COLLIDER)
-    // GRAPHICAL STUFF
-    // DIRECTION THE BLOCK FACES
     ConfigReader cr = ServiceManager.getConfigReader();
     protected int maxHealth = cr.getFromMap(cr.getBaseMap("Basic"), "MaxHealth", int.class);
     protected int health = maxHealth;
@@ -153,9 +150,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         fDef.friction = 0.6f;
         fDef.filter.categoryBits = colliderType;
         fDef.filter.maskBits = collidingWith;
-        //fDef.restitution = 0.5f;
-        
-        // set body                        
+                      
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
