@@ -41,7 +41,7 @@ public class LaserGun extends Weapon {
     @Override
     public void onPlaced (BasicShip ship) {
         super.onPlaced(ship);
-        fire_sound = new AudioNode(ship.getApp().getAssetManager(), "Sound/Effects/LaserProjectile.ogg", false);
+        fire_sound = new AudioNode(ship.getApp().getAssetManager(), "Sound/Effects/lasershot2.ogg", false);
         fire_sound.setPositional(false);
         fire_sound.setLooping(false);
         fire_sound.setVolume(1);
