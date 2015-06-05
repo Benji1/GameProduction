@@ -52,6 +52,12 @@ public class Main extends SimpleApplication implements ActionListener {
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     
+    private float cameraHeight = 0f;
+    float camXOffset = -20f; // Camera X
+    float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
+    float camYOffset = 50f;  // Camera height
+    boolean universeDebug = false;
+    
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(60);
@@ -114,12 +120,12 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, 70 * (this.viewPort.getCamera().getWidth() / 1600f), this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
         
-            if(this.playersShip.cockpit != null) {
-                camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
-            }
-       }
+        cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
+        if(this.playersShip.cockpit != null) {
+            UpdateCamPos();
+        }
+    }
 
     private void initKeys() {
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
@@ -232,8 +238,10 @@ public class Main extends SimpleApplication implements ActionListener {
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
-                if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
-                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
+                // if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
+                if (universeDebug) {
+                    universeDebug = false;
+                    //camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
                     guiNode.attachChild(this.textShipPos);
                     guiNode.attachChild(this.textNewChunk);
@@ -242,6 +250,7 @@ public class Main extends SimpleApplication implements ActionListener {
                     //this.u.toggleUniverseDebug();
                     guiNode.detachChild(this.textShipPos);
                     guiNode.detachChild(this.textNewChunk);
+                    universeDebug = true;
                 }
             }
         }
@@ -297,9 +306,8 @@ public class Main extends SimpleApplication implements ActionListener {
         this.background.updateBackground();
         // update camera position
         
-        if(this.playersShip != null && this.playersShip.cockpit != null) {
-            camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
-            camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
+        if(this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
+            UpdateCamPos();
         }
     }
 
@@ -314,5 +322,17 @@ public class Main extends SimpleApplication implements ActionListener {
  
     public void phyicsUpdate(float delta) {
         PhysicsWorld.world.step(delta, 8, 8);
+    }
+    
+    public void UpdateCamPos()
+    {
+        camNode.setLocalTranslation(
+                    this.playersShip.cockpit.getLocalTranslation().x + camXOffset,
+                    this.cameraHeight, 
+                    this.playersShip.cockpit.getLocalTranslation().z + camZOffset
+                );
+        
+        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
+
     }
 }
