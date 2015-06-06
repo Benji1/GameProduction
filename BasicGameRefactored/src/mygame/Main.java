@@ -55,7 +55,7 @@ public class Main extends SimpleApplication implements ActionListener {
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
-    float camYOffset = 50f;  // Camera height
+    float camYOffset = 30f;  // Camera height
     boolean universeDebug = false;
     
     public static void main(String[] args) {
@@ -324,15 +324,54 @@ public class Main extends SimpleApplication implements ActionListener {
         PhysicsWorld.world.step(delta, 8, 8);
     }
     
+    Vector3f previousCamPos;
+    Vector3f currentCamPos = new Vector3f();
+    float camPosChangeLerpValue = 0.07f;
     public void UpdateCamPos()
     {
-        camNode.setLocalTranslation(
-                    this.playersShip.cockpit.getLocalTranslation().x + camXOffset,
-                    this.cameraHeight, 
-                    this.playersShip.cockpit.getLocalTranslation().z + camZOffset
+        previousCamPos = currentCamPos;
+        currentCamPos = new Vector3f();
+        
+        float min = 0.1f; 
+        float max = 100f;
+        float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
+
+        speedFactor = Math.max(min, speedFactor);
+        speedFactor = Math.min(speedFactor, max);
+        float t = inverseLerp(0f, max+min, speedFactor);
+        float offsetFactor = 1f - t;
+
+        currentCamPos.x = 
+                lerp(
+                    previousCamPos.x,
+                    this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor,
+                    camPosChangeLerpValue
                 );
+        currentCamPos.y = 
+                lerp(
+                    previousCamPos.y,
+                    this.cameraHeight + speedFactor,
+                    camPosChangeLerpValue
+                );
+        currentCamPos.z = 
+                lerp(
+                    previousCamPos.z,
+                    this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor,
+                    camPosChangeLerpValue
+                );
+                
+        camNode.setLocalTranslation(currentCamPos);
+        
         
         camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
 
     }
+    
+    float lerp(float v0, float v1, float t) {
+        return (1-t)*v0 + t*v1;
+    }
+    
+    float inverseLerp(float a, float b, float x) {
+        return (x - a) / (b - a);
+    } 
 }
