@@ -44,6 +44,4 @@ public abstract class Projectile extends Node implements IUpdateable {
     protected void die() {
         ServiceManager.getUpdateableManager().removeUpdateable(this);
     }
-    
-    //test
 }
