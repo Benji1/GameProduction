@@ -48,18 +48,15 @@ public class Main extends SimpleApplication implements ActionListener {
     public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
     public BasicShip targetShip;
-    
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
-    
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
-    
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
     float camYOffset = 20f;  // Camera height
     boolean universeDebug = false;
-    
+
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(60);
@@ -95,10 +92,10 @@ public class Main extends SimpleApplication implements ActionListener {
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
         targetShip = tsd.createTestTargetShip2();
-        
+
         Spatial spatial;
-        Material material;    
-        
+        Material material;
+
         Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
         material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
@@ -110,7 +107,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         spatial.setMaterial(material);
         this.rootNode.attachChild(spatial);
-        
+
         System.out.println(this.rootNode.getLocalTranslation());
         System.out.println(spatial.getLocalTranslation());
     }
@@ -122,9 +119,9 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
-        
+
         cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
-        if(this.playersShip.cockpit != null) {
+        if (this.playersShip.cockpit != null) {
             UpdateCamPos();
         }
     }
@@ -158,7 +155,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initWorld() {
         this.u = new Universe(this);
-        
+
         UniverseGenerator.debugSystem(this, u);
     }
 
@@ -167,9 +164,8 @@ public class Main extends SimpleApplication implements ActionListener {
         ambient.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(ambient);
     }
-
     boolean up = false, down = false;
-    
+
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         if (name.equals("Up")) {
@@ -232,9 +228,9 @@ public class Main extends SimpleApplication implements ActionListener {
                     targetShip.activateModules("Shield");
                 }
             }
-            
-            
-            
+
+
+
         }
 
         if (name.equals("ToggleUniverseDebug")) {
@@ -265,55 +261,35 @@ public class Main extends SimpleApplication implements ActionListener {
             }
         }
     }
-    
+
     @Override
     public void simpleUpdate(float delta) {
-        
-        
-        Spatial spatial;
-        Material material;    
-        
-        Box box = new Box(1, 0.4f, 1);
-        spatial = new Geometry("Box", box);
-        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-        ColorRGBA color = ColorRGBA.Blue;
-        material.setBoolean("UseMaterialColors", true);
-        material.setColor("Ambient", color);
-        material.setColor("Diffuse", color);
-
-        spatial.setMaterial(material);
-        this.rootNode.attachChild(spatial);
-        
-        
         phyicsUpdate(delta);
-        
-        
-         for (BasicShip s : ships) {
+
+        for (BasicShip s : ships) {
             s.update(delta);
         }
+        
         //System.out.println(ships.size());
         updateableManager.update(delta);
-        
-        
-        
-        for(Body b: bodiesToRemove) {
+
+        for (Body b : bodiesToRemove) {
             //System.out.println(b);
             PhysicsWorld.world.destroyBody(b);
         }
         bodiesToRemove.clear();
 
-        for(Projectile p: projectilesToRemove) {
-            //System.out.println(b);
+        while (projectilesToRemove.size() > 0) {
+            Projectile p = projectilesToRemove.get(0);
+            projectilesToRemove.remove(0);
             p.delete();
         }
-        projectilesToRemove.clear();
-       
+        
         this.u.update(delta);
         this.background.updateBackground();
         // update camera position
-        
-        if(this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
+
+        if (this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
             UpdateCamPos();
         }
     }
@@ -326,54 +302,52 @@ public class Main extends SimpleApplication implements ActionListener {
     public Universe getUniverse() {
         return this.u;
     }
- 
+
     public void phyicsUpdate(float delta) {
         PhysicsWorld.world.step(delta, 8, 8);
     }
-    
     Vector3f previousCamPos;
     Vector3f currentCamPos = new Vector3f();
     float camPosChangeLerpValue = 0.03f;
 
-    public void UpdateCamPos()
-    {
+    public void UpdateCamPos() {
         previousCamPos = currentCamPos;
         currentCamPos = new Vector3f();
-        
-        float min = 0.1f; 
+
+        float min = 0.1f;
         float max = 100f;
         float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
 
         speedFactor = Math.max(min, speedFactor);
         speedFactor = Math.min(speedFactor, max);
-        float t = inverseLerp(0f, max+min, speedFactor);
+        float t = inverseLerp(0f, max + min, speedFactor);
         float offsetFactor = 1f - t;
 
         currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
         currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
 
-        float newY = 
+        float newY =
                 lerp(
-                    previousCamPos.y,
-                    this.cameraHeight + speedFactor,
-                    camPosChangeLerpValue
-                );
+                previousCamPos.y,
+                this.cameraHeight + speedFactor,
+                camPosChangeLerpValue);
 
-        if (!up || newY > previousCamPos.y)
+        if (!up || newY > previousCamPos.y) {
             currentCamPos.y = newY;
-        else    
+        } else {
             currentCamPos.y = previousCamPos.y;
+        }
 
         camNode.setLocalTranslation(currentCamPos);
-        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
+        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
 
     }
-    
+
     float lerp(float v0, float v1, float t) {
-        return (1-t)*v0 + t*v1;
+        return (1 - t) * v0 + t * v1;
     }
-    
+
     float inverseLerp(float a, float b, float x) {
         return (x - a) / (b - a);
-    } 
+    }
 }

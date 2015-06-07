@@ -23,6 +23,8 @@ public abstract class Projectile extends JBox2dNode implements IUpdateable {
     
     ConfigReader cr = ServiceManager.getConfigReader();
     
+     protected boolean beDead;
+    
     public Projectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super();
         this.app = app;

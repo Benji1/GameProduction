@@ -33,6 +33,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     protected Spatial spatial;
     protected Material material;
     protected boolean alreadyCollidedWithAnything;
+   
 
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
@@ -86,6 +87,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
         bDef.angle = (float) Math.atan2(direction.y, direction.x);
         bDef.type = BodyType.DYNAMIC;
         bDef.bullet = true;
+        bDef.allowSleep = false;
 
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
@@ -112,6 +114,9 @@ public class LaserProjectile extends Projectile implements ContactListener {
     public void update(float delta) {
         super.update(delta);
         updateBoxPosition();
+        if(beDead) {
+            //System.out.println("SHOULD BE DEAD");
+        }
     }
 
     @Override
@@ -137,6 +142,9 @@ public class LaserProjectile extends Projectile implements ContactListener {
             if (cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
                 handleBasicModuleCollision((BasicModule) cntct.getFixtureB().getBody().getUserData());
             }
+            // DOES NOT GET CALLED!! WTF
+            beDead = true;
+            markForDeletion();
         }
     }
 
