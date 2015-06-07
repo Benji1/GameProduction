@@ -47,12 +47,14 @@ public class TestShipDesigns {
     public static final int CATEGORY_SCENERY = 3;
     public static final int CATEGORY_PROJECTILE = 4;
     public static final int CATEGORY_SHIELD = 5;
+    public static final int CATEGORY_ITEM = 6;
     
-    public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
-    public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
+    public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
+    public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
     public static final int MASK_SCENERY = -1;
     public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
     public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
+    public static final int MASK_ITEM = CATEGORY_PLAYER | CATEGORY_ENEMY;
     
     public TestShipDesigns(Main main) {
         this.main = main;

@@ -20,6 +20,8 @@ import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
+import items.EncapsulatingItem;
+import items.Item;
 import java.util.ArrayList;
 import org.jbox2d.dynamics.Body;
 import services.updater.UpdateableManager;
@@ -48,9 +50,13 @@ public class Main extends SimpleApplication implements ActionListener {
     public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
     public BasicShip targetShip;
+    
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
+    
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
+    public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
+    
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
@@ -279,11 +285,20 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         bodiesToRemove.clear();
 
-        while (projectilesToRemove.size() > 0) {
+        while (!projectilesToRemove.isEmpty()) {
             Projectile p = projectilesToRemove.get(0);
             projectilesToRemove.remove(0);
             p.delete();
         }
+        
+        while (!itemsToCreate.isEmpty()) {
+            // Remove object from queue.
+            EncapsulatingItem encItem =  itemsToCreate.remove(0);
+
+            // Create new body in world.
+            encItem.init();
+        }
+        
         
         this.u.update(delta);
         this.background.updateBackground();

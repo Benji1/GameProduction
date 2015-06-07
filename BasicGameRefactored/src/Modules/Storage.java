@@ -6,7 +6,7 @@ package Modules;
 
 import com.jme3.math.ColorRGBA;
 import java.util.ArrayList;
-import mygame.Item;
+import items.Item;
 
 /**
  *

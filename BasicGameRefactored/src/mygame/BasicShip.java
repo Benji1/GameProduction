@@ -4,6 +4,7 @@
  */
 package mygame;
 
+import items.Item;
 import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
