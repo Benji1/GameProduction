@@ -30,6 +30,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
     public Cockpit cockpit;
     public int colliderType, collidingWith;
+    private Inventory inventory;
 
     public BasicShip(Main app) {
         super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
@@ -39,6 +40,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         this.shipId = idCounter++;
         ServiceManager.getEditorManager().registerAsShipChangedListener(this);
         ServiceManager.getEditorManager().addShip(this);
+        this.inventory = new Inventory(this);
     }
 
     @Override
@@ -320,5 +322,9 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
 
     public int getShipId() {
         return shipId;
+    }
+    
+    public Inventory getInventory() {
+        return inventory;
     }
 }

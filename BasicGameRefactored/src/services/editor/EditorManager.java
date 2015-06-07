@@ -62,10 +62,10 @@ public class EditorManager extends Service {
         this.ships.remove(ship);
     }
     
-    public BasicModule[][] getShipModules(int shipId) {
+    public BasicShip getShip(int shipId) {
         for (BasicShip ship : ships) {
             if (ship.getShipId() == shipId) {
-                return ship.getModules();
+                return ship;
             }
         }
         

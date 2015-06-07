@@ -7,7 +7,7 @@
         "MaxHealth": 500
     },
     "Storage": {
-        "MaxStorage": 5
+        "MaxStorage": 20
     },
     "Thruster": {
         "ForceMagnitude": 300,

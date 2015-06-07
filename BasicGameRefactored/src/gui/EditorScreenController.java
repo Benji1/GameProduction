@@ -4,6 +4,7 @@
  */
 package gui;
 
+import gui.inventory.InventoryCategory;
 import Modules.Armor;
 import Modules.BasicModule;
 import Modules.Cockpit;
@@ -42,7 +43,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import mygame.Inventory;
 import services.ServiceManager;
+import services.editor.EditorManager;
 
 /**
  *
@@ -96,6 +99,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     private int partIdCounter = 0;
     private HashMap<Point , OrientedModule> shipTiles = new HashMap<Point, OrientedModule>();
+    // TODO: change ship id
+    Inventory inventory = ServiceManager.getEditorManager().getShip(0).getInventory();
     private int[][] directions = new int[][] {{1,0},{0,1},{-1,0},{0,-1},{0,0}};
     //private int[][] directions = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{0,0}};
     
@@ -103,6 +108,9 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     private static final float MAX_SCALE = 3f;
     private static final float MIN_SCALE = 0.5f;
     private float scale = 1f;
+    
+    private boolean realDragCancel = true;
+    private boolean deleteOnDragCancel = true;
     
     public void bind(Nifty nifty, Screen screen) {
         //System.out.println("bind " + this.getClass().getSimpleName());
@@ -117,7 +125,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         partIdCounter = 0;
         
         // reload inventory       
-        setupPartsPanel("Cockpit");
+        setupPartsPanel(InventoryCategory.COCKPIT_CAT);
         setupSlotsPanel();
         loadShipFromGame();
     }
@@ -209,37 +217,57 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     public void onDragStarted(final String id, DraggableDragStartedEvent event) {
         if (event.getDraggable() instanceof DraggableControl) {
             DraggableControl dragControl = (DraggableControl) event.getDraggable();
+            // move from inventory section to editor
             if (dragControl.getOriginalParent().getId().startsWith("panel-parent")) {
-                // a new draggable element has to be created since the old one was moved away
+                // check if modules count > 0
                 final String parentNr = id.substring(11, id.lastIndexOf("-"));
-                String parentId = "panel-parent-"+parentNr;
-                Element parent = screen.findElementByName(parentId);
+                if (inventory.getModuleCountInBase(ModuleType.getType(Integer.parseInt(parentNr))) > 0) {
+                    // a new draggable element has to be created since the old one was moved away                    
+                    String parentId = "panel-parent-"+parentNr;
+                    Element parent = screen.findElementByName(parentId);
 
-                // somehow can't acces imagemode property
-                //ImageMode im = event.getDraggable().getElement().getElements().get(0).getRenderer(ImageRenderer.class).getImage().getImageMode();
-                //System.out.println(im);
+                    // somehow can't acces imagemode property
+                    //ImageMode im = event.getDraggable().getElement().getElements().get(0).getRenderer(ImageRenderer.class).getImage().getImageMode();
+                    //System.out.println(im);
 
-                String newDragId = "part-panel-"+parentNr+"-"+partIdCounter++;
+                    String newDragId = "part-panel-"+parentNr+"-"+partIdCounter++;
 
-                Element newDraggable = new DraggableBuilder(newDragId) {{
-                    visibleToMouse(true);
-                    childLayout(ElementBuilder.ChildLayoutType.Center);
-                    panel(new PanelBuilder() {{
-                        backgroundImage("Interface/Images/Parts.png");
-                        width("80%");
-                        height("80%");
-                        // crap cause can't acces imagemode property of other panel
-                        imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)*4));
-                    }});
-                }}.build(nifty, screen, parent);
+                    Element newDraggable = new DraggableBuilder(newDragId) {{
+                        visibleToMouse(true);
+                        childLayout(ElementBuilder.ChildLayoutType.Center);
+                        panel(new PanelBuilder() {{
+                            backgroundImage("Interface/Images/Parts.png");
+                            width("80%");
+                            height("80%");
+                            // crap cause can't acces imagemode property of other panel
+                            imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)*4));
+                        }});
+                    }}.build(nifty, screen, parent);
 
-                newDraggable.setParent(parent);
+                    newDraggable.setParent(parent);
 
-                // TODO: counter-- of that module type in gui
-                TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter").getRenderer(TextRenderer.class);
-                int count = Integer.parseInt(textRenderer.getOriginalText().substring(1));
-                if (count > 0) --count;
-                textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+                    // counter-- of that module type in inventory
+                    inventory.removeItemOfType(ModuleType.getType(Integer.parseInt(parentNr)));
+                    // counter-- of that module type in gui
+                    TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter").getRenderer(TextRenderer.class);
+                    int count = inventory.getModuleCountInBase(ModuleType.getType(Integer.parseInt(parentNr)));
+                    textRenderer.setText("x" + (count < 10 ? "0" : "") + count);         
+                    
+                    SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
+                    Element dragged = event.getDraggable().getElement();
+                    dragged.setConstraintWidth(sizeValue);
+                    dragged.setConstraintHeight(sizeValue);
+                    dragged.getElements().get(0).setConstraintWidth(new SizeValue("100%"));
+                    dragged.getElements().get(0).setConstraintHeight(new SizeValue("100%"));
+                } else {
+                    // no more items in inventory --> cancel drag
+                    realDragCancel = false;
+                    deleteOnDragCancel = false;
+                    if (event.getDraggable() instanceof DraggableControl) {
+                        dragControl.dragStop();
+                    } 
+                }
+            // move in editor field
             } else {
                 String id2 = dragControl.getOriginalParent().getId();
                 //System.out.println(id2);
@@ -273,21 +301,26 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 }
             }
         }
-        SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
-        Element dragged = event.getDraggable().getElement();
-        dragged.setConstraintWidth(sizeValue);
-        dragged.setConstraintHeight(sizeValue);
-        dragged.getElements().get(0).setConstraintWidth(new SizeValue("100%"));
-        dragged.getElements().get(0).setConstraintHeight(new SizeValue("100%"));
     }
     
     @NiftyEventSubscriber(pattern="part-panel-.*") 
     public void onDragCanceled(String id, DraggableDragCanceledEvent event) {  
-        event.getDraggable().getElement().markForRemoval();
-        // TODO: ++ to counter of that module type in gui
-        /*TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(id.substring(11, id.lastIndexOf("-")))).toString() + "-counter").getRenderer(TextRenderer.class);
-        int count = Integer.parseInt(textRenderer.getOriginalText().substring(1)) + 1;
-        textRenderer.setText("x" + (count < 10 ? "0" : "") + count);*/
+        if (deleteOnDragCancel) {
+            event.getDraggable().getElement().markForRemoval();
+        }
+        
+        if (realDragCancel) {        
+            // counter++ of that module type in inventory
+            int parentId = Integer.parseInt(id.substring(11, id.lastIndexOf("-")));
+            inventory.addItemOfType(ModuleType.getType(parentId));        
+            // counter++ of that module type in gui        
+            TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter").getRenderer(TextRenderer.class);
+            int count = inventory.getModuleCountInBase(ModuleType.getType(parentId));
+            textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+        }
+        
+        realDragCancel = true;
+        deleteOnDragCancel = true;
     }
     
     @NiftyEventSubscriber(pattern="slot-.*")
@@ -364,42 +397,13 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         }
     }
     
-    private void setupPartsPanel(String blockType) {
+    private void setupPartsPanel(InventoryCategory cat) {
         Element partsPanel = screen.findElementByName("parts-container");
         
-        // TODO: change this later on - quick & crappy solution cause we need to change
-        // this later on anyways once we have the inventory stuff
-        int numOfDifferentItems = 0;
-        int[] numOfEachItem = new int[0];
-        int[] tileImgIds = new int[0];
-        int[] parentIds = new int[0];
-        
-        if (blockType.equals("Armor")) {
-            numOfDifferentItems = 2;
-            numOfEachItem = new int[] {12, 3};
-            tileImgIds = new int[] {12, 20};
-            parentIds = new int[] {3, 5};
-        } else if (blockType.equals("Weapon")) {
-            numOfDifferentItems = 1;
-            numOfEachItem = new int[] {8};
-            tileImgIds = new int[] {16};
-            parentIds = new int[] {4};
-        } else if (blockType.equals("Thruster")) {
-            numOfDifferentItems = 1;
-            numOfEachItem = new int[] {2};
-            tileImgIds = new int[] {4};
-            parentIds = new int[] {1};
-        } else if (blockType.equals("Cockpit")) {
-            numOfDifferentItems = 1;
-            numOfEachItem = new int[] {1};
-            tileImgIds = new int[] {0};
-            parentIds = new int[] {0};
-        } else if (blockType.equals("Energy")) {
-            numOfDifferentItems = 1;
-            numOfEachItem = new int[] {4};
-            tileImgIds = new int[] {8};
-            parentIds = new int[] {2};
-        }
+        int numOfDifferentItems = cat.getTypes().length;
+        int[] numOfEachItem = inventory.getNumOfItemsPerCat(cat);
+        int[] tileImgIds = cat.getTileImgIds();
+        int[] typeIds = cat.getTypeIds();
          
         int numOfCols = 4;
         int numOfBgPanels = (int) (Math.ceil(numOfDifferentItems/(numOfCols*1f))) * numOfCols;
@@ -426,13 +430,13 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 else 
                     numOfItems = "x"+numOfEachItem[i];
                 
-                partPanel.parameter("parentId", "panel-parent-"+parentIds[i]);
-                partPanel.parameter("draggableId", "part-panel-"+parentIds[i]+"-"+partIdCounter++);
+                partPanel.parameter("parentId", "panel-parent-"+typeIds[i]);
+                partPanel.parameter("draggableId", "part-panel-"+typeIds[i]+"-"+partIdCounter++);
                 partPanel.parameter("label", numOfItems);
                 partPanel.parameter("x", x+"px");
                 partPanel.parameter("y", y+"px");
                 partPanel.parameter("sprite", "sprite:100,100,"+tileImgIds[i]);
-                partPanel.parameter("counterId", ModuleType.getType(parentIds[i]).toString() + "-counter");
+                partPanel.parameter("counterId", ModuleType.getType(typeIds[i]).toString() + "-counter");
                 partPanel.build(nifty, screen, partsPanel);
             } else {
                 emptyPanel.parameter("x", x+"px");
@@ -448,15 +452,13 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     private void loadShipFromGame() {
         // TODO: change ship id
-        BasicModule[][] modules = ServiceManager.getEditorManager().getShipModules(0);
-        //System.out.println(modules.length + "/" + modules[0].length);
+        BasicModule[][] modules = ServiceManager.getEditorManager().getShip(0).getModules();
         for (int i=0; i<modules.length; i++) {
             for (int j=0; j<modules[0].length; j++) {
                 if (modules[i][j] != null) {
                     int slotX = i - (modules.length / 2);
                     int slotY = j - (modules[0].length / 2);
-                    //System.out.println("array: " + i + "/" + j);
-                    //System.out.println("slot: " + slotX + "/" + slotY);
+                    
                     // build slots
                     Element parent = buildEmptySlot(slotX, slotY).getElements().get(0);
                     buildNeighborSlots(slotX, slotY);
@@ -541,11 +543,22 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
 
                 } else {
                     // delete element at target in gui
-                    targetParent.getElements().get(1).markForRemoval();
-                    // TODO: inventory++
+                    Element elementToDelete = targetParent.getElements().get(1);                    
+                    
+                    // counter++ of that module type in inventory
+                    int parentId = Integer.parseInt(elementToDelete.getId().substring(11, elementToDelete.getId().lastIndexOf("-")));
+                    inventory.addItemOfType(ModuleType.getType(parentId));
+                    // counter++ of that module type in gui                    
+                    TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter").getRenderer(TextRenderer.class);
+                    int count = inventory.getModuleCountInBase(ModuleType.getType(parentId));
+                    textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+                    
+                    elementToDelete.markForRemoval();
                 }
             }
         }
+        
+        realDragCancel = false;
         
         return false;   // prevent default drag&drop
     }
@@ -628,22 +641,22 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     public void selectCockpit() {
         clearPartsPanel();
-        setupPartsPanel("Cockpit");
+        setupPartsPanel(InventoryCategory.COCKPIT_CAT);
     }
     public void selectArmor() {
         clearPartsPanel();
-        setupPartsPanel("Armor");
+        setupPartsPanel(InventoryCategory.ARMOR_CAT);
     }
     public void selectWeapon() {
         clearPartsPanel();
-        setupPartsPanel("Weapon");
+        setupPartsPanel(InventoryCategory.WEAPON_CAT);
     }
     public void selectEnergy() {
         clearPartsPanel();
-        setupPartsPanel("Energy");
+        setupPartsPanel(InventoryCategory.ENERGY_CAT);
     }
     public void selectThruster() {
         clearPartsPanel();
-        setupPartsPanel("Thruster");
+        setupPartsPanel(InventoryCategory.THRUSTER_CAT);
     }
 }
