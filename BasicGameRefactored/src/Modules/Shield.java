@@ -6,6 +6,7 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
+import gui.ModuleType;
 import java.util.ArrayList;
 import weapons.ShieldCollider;
 
@@ -27,6 +28,8 @@ public class Shield extends InteractiveModule {
         energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Shield"), "EnergyConsumptionPerSecond", float.class);
         color = ColorRGBA.Blue;
         colorActive = ColorRGBA.Cyan;
+        type = ModuleType.SHIELD;
+        orientation = FacingDirection.FORWARD;
     }
     
     public ShieldCollider getShieldCollider  () {

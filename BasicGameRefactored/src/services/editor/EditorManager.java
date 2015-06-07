@@ -7,15 +7,20 @@ package services.editor;
 import Modules.BasicModule;
 import java.util.ArrayList;
 import java.util.Stack;
+import mygame.BasicShip;
 import services.Service;
 
 public class EditorManager extends Service {
+    
+    private ArrayList<BasicShip> ships;
     
     private ArrayList<IShipChangedListener> shipChangedListeners;
     private Stack<IShipChangedListener> shipChangedListenersToRemove;
     private Stack<IShipChangedListener> shipChangedListenersToAdd;
     
     public EditorManager() {
+        ships = new ArrayList<BasicShip>();
+        
         shipChangedListeners = new ArrayList<IShipChangedListener>();
         shipChangedListenersToAdd = new Stack<IShipChangedListener>();
         shipChangedListenersToRemove = new Stack<IShipChangedListener>();
@@ -50,4 +55,20 @@ public class EditorManager extends Service {
         }
     }
     
+    public void addShip(BasicShip ship) {
+        this.ships.add(ship);
+    }
+    public void removeShip(BasicShip ship) {
+        this.ships.remove(ship);
+    }
+    
+    public BasicModule[][] getShipModules(int shipId) {
+        for (BasicShip ship : ships) {
+            if (ship.getShipId() == shipId) {
+                return ship.getModules();
+            }
+        }
+        
+        return null;
+    }    
 }

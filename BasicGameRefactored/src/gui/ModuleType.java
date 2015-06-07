@@ -13,7 +13,9 @@ public enum ModuleType {
     ENERGY_GENERATOR(2),
     ARMOR(3),
     WEAPON(4),
-    ARMOR_DIAGONAL(5);
+    ARMOR_DIAGONAL(5),
+    SHIELD(6),
+    STORAGE(7);
     
     private final int value;
     

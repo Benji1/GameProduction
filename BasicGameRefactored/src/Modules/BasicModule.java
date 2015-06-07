@@ -12,6 +12,13 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.ElementBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.screen.Screen;
+import gui.ModuleType;
+import gui.dragAndDrop.builder.DraggableBuilder;
 import services.config.ConfigReader;
 import java.awt.Point;
 import mygame.BasicShip;
@@ -43,7 +50,9 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected ColorRGBA color = ColorRGBA.Gray;
     protected Body body;
     protected Spatial spatial;
-    protected Material material;       
+    protected Material material;   
+    protected ModuleType type;
+    protected FacingDirection orientation;
     
     public int group = 0;
 
@@ -196,5 +205,29 @@ public abstract class BasicModule extends Node implements ContactListener {
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
+    }
+    
+    public void buildGuiElement(int idCounter, Nifty nifty, Screen screen, Element targetParent) {
+        String newId = "part-panel-"+type.getValue()+"-"+idCounter;
+        
+        Element element = new DraggableBuilder(newId) {{
+            visibleToMouse(true);
+            childLayout(ElementBuilder.ChildLayoutType.Center);
+            panel(new PanelBuilder() {{
+                backgroundImage("Interface/Images/Parts.png");
+                width("100%");
+                height("100%");
+                imageMode("sprite:100,100,"+(type.getValue()*4 + orientation.getSpriteValue()));
+            }});
+        }}.build(nifty, screen, targetParent);
+        
+        element.setParent(targetParent);
+    }
+    
+    public ModuleType getType() {
+        return type;
+    }
+    public FacingDirection getOrientation() {
+        return orientation;
     }
 }

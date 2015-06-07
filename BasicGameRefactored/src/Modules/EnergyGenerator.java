@@ -6,6 +6,7 @@ package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.math.ColorRGBA;
+import gui.ModuleType;
 
 /**
  *
@@ -21,6 +22,8 @@ public class EnergyGenerator extends BasicModule {
     public EnergyGenerator() {
         moduleName = "E-Gen";
         color = ColorRGBA.Yellow;
+        type = ModuleType.ENERGY_GENERATOR;
+        orientation = FacingDirection.FORWARD;
     }
 
     @Override

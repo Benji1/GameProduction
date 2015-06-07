@@ -20,6 +20,8 @@ public class Storage extends BasicModule {
     public Storage() {
         moduleName = "Storage";
         color = ColorRGBA.Magenta;
+        type = ModuleType.STORAGE;
+        orientation = FacingDirection.FORWARD;
     }
     
     public boolean storeItem(ModuleType item) {

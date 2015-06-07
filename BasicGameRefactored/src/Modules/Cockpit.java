@@ -5,6 +5,7 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
+import gui.ModuleType;
 import mygame.BasicShip;
 
 /**
@@ -16,6 +17,8 @@ public class Cockpit extends BasicModule {
     public Cockpit() {
         moduleName = "Cockpit";
         color = ColorRGBA.White;
+        type = ModuleType.COCKPIT;
+        orientation = FacingDirection.FORWARD;
     }
     
     @Override

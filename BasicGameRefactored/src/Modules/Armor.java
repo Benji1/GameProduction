@@ -5,6 +5,7 @@
 package Modules;
 
 import com.jme3.math.ColorRGBA;
+import gui.ModuleType;
 
 /**
  *
@@ -18,5 +19,7 @@ public class Armor extends BasicModule {
         
         maxHealth = cr.getFromMap(cr.getBaseMap("Armor"), "MaxHealth", int.class);
         health = maxHealth;
+        type = ModuleType.ARMOR;
+        orientation = FacingDirection.FORWARD;
     }
 }

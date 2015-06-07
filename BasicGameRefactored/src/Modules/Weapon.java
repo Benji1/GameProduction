@@ -16,7 +16,6 @@ public abstract class Weapon extends InteractiveModule {
 
     protected float fireRate;       // time between shots
     protected float fireRateTimer;
-    protected Vec2 orientation;
 
     public Weapon(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys);
@@ -24,7 +23,7 @@ public abstract class Weapon extends InteractiveModule {
         colorActive = ColorRGBA.Red;
         fireRateTimer = 0;
 
-        orientation = FacingDirection.getDirectionVector(orientationDirection);
+        orientation = orientationDirection;
     }
 
     protected void onActive() {

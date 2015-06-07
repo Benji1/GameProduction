@@ -38,6 +38,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
 
         this.shipId = idCounter++;
         ServiceManager.getEditorManager().registerAsShipChangedListener(this);
+        ServiceManager.getEditorManager().addShip(this);
     }
 
     @Override
@@ -51,6 +52,10 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
                 }
             }
         }
+    }
+    
+    public BasicModule[][] getModules() {
+        return modules;
     }
 
     public Main getApp() {
