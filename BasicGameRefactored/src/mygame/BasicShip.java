@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.jme3.math.Vector3f;
+import gui.ModuleType;
 
 import services.ServiceManager;
 import services.editor.IShipChangedListener;
@@ -43,6 +44,11 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
 
         this.shipId = idCounter++;
         ServiceManager.getEditorManager().registerAsShipChangedListener(this);
+        ServiceManager.getEditorManager().addShip(this);
+    }
+    
+    public BasicModule[][] getModules() {
+        return modules;
     }
 
     @Override
@@ -167,7 +173,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         // TODO: player returns to base
     }
 
-    public void collectItem(Item item) {
+    public void collectItem(ModuleType item) {
         // check for available item storage
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {

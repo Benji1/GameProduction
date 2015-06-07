@@ -7,7 +7,10 @@ package Modules;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
+import gui.ModuleType;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 
@@ -19,7 +22,6 @@ public class Thruster extends InteractiveModule {
 
     protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
     protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDamping", float.class);
-    protected Vec2 orientation;
 
     public Thruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys);
@@ -29,11 +31,12 @@ public class Thruster extends InteractiveModule {
         color = ColorRGBA.LightGray;
         colorActive = ColorRGBA.Orange;
 
-        orientation = FacingDirection.getDirectionVector(orientationDirection);
+        orientation = orientationDirection;
+        type = ModuleType.THRUSTER;
     }
 
     protected void onActive() {
-        Vec2 forceDirection = body.getWorldVector(orientation).mul(forceMagnitude);
+        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude).mul(-1);
         body.applyForce(forceDirection, body.getPosition());
     }
    

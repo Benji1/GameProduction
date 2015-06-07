@@ -98,24 +98,6 @@ public class Main extends SimpleApplication implements ActionListener {
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
         targetShip = tsd.createTestTargetShip2();
-
-        Spatial spatial;
-        Material material;
-
-        Box box = new Box(1, 0.4f, 1);
-        spatial = new Geometry("Box", box);
-        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-        ColorRGBA color = ColorRGBA.Blue;
-        material.setBoolean("UseMaterialColors", true);
-        material.setColor("Ambient", color);
-        material.setColor("Diffuse", color);
-
-        spatial.setMaterial(material);
-        this.rootNode.attachChild(spatial);
-
-        System.out.println(this.rootNode.getLocalTranslation());
-        System.out.println(spatial.getLocalTranslation());
     }
 
     private void initCamera() {

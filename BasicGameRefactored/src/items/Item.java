@@ -94,7 +94,6 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
         Quaternion q = new Quaternion();
         q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 
-        System.out.println(spatials);
         if(spatials != null) {
             for(Spatial s: spatials) {
                 s.setLocalTranslation(bodyPos);
@@ -119,7 +118,7 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     }
     
     public void handleShipCollision(BasicShip s) {
-        s.collectItem(this);
+        //s.collectItem();
     }
 
     public void endContact(Contact cntct) {

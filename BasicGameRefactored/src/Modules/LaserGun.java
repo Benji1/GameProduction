@@ -8,6 +8,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.material.Material;
 import com.jme3.texture.Texture;
+import gui.ModuleType;
 import java.util.ArrayList;
 import mygame.BasicShip;
 import org.jbox2d.common.Vec2;
@@ -27,11 +28,12 @@ public class LaserGun extends Weapon {
 
         fireRate = cr.getFromMap(cr.getBaseMap("LaserGun"), "Firerate", float.class);
         energyConsumptionPerAction = cr.getFromMap(cr.getBaseMap("LaserGun"), "EnergyConsumptionPerAction", float.class);
+        type = ModuleType.WEAPON;
     }
 
     @Override
     protected void fire() {
-        Vec2 fireDirection = body.getWorldVector(orientation);
+        Vec2 fireDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation).mul(-1));
         LaserProjectile p = new LaserProjectile(body.getWorldPoint(body.getLocalCenter()).add(new Vec2(2f * fireDirection.x, 2f * fireDirection.y)), fireDirection, ship.getApp());
         fire_sound.setPitch((float) Math.random() * 0.1f + 0.95f);
         fire_sound.playInstance();

@@ -8,6 +8,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Texture;
+import gui.ModuleType;
 
 /**
  *
@@ -22,6 +23,8 @@ public class Armor extends BasicModule {
         
         maxHealth = cr.getFromMap(cr.getBaseMap("Armor"), "MaxHealth", int.class);
         health = maxHealth;
+        type = ModuleType.ARMOR;
+        orientation = FacingDirection.FORWARD;
     }
     
     @Override
