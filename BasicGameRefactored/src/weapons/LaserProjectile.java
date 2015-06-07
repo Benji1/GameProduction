@@ -32,6 +32,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     protected Body body;
     protected Spatial spatial;
     protected Material material;
+    protected boolean alreadyCollidedWithAnything;
 
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, Main app) {
         super(spawnPoint, fireDirection, app);
@@ -114,28 +115,28 @@ public class LaserProjectile extends Projectile implements ContactListener {
     }
 
     @Override
-    public void die() {
-        super.die();
-        //System.out.println("Should be dead now");
-        app.bodiesToRemove.add(body);
+    public void delete() {
+        super.delete();
+        PhysicsWorld.world.destroyBody(body);
         spatial.removeFromParent();
         this.removeFromParent();
     }
 
     public void beginContact(Contact cntct) {
-        if (cntct.getFixtureA().getBody().getUserData() instanceof ShieldCollider) {
-            handleShieldColliderCollision((ShieldCollider) cntct.getFixtureA().getBody().getUserData());
-        }
-        if (cntct.getFixtureB().getBody().getUserData() instanceof ShieldCollider) {
-            handleShieldColliderCollision((ShieldCollider) cntct.getFixtureB().getBody().getUserData());
-        }
-
-        if (cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
-            handleBasicModuleCollision((BasicModule) cntct.getFixtureA().getBody().getUserData());
-        }
-
-        if (cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
-            handleBasicModuleCollision((BasicModule) cntct.getFixtureB().getBody().getUserData());
+        if(!alreadyCollidedWithAnything) {
+            alreadyCollidedWithAnything = true;
+            if (cntct.getFixtureA().getBody().getUserData() instanceof ShieldCollider) {
+                handleShieldColliderCollision((ShieldCollider) cntct.getFixtureA().getBody().getUserData());
+            }
+            if (cntct.getFixtureB().getBody().getUserData() instanceof ShieldCollider) {
+                handleShieldColliderCollision((ShieldCollider) cntct.getFixtureB().getBody().getUserData());
+            }
+            if (cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
+                handleBasicModuleCollision((BasicModule) cntct.getFixtureA().getBody().getUserData());
+            }
+            if (cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
+                handleBasicModuleCollision((BasicModule) cntct.getFixtureB().getBody().getUserData());
+            }
         }
     }
 
@@ -153,12 +154,12 @@ public class LaserProjectile extends Projectile implements ContactListener {
         } else {
             b.takeDamage(100);
         }
-        die();
+        markForDeletion();
     }
 
     public void handleShieldColliderCollision(ShieldCollider s) {
         s.putDamgeToShieldModule(100f);
-        die();
+        markForDeletion();
     }
 
     public void endContact(Contact cntct) {

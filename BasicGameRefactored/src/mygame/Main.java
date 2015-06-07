@@ -26,6 +26,7 @@ import services.updater.UpdateableManager;
 import universe.Background;
 import universe.Universe;
 import universe.UniverseGenerator;
+import weapons.Projectile;
 
 /**
  * test
@@ -51,6 +52,7 @@ public class Main extends SimpleApplication implements ActionListener {
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
+    public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
     
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
@@ -301,6 +303,11 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         bodiesToRemove.clear();
 
+        for(Projectile p: projectilesToRemove) {
+            //System.out.println(b);
+            p.delete();
+        }
+        projectilesToRemove.clear();
        
         this.u.update(delta);
         this.background.updateBackground();
