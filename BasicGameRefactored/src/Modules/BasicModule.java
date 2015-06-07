@@ -9,7 +9,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import de.lessvoid.nifty.Nifty;
@@ -19,9 +18,13 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import gui.ModuleType;
 import gui.dragAndDrop.builder.DraggableBuilder;
+import items.EncapsulatingItem;
 import services.config.ConfigReader;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
 import mygame.BasicShip;
+import mygame.JBox2dNode;
 import mygame.PhysicsWorld;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -39,7 +42,7 @@ import services.ServiceManager;
  *
  * @author 1337
  */
-public abstract class BasicModule extends Node implements ContactListener {
+public abstract class BasicModule extends JBox2dNode implements ContactListener {
 
     ConfigReader cr = ServiceManager.getConfigReader();
     protected int maxHealth = cr.getFromMap(cr.getBaseMap("Basic"), "MaxHealth", int.class);
@@ -50,13 +53,14 @@ public abstract class BasicModule extends Node implements ContactListener {
     protected ColorRGBA color = ColorRGBA.Gray;
     protected Body body;
     protected Spatial spatial;
-    protected Material material;   
+    protected Material material;
     protected ModuleType type;
     protected FacingDirection orientation;
     
     public int group = 0;
 
     public BasicModule() {
+        super();
     }
 
     private void lockToShip() {
@@ -88,17 +92,18 @@ public abstract class BasicModule extends Node implements ContactListener {
     public BasicShip getShip() {
         return ship;
     }
+    
+    public Spatial getSpatial() {
+    	return this.spatial;
+    }
+    
+    public Material getMaterial() {
+        return this.material;
+    }
 
+    @Override
     public void update(float tpf) {
-        Vector3f bodyPos = new Vector3f(
-                (float) body.getWorldPoint(body.getLocalCenter()).x, 0.0f, (float) body.getWorldPoint(body.getLocalCenter()).y);
-
-        spatial.setLocalTranslation(bodyPos);
-
-        float angleRad = body.getAngle();
-        Quaternion q = new Quaternion();
-        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-        spatial.setLocalRotation(q);
+        super.update(tpf);
     }
 
     public void takeDamage(int amount) {
@@ -116,6 +121,23 @@ public abstract class BasicModule extends Node implements ContactListener {
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
         
+        create3DBody();
+        int x = ship.getActualPositionInGrid(this).x * 2;
+        int y = ship.getActualPositionInGrid(this).y * 2;
+        if(ship != null && ship.cockpitPos != null){
+        		x += ship.cockpitPos.x;
+        		y += ship.cockpitPos.z;
+        }
+        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
+        setPhysicsCenter(body);
+        
+        this.attachChild(spatial);
+        ship.attachChild(this);
+        
+        lockToShip();
+    }
+    
+    protected void create3DBody() {
         Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
         material = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
@@ -125,15 +147,8 @@ public abstract class BasicModule extends Node implements ContactListener {
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
-        int x = ship.getActualPositionInGrid(this).x * 2;
-        int y = ship.getActualPositionInGrid(this).y * 2;
-        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
-
-        ship.attachChild(this);
-        this.attachChild(spatial);
-        
-        lockToShip();
     }
+    
     
     public void onMovedToOtherShip (BasicShip s) {
         this.ship = s;
@@ -159,7 +174,7 @@ public abstract class BasicModule extends Node implements ContactListener {
         fDef.friction = 0.6f;
         fDef.filter.categoryBits = colliderType;
         fDef.filter.maskBits = collidingWith;
-                      
+
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
@@ -172,17 +187,37 @@ public abstract class BasicModule extends Node implements ContactListener {
     
     public void destroy() {
         onRemove();
-        this.detachChild(spatial);
+        
+        if(shouldSpawnItem()) {
+            spawnItem();
+        }
+        this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
         ship.sperateInNewShips();
-        // SPAWN WITH DROPABILITY OR JUST DESTROY
+    }
+    
+    public boolean shouldSpawnItem() {
+        Random rn = new Random();
+        return rn.nextFloat() <= dropRateInPercent / 100;
+    }
+    
+    public void spawnItem() {
+        float angleRad = body.getAngle();
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+        
+        ArrayList<Spatial> saveSpatials = new ArrayList<Spatial>();
+        for(Spatial s : children) {
+            saveSpatials.add(s.clone());
+        }
+        
+        ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, body.getPosition(), q, ship.getApp()));
     }
     
      public void destroyWithoutSeperation() {
         onRemove();
-        this.detachChild(spatial);
+        spatial.removeFromParent();
         ship.getApp().bodiesToRemove.add(body);
-        //ship.sperateInNewShips();
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 
@@ -209,7 +244,7 @@ public abstract class BasicModule extends Node implements ContactListener {
     
     public void buildGuiElement(int idCounter, Nifty nifty, Screen screen, Element targetParent) {
         String newId = "part-panel-"+type.getValue()+"-"+idCounter;
-        
+
         Element element = new DraggableBuilder(newId) {{
             visibleToMouse(true);
             childLayout(ElementBuilder.ChildLayoutType.Center);
@@ -227,6 +262,7 @@ public abstract class BasicModule extends Node implements ContactListener {
     public ModuleType getType() {
         return type;
     }
+   
     public FacingDirection getOrientation() {
         return orientation;
     }

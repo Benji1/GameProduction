@@ -3,18 +3,14 @@ package universe;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import universe.Abs_ChunkNode.ChunkNodeType;
-
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
-
 import mygame.Main;
 
 /**
@@ -114,8 +110,15 @@ public class Universe {
     }
     
     public void update(float tpf) {
+        
+        for(int i = 0; i < UNIVERSE_SIZE; i++) {
+            for(int j = 0; j < UNIVERSE_SIZE; j++) {
+                this.universeChunks[i][j].update(tpf);
+            }
+        }
     	for (SolarSystem s: systems)
     		s.update(tpf);
+        
     	if(this.isDebug)
     		this.app.textShipPos.setText("PosChunk: " + this.app.playersShip.getChunkX() + "/" + this.app.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.playersShip.getWorldTranslation().toString());
     }

@@ -4,7 +4,10 @@
  */
 package Modules;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.texture.Texture;
 import gui.ModuleType;
 
 /**
@@ -14,6 +17,7 @@ import gui.ModuleType;
 public class Armor extends BasicModule {
 
     public Armor() {
+        super();
         moduleName = "Armor";
         color = ColorRGBA.Gray;
         
@@ -21,5 +25,16 @@ public class Armor extends BasicModule {
         health = maxHealth;
         type = ModuleType.ARMOR;
         orientation = FacingDirection.FORWARD;
+    }
+    
+    @Override
+    protected void create3DBody() {
+         AssetManager a = ship.getApp().getAssetManager();
+         spatial = a.loadModel("3dmodels/armor.obj");
+         ship.attachChild(spatial);
+         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+         Texture t = a.loadTexture("3dmodels/armor_ao.png");
+         material.setTexture("DiffuseMap", t);
+         spatial.setMaterial(material);
     }
 }

@@ -19,6 +19,7 @@ public class Storage extends BasicModule {
     protected int maxStoredItems = cr.getFromMap(cr.getBaseMap("Storage"), "MaxStorage", int.class);
 
     public Storage() {
+        super();
         moduleName = "Storage";
         color = ColorRGBA.Magenta;
         type = ModuleType.STORAGE;
@@ -30,7 +31,6 @@ public class Storage extends BasicModule {
             itemsInStorage.add(item);
             return true;
         }
-
         return false;
     }
     

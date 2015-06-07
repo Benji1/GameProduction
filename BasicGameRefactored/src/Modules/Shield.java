@@ -5,7 +5,11 @@
 package Modules;
 
 import static Modules.BasicModule.fillNotOverLimit;
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Spatial;
+import com.jme3.texture.Texture;
 import gui.ModuleType;
 import java.util.ArrayList;
 import weapons.ShieldCollider;
@@ -31,8 +35,8 @@ public class Shield extends InteractiveModule {
         type = ModuleType.SHIELD;
         orientation = FacingDirection.FORWARD;
     }
-    
-    public ShieldCollider getShieldCollider  () {
+
+    public ShieldCollider getShieldCollider() {
         return sc;
     }
 
@@ -70,7 +74,7 @@ public class Shield extends InteractiveModule {
     @Override
     public void onRemove() {
         super.onRemove();
-        if(sc != null) {
+        if (sc != null) {
             sc.die();
             sc = null;
         }
@@ -85,5 +89,25 @@ public class Shield extends InteractiveModule {
 
     public void takeDamageOnShield(float amount) {
         this.shieldPower -= amount;
+    }
+
+    @Override
+    protected void create3DBody() {
+        super.create3DBody();
+        AssetManager a = ship.getApp().getAssetManager();
+        spatial = a.loadModel("3dmodels/shield_generator.obj");
+        material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t = a.loadTexture("3dmodels/shield_generator_ao.png");
+        material.setTexture("DiffuseMap", t);
+        spatial.setMaterial(material);
+
+        materialActive.setTexture("DiffuseMap", t);
+
+        Spatial spatial2 = a.loadModel("3dmodels/armor.obj");
+        this.attachChild(spatial2);
+        Material material2 = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t2 = a.loadTexture("3dmodels/armor_ao.png");
+        material2.setTexture("DiffuseMap", t2);
+        spatial2.setMaterial(material2);
     }
 }

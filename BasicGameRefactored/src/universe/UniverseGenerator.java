@@ -10,7 +10,7 @@ public class UniverseGenerator {
 	public static void debugSystem(Main app, Universe u){
 		SolarSystem sys = new SolarSystem(app);
 		app.getRootNode().attachChild(sys);
-		sys.setLocalTranslation(-20, -5, 0);
+		sys.setLocalTranslation(-100, -5, 0);
 		u.systems.add(sys);
 	}
 	

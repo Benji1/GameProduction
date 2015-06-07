@@ -54,7 +54,6 @@ public class EditorManager extends Service {
             shipChangedListeners.remove(shipChangedListenersToRemove.pop());
         }
     }
-    
     public void addShip(BasicShip ship) {
         this.ships.add(ship);
     }

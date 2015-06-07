@@ -9,21 +9,22 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.control.CameraControl;
-import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
+import items.EncapsulatingItem;
+import items.Item;
 import java.util.ArrayList;
 import org.jbox2d.dynamics.Body;
 import services.updater.UpdateableManager;
+import universe.Background;
 import universe.Universe;
 import universe.UniverseGenerator;
+import weapons.Projectile;
 
 /**
  * test
@@ -32,8 +33,9 @@ import universe.UniverseGenerator;
  */
 public class Main extends SimpleApplication implements ActionListener {
 
-    private CameraNode camNode;
+    public CameraNode camNode;
     private Universe u;
+    private Background background;
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
     protected float shipSpeed = 0;
@@ -43,10 +45,20 @@ public class Main extends SimpleApplication implements ActionListener {
     private GUI gui;
     public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     public BasicShip playersShip;
+    public BasicShip targetShip;
     
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
+    public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
+    public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
+    public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
+    
+    private float cameraHeight = 0f;
+    float camXOffset = -20f; // Camera X
+    float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
+    float camYOffset = 20f;  // Camera height
+    boolean universeDebug = false;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -66,13 +78,14 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
-        this.u = new Universe(this);
-        this.initShip();
         this.initWorld();
+        this.initShip();
         this.initLight();
-        this.initCamera();
         this.initKeys();
         this.initHUD();
+        this.initCamera();
+        this.background = new Background(this);
+        this.background.initBackground();
         this.gui = new GUI(this);
     }
 
@@ -80,7 +93,8 @@ public class Main extends SimpleApplication implements ActionListener {
         TestShipDesigns tsd = new TestShipDesigns(this);
         playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
-        tsd.createTestTargetShip2();
+        //playersShip = tsd.createBasicShip();
+        targetShip = tsd.createTestTargetShip2();
     }
 
     private void initCamera() {
@@ -89,12 +103,12 @@ public class Main extends SimpleApplication implements ActionListener {
 
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        this.playersShip.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-        camNode.lookAt(this.playersShip.getLocalTranslation(), Vector3f.UNIT_Y);
+        this.rootNode.attachChild(camNode);
 
-        // Does not work quite right
-        //camNode.lookAt(new Vector3f(this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().x, 0, this.s.getModule(new Point(playersShip.modules.length / 2, playersShip.modules.length / 2)).getBody().getWorldCenter().y), Vector3f.UNIT_Y);
+        cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
+        if (this.playersShip.cockpit != null) {
+            UpdateCamPos();
+        }
     }
 
     private void initKeys() {
@@ -125,36 +139,18 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initWorld() {
-        //UniverseGenerator.generateUniverse(this, u);
+        this.u = new Universe(this);
+
         UniverseGenerator.debugSystem(this, u);
-        
-        Box box1 = new Box(1, 1, 1);
-        Material mat1 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat1.setColor("Diffuse", ColorRGBA.Blue);
-        mat1.setColor("Specular", ColorRGBA.Blue);
-
-
-        for (int i = 0; i < 1000; i++) {
-            Geometry blue = new Geometry("Box", box1);
-            blue.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, -15, ((float) Math.random() - 0.5f) * 1000));
-            blue.setMaterial(mat1);
-            rootNode.attachChild(blue);
-
-            Geometry blue2 = new Geometry("Box", box1);
-            blue2.setLocalTranslation(new Vector3f(((float) Math.random() - 0.5f) * 1000, 10, ((float) Math.random() - 0.5f) * 1000));
-            blue2.setMaterial(mat1);
-            rootNode.attachChild(blue2);
-        }
     }
 
     private void initLight() {
         AmbientLight ambient = new AmbientLight();
-        ambient.setColor(ColorRGBA.White.mult(0.2f));
+        ambient.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(ambient);
     }
-
     boolean up = false, down = false;
-    
+
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         if (name.equals("Up")) {
@@ -208,27 +204,36 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("Shield") && !keyPressed) {
             // TODO: improve bool test
-            if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
+            if (playersShip.getInteractiveModulesWithHotkey("Shield").size() > 0 && playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
                 if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
                     playersShip.deactivateModules("Shield");
+                    targetShip.deactivateModules("Shield");
                 } else {
                     playersShip.activateModules("Shield");
+                    targetShip.activateModules("Shield");
                 }
             }
+
+
+
         }
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
-                if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1280f)) {
-                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-                    this.u.toggleUniverseDebug();
+                //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
+                // if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
+                if (universeDebug) {
+                    universeDebug = false;
+                    //camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
+                    //this.u.toggleUniverseDebug();
                     guiNode.attachChild(this.textShipPos);
                     guiNode.attachChild(this.textNewChunk);
                 } else {
-                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1280f), 0.1f));
-                    this.u.toggleUniverseDebug();
+                    camNode.setLocalTranslation(new Vector3f(0, 70 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
+                    //this.u.toggleUniverseDebug();
                     guiNode.detachChild(this.textShipPos);
                     guiNode.detachChild(this.textNewChunk);
+                    universeDebug = true;
                 }
             }
         }
@@ -241,23 +246,51 @@ public class Main extends SimpleApplication implements ActionListener {
             }
         }
     }
-    
+
     @Override
     public void simpleUpdate(float delta) {
-        this.u.update(delta);
-        
+        phyicsUpdate(delta);
+
         for (BasicShip s : ships) {
             s.update(delta);
         }
+        
         //System.out.println(ships.size());
         updateableManager.update(delta);
-        for(Body b: bodiesToRemove) {
+
+        for (Body b : bodiesToRemove) {
             //System.out.println(b);
             PhysicsWorld.world.destroyBody(b);
         }
         bodiesToRemove.clear();
 
-        phyicsUpdate(delta);
+        while (!projectilesToRemove.isEmpty()) {
+            Projectile p = projectilesToRemove.get(0);
+            projectilesToRemove.remove(0);
+            p.delete();
+        }
+        
+        while (!itemsToCreate.isEmpty()) {
+            EncapsulatingItem encItem =  itemsToCreate.remove(0);
+            encItem.init();
+        }
+        
+        while (!itemsToRemove.isEmpty()) {
+            Item i = itemsToRemove.get(0);
+            itemsToRemove.remove(0);
+            i.delete();
+        }
+        
+        
+        
+        
+        this.u.update(delta);
+        this.background.updateBackground();
+        // update camera position
+
+        if (this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
+            UpdateCamPos();
+        }
     }
 
     @Override
@@ -268,8 +301,52 @@ public class Main extends SimpleApplication implements ActionListener {
     public Universe getUniverse() {
         return this.u;
     }
- 
+
     public void phyicsUpdate(float delta) {
         PhysicsWorld.world.step(delta, 8, 8);
+    }
+    Vector3f previousCamPos;
+    Vector3f currentCamPos = new Vector3f();
+    float camPosChangeLerpValue = 0.03f;
+
+    public void UpdateCamPos() {
+        previousCamPos = currentCamPos;
+        currentCamPos = new Vector3f();
+
+        float min = 0.1f;
+        float max = 100f;
+        float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
+
+        speedFactor = Math.max(min, speedFactor);
+        speedFactor = Math.min(speedFactor, max);
+        float t = inverseLerp(0f, max + min, speedFactor);
+        float offsetFactor = 1f - t;
+
+        currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
+        currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
+
+        float newY =
+                lerp(
+                previousCamPos.y,
+                this.cameraHeight + speedFactor,
+                camPosChangeLerpValue);
+
+        if (!up || newY > previousCamPos.y) {
+            currentCamPos.y = newY;
+        } else {
+            currentCamPos.y = previousCamPos.y;
+        }
+
+        camNode.setLocalTranslation(currentCamPos);
+        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+
+    }
+
+    float lerp(float v0, float v1, float t) {
+        return (1 - t) * v0 + t * v1;
+    }
+
+    float inverseLerp(float a, float b, float x) {
+        return (x - a) / (b - a);
     }
 }

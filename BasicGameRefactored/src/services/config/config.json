@@ -1,7 +1,7 @@
 {
     "Basic": {
         "MaxHealth": 100,
-        "DropRateInPercent": 2
+        "DropRateInPercent": 25
     },
     "Armor": {
         "MaxHealth": 500
@@ -11,7 +11,9 @@
     },
     "Thruster": {
         "ForceMagnitude": 300,
-        "EnergyConsumptionPerSecond": 10
+        "EnergyConsumptionPerSecond": 10,
+        "LinearDamping": 0.5,
+        "LinearDampingWeak": 2
     },
     "EnergyGenerator": {
         "EnergyGeneratedPerSecond": 20,

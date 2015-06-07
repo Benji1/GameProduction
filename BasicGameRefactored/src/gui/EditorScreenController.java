@@ -76,6 +76,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     private class OrientedModule {
         public ModuleType moduleType;
         public FacingDirection facingDirection;
+        
         public OrientedModule(ModuleType moduleType) {
             this(moduleType, FacingDirection.FORWARD);
         }
@@ -83,6 +84,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             this.moduleType = moduleType;
             this.facingDirection = orientation;
         }
+
         public void rotateRight() {
             facingDirection = facingDirection.next();
         }
@@ -301,6 +303,12 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 }
             }
         }
+        SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
+        Element dragged = event.getDraggable().getElement();
+        dragged.setConstraintWidth(sizeValue);
+        dragged.setConstraintHeight(sizeValue);
+        dragged.getElements().get(0).setConstraintWidth(new SizeValue("100%"));
+        dragged.getElements().get(0).setConstraintHeight(new SizeValue("100%"));
     }
     
     @NiftyEventSubscriber(pattern="part-panel-.*") 
@@ -458,7 +466,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 if (modules[i][j] != null) {
                     int slotX = i - (modules.length / 2);
                     int slotY = j - (modules[0].length / 2);
-                    
+
                     // build slots
                     Element parent = buildEmptySlot(slotX, slotY).getElements().get(0);
                     buildNeighborSlots(slotX, slotY);

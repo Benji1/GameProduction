@@ -8,9 +8,10 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
-import gui.ModuleType;
 import java.awt.Point;
 import java.util.ArrayList;
+import com.jme3.math.Vector3f;
+import gui.ModuleType;
 import services.ServiceManager;
 import services.editor.IShipChangedListener;
 import services.updater.IUpdateable;
@@ -29,11 +30,12 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
     public Cockpit cockpit;
+    public Vector3f cockpitPos;
     public int colliderType, collidingWith;
     private Inventory inventory;
 
-    public BasicShip(Main app) {
-        super(app, "BasicShip", Abs_ChunkNode.ChunkNodeType.Ship);
+    public BasicShip(Main app, String name) {
+        super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
         app.ships.add(this);
 
@@ -238,7 +240,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         // if seperated in more than one ship
         if (shipNumber > 2) { // more than one ship (cause it starts with one and gets a ++ at the end of the loop)
             for (int k = 3; k <= shipNumber; k++) {
-                BasicShip newShip = new BasicShip(app);
+                // XXX
+                BasicShip newShip = new BasicShip(app, name + "" + idCounter);
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
@@ -269,7 +272,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public void floodFill(int shipNumber, int[][] alreadyAdded, BasicModule[][] ms, Point start) {
         if (ms[start.x][start.y] != null && alreadyAdded[start.x][start.y] < shipNumber) {
 
-            ms[start.x][start.y] = modules[start.x][start.y];
             alreadyAdded[start.x][start.y] = shipNumber;
             if (start.x - 1 > 0) {
                 floodFill(shipNumber, alreadyAdded, ms, new Point(start.x - 1, start.y));
@@ -302,6 +304,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     }
 
     public void onShipChanged(BasicModule[][] modulesNewShip) {
+        this.cockpitPos = this.cockpit.getBodyPos().clone();
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
                 if (modules[i][j] != null) {

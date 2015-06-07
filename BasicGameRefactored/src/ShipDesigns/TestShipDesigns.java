@@ -12,6 +12,7 @@ import Modules.LaserGun;
 import Modules.Shield;
 import Modules.Storage;
 import Modules.Thruster;
+import Modules.WeakThruster;
 import java.awt.Point;
 import java.util.ArrayList;
 import mygame.BasicShip;
@@ -47,12 +48,14 @@ public class TestShipDesigns {
     public static final int CATEGORY_SCENERY = 3;
     public static final int CATEGORY_PROJECTILE = 4;
     public static final int CATEGORY_SHIELD = 5;
+    public static final int CATEGORY_ITEM = 6;
     
-    public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
-    public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
+    public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
+    public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
     public static final int MASK_SCENERY = -1;
     public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
     public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
+    public static final int MASK_ITEM = CATEGORY_PLAYER | CATEGORY_ENEMY;
     
     public TestShipDesigns(Main main) {
         this.main = main;
@@ -106,31 +109,33 @@ public class TestShipDesigns {
     }
 
     public BasicShip createTestShip1() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "PlayerShip");
         
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
-        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
-        s.addModuleAtFromOffset(new Storage(), new Point(-1, 0));
-        s.addModuleAtFromOffset(new Storage(), new Point(1, 0));
+        Cockpit cp = new Cockpit();
+        s.addModuleAtFromOffset(cp, new Point(0,0));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 0));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 0));
         s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(0, -2)); // Backwards is strange
-        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, 2));
-        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.LEFT), new Point(1, 1));
-        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.RIGHT), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.LEFT), new Point(1, 1));
+        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.RIGHT), new Point(-1, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Storage(), new Point(-1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(-2, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
         s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 0));
         s.addModuleAtFromOffset(new Shield(shield), new Point(2, 0));
+        s.cockpit = cp;
         
         return s;
     }
 
     public BasicShip createTestTargetShip() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "TargetShip");
         
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
@@ -160,7 +165,7 @@ public class TestShipDesigns {
     }
     
      public BasicShip createTestTargetShip2() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "TargetShip");
         
         s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
@@ -177,18 +182,18 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-2, -7));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -9));
-        s.addModuleAtFromOffset(new Shield(testFire), new Point(-3, -8));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(-3, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-3, -7));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -9));
-        s.addModuleAtFromOffset(new Shield(testFire), new Point(2, -8));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(2, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -7));
-        s.activateModules("TestFire");
+        //s.activateModules("Shield");
         
         return s;
     }
     
     public BasicShip createStickShip() {
-        BasicShip s = new BasicShip(main);
+        BasicShip s = new BasicShip(main, "PlayerShip");
 
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
@@ -198,18 +203,58 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-2, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(2, 0));
         
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(1, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(-1, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(2, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(-2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.FORWARD), new Point(1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.FORWARD), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.FORWARD), new Point(2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.FORWARD), new Point(-2, 1));
         
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(1, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(-1, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(2, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(-2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, -1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.BACKWARD), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.BACKWARD), new Point(-2, -1));
         
         return s;
     }
+    
+    public BasicShip createBasicShip() {
+        BasicShip s = new BasicShip(main, "PlayerShip");
+
+        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
+        
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
+ //       s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new WeakThruster(right, FacingDirection.RIGHT), new Point(-1, 2));
+        s.addModuleAtFromOffset(new WeakThruster(left, FacingDirection.LEFT), new Point(1, 2));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(-1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(1, 0)); // Backwards is strange
+        
+        return s;
+    }
+    
+    public BasicShip createBasicShip2() {
+        BasicShip s = new BasicShip(main, "PlayerShip");
+
+        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
+        
+        s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
+        s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
+ //       s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.RIGHT), new Point(-1, 2));
+        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.LEFT), new Point(1, 2));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(-1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new Shield(shield), new Point(2, 1));
+        s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 1));
+        
+        return s;
+    }    
 }

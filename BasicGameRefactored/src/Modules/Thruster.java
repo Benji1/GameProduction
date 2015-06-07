@@ -4,7 +4,10 @@
  */
 package Modules;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.texture.Texture;
 import gui.ModuleType;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
@@ -16,6 +19,7 @@ import org.jbox2d.common.Vec2;
 public class Thruster extends InteractiveModule {
 
     protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
+    protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDamping", float.class);
 
     public Thruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys);
@@ -30,7 +34,28 @@ public class Thruster extends InteractiveModule {
     }
 
     protected void onActive() {
-        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude);
+        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude).mul(-1);
         body.applyForce(forceDirection, body.getPosition());
+    }
+   
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        if (!active) {
+            this.body.setLinearDamping(linearDampingFactor);
+        }
+    }
+    
+    @Override
+    protected void create3DBody() {
+        super.create3DBody();
+        AssetManager a = ship.getApp().getAssetManager();
+        spatial = a.loadModel("3dmodels/thruster.obj");
+        material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        Texture t = a.loadTexture("3dmodels/thruster_ao.png");
+        material.setTexture("DiffuseMap", t);
+        spatial.setMaterial(material);
+        
+        materialActive.setTexture("DiffuseMap", t);
     }
 }
