@@ -303,12 +303,6 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 }
             }
         }
-        SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
-        Element dragged = event.getDraggable().getElement();
-        dragged.setConstraintWidth(sizeValue);
-        dragged.setConstraintHeight(sizeValue);
-        dragged.getElements().get(0).setConstraintWidth(new SizeValue("100%"));
-        dragged.getElements().get(0).setConstraintHeight(new SizeValue("100%"));
     }
     
     @NiftyEventSubscriber(pattern="part-panel-.*") 
