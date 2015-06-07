@@ -211,7 +211,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
             saveSpatials.add(s.clone());
         }
         
-        ship.getApp().itemsToCreate.add(new EncapsulatingItem(saveSpatials, body.getPosition(), q, ship.getApp()));
+        ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, body.getPosition(), q, ship.getApp()));
     }
     
      public void destroyWithoutSeperation() {

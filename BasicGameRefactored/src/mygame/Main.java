@@ -9,15 +9,11 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
-import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
 import items.EncapsulatingItem;
@@ -56,6 +52,7 @@ public class Main extends SimpleApplication implements ActionListener {
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
+    public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
@@ -274,12 +271,17 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         
         while (!itemsToCreate.isEmpty()) {
-            // Remove object from queue.
             EncapsulatingItem encItem =  itemsToCreate.remove(0);
-
-            // Create new body in world.
             encItem.init();
         }
+        
+        while (!itemsToRemove.isEmpty()) {
+            Item p = itemsToRemove.get(0);
+            itemsToRemove.remove(0);
+            p.delete();
+        }
+        
+        
         
         
         this.u.update(delta);
