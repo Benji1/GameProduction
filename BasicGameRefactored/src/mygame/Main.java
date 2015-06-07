@@ -9,23 +9,22 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
-import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import gui.GUI;
+import items.EncapsulatingItem;
+import items.Item;
 import java.util.ArrayList;
 import org.jbox2d.dynamics.Body;
 import services.updater.UpdateableManager;
 import universe.Background;
 import universe.Universe;
 import universe.UniverseGenerator;
+import weapons.Projectile;
 
 /**
  * test
@@ -51,13 +50,16 @@ public class Main extends SimpleApplication implements ActionListener {
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
+    public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
+    public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
+    public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
-    float camYOffset = 50f;  // Camera height
+    float camYOffset = 20f;  // Camera height
     boolean universeDebug = false;
-    
+
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(60);
@@ -93,24 +95,6 @@ public class Main extends SimpleApplication implements ActionListener {
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
         targetShip = tsd.createTestTargetShip2();
-        
-        Spatial spatial;
-        Material material;    
-        
-        Box box = new Box(1, 0.4f, 1);
-        spatial = new Geometry("Box", box);
-        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-        ColorRGBA color = ColorRGBA.Blue;
-        material.setBoolean("UseMaterialColors", true);
-        material.setColor("Ambient", color);
-        material.setColor("Diffuse", color);
-
-        spatial.setMaterial(material);
-        this.rootNode.attachChild(spatial);
-        
-        System.out.println(this.rootNode.getLocalTranslation());
-        System.out.println(spatial.getLocalTranslation());
     }
 
     private void initCamera() {
@@ -120,9 +104,9 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode = new CameraNode("Camera Node", viewPort.getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
-        
+
         cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
-        if(this.playersShip.cockpit != null) {
+        if (this.playersShip.cockpit != null) {
             UpdateCamPos();
         }
     }
@@ -156,7 +140,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initWorld() {
         this.u = new Universe(this);
-        
+
         UniverseGenerator.debugSystem(this, u);
     }
 
@@ -165,9 +149,8 @@ public class Main extends SimpleApplication implements ActionListener {
         ambient.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(ambient);
     }
-
     boolean up = false, down = false;
-    
+
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         if (name.equals("Up")) {
@@ -230,9 +213,9 @@ public class Main extends SimpleApplication implements ActionListener {
                     targetShip.activateModules("Shield");
                 }
             }
-            
-            
-            
+
+
+
         }
 
         if (name.equals("ToggleUniverseDebug")) {
@@ -263,50 +246,49 @@ public class Main extends SimpleApplication implements ActionListener {
             }
         }
     }
-    
+
     @Override
     public void simpleUpdate(float delta) {
-        
-        
-        Spatial spatial;
-        Material material;    
-        
-        Box box = new Box(1, 0.4f, 1);
-        spatial = new Geometry("Box", box);
-        material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-        ColorRGBA color = ColorRGBA.Blue;
-        material.setBoolean("UseMaterialColors", true);
-        material.setColor("Ambient", color);
-        material.setColor("Diffuse", color);
-
-        spatial.setMaterial(material);
-        this.rootNode.attachChild(spatial);
-        
-        
         phyicsUpdate(delta);
-        
-        
-         for (BasicShip s : ships) {
+
+        for (BasicShip s : ships) {
             s.update(delta);
         }
+        
         //System.out.println(ships.size());
         updateableManager.update(delta);
-        
-        
-        
-        for(Body b: bodiesToRemove) {
+
+        for (Body b : bodiesToRemove) {
             //System.out.println(b);
             PhysicsWorld.world.destroyBody(b);
         }
         bodiesToRemove.clear();
 
-       
+        while (!projectilesToRemove.isEmpty()) {
+            Projectile p = projectilesToRemove.get(0);
+            projectilesToRemove.remove(0);
+            p.delete();
+        }
+        
+        while (!itemsToCreate.isEmpty()) {
+            EncapsulatingItem encItem =  itemsToCreate.remove(0);
+            encItem.init();
+        }
+        
+        while (!itemsToRemove.isEmpty()) {
+            Item i = itemsToRemove.get(0);
+            itemsToRemove.remove(0);
+            i.delete();
+        }
+        
+        
+        
+        
         this.u.update(delta);
         this.background.updateBackground();
         // update camera position
-        
-        if(this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
+
+        if (this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
             UpdateCamPos();
         }
     }
@@ -319,20 +301,52 @@ public class Main extends SimpleApplication implements ActionListener {
     public Universe getUniverse() {
         return this.u;
     }
- 
+
     public void phyicsUpdate(float delta) {
         PhysicsWorld.world.step(delta, 8, 8);
     }
-    
-    public void UpdateCamPos()
-    {
-        camNode.setLocalTranslation(
-                    this.playersShip.cockpit.getLocalTranslation().x + camXOffset,
-                    this.cameraHeight, 
-                    this.playersShip.cockpit.getLocalTranslation().z + camZOffset
-                );
-        
-        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
+    Vector3f previousCamPos;
+    Vector3f currentCamPos = new Vector3f();
+    float camPosChangeLerpValue = 0.03f;
 
+    public void UpdateCamPos() {
+        previousCamPos = currentCamPos;
+        currentCamPos = new Vector3f();
+
+        float min = 0.1f;
+        float max = 100f;
+        float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
+
+        speedFactor = Math.max(min, speedFactor);
+        speedFactor = Math.min(speedFactor, max);
+        float t = inverseLerp(0f, max + min, speedFactor);
+        float offsetFactor = 1f - t;
+
+        currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
+        currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
+
+        float newY =
+                lerp(
+                previousCamPos.y,
+                this.cameraHeight + speedFactor,
+                camPosChangeLerpValue);
+
+        if (!up || newY > previousCamPos.y) {
+            currentCamPos.y = newY;
+        } else {
+            currentCamPos.y = previousCamPos.y;
+        }
+
+        camNode.setLocalTranslation(currentCamPos);
+        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+
+    }
+
+    float lerp(float v0, float v1, float t) {
+        return (1 - t) * v0 + t * v1;
+    }
+
+    float inverseLerp(float a, float b, float x) {
+        return (x - a) / (b - a);
     }
 }

@@ -10,6 +10,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
+import gui.ModuleType;
 
 /**
  *
@@ -26,6 +27,8 @@ public class EnergyGenerator extends BasicModule {
         super();
         moduleName = "E-Gen";
         color = ColorRGBA.Yellow;
+        type = ModuleType.ENERGY_GENERATOR;
+        orientation = FacingDirection.FORWARD;
     }
 
     @Override

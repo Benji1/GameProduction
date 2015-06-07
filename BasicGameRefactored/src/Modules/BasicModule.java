@@ -6,11 +6,23 @@ package Modules;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.ElementBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.screen.Screen;
+import gui.ModuleType;
+import gui.dragAndDrop.builder.DraggableBuilder;
+import items.EncapsulatingItem;
 import services.config.ConfigReader;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
 import mygame.BasicShip;
 import mygame.JBox2dNode;
 import mygame.PhysicsWorld;
@@ -41,7 +53,9 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected ColorRGBA color = ColorRGBA.Gray;
     protected Body body;
     protected Spatial spatial;
-    protected Material material;       
+    protected Material material;
+    protected ModuleType type;
+    protected FacingDirection orientation;
     
     public int group = 0;
 
@@ -81,6 +95,10 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public Spatial getSpatial() {
     	return this.spatial;
+    }
+    
+    public Material getMaterial() {
+        return this.material;
     }
 
     @Override
@@ -169,10 +187,31 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public void destroy() {
         onRemove();
+        
+        if(shouldSpawnItem()) {
+            spawnItem();
+        }
         this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
         ship.sperateInNewShips();
-        // SPAWN WITH DROPABILITY OR JUST DESTROY
+    }
+    
+    public boolean shouldSpawnItem() {
+        Random rn = new Random();
+        return rn.nextFloat() <= dropRateInPercent / 100;
+    }
+    
+    public void spawnItem() {
+        float angleRad = body.getAngle();
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+        
+        ArrayList<Spatial> saveSpatials = new ArrayList<Spatial>();
+        for(Spatial s : children) {
+            saveSpatials.add(s.clone());
+        }
+        
+        ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, body.getPosition(), q, ship.getApp()));
     }
     
      public void destroyWithoutSeperation() {
@@ -201,5 +240,30 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
+    }
+    
+    public void buildGuiElement(int idCounter, Nifty nifty, Screen screen, Element targetParent) {
+        String newId = "part-panel-"+type.getValue()+"-"+idCounter;
+       
+        Element element = new DraggableBuilder(newId) {{
+            visibleToMouse(true);
+            childLayout(ElementBuilder.ChildLayoutType.Center);
+            panel(new PanelBuilder() {{
+                backgroundImage("Interface/Images/Parts.png");
+                width("100%");
+                height("100%");
+                imageMode("sprite:100,100,"+(type.getValue()*4 + orientation.getSpriteValue()));
+            }});
+        }}.build(nifty, screen, targetParent);
+        
+        element.setParent(targetParent);
+    }
+    
+    public ModuleType getType() {
+        return type;
+    }
+    
+    public FacingDirection getOrientation() {
+        return orientation;
     }
 }

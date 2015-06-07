@@ -10,6 +10,8 @@ import Modules.Cockpit;
 import Modules.EnergyGenerator;
 import Modules.FacingDirection;
 import Modules.LaserGun;
+import Modules.Shield;
+import Modules.Storage;
 import Modules.Thruster;
 import gui.dragAndDrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.Nifty;
@@ -71,9 +73,13 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     private class OrientedModule {
         public ModuleType moduleType;
         public FacingDirection facingDirection;
+        
         public OrientedModule(ModuleType moduleType) {
-            this.moduleType = moduleType;
             this.facingDirection = FacingDirection.FORWARD;
+        }
+        public OrientedModule(ModuleType moduleType, FacingDirection orientation) {
+            this.moduleType = moduleType;
+            this.facingDirection = orientation;
         }
         public void rotateRight() {
             facingDirection = facingDirection.next();
@@ -82,13 +88,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             facingDirection = facingDirection.previous();
         }
         public int getSpriteNumber() {
-            switch (facingDirection) {
-                case FORWARD: return moduleType.getValue() * 4;
-                case RIGHT: return moduleType.getValue() * 4 + 1;
-                case BACKWARD: return moduleType.getValue() * 4 + 2;
-                case LEFT: return moduleType.getValue() * 4 + 3;
-                default: return moduleType.getValue() * 4;
-            }
+            return moduleType.getValue() * 4 + facingDirection.getSpriteValue();
         }
     }
     
@@ -120,6 +120,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         // reload inventory       
         setupPartsPanel("Cockpit");
         setupSlotsPanel();
+        loadShipFromGame();
     }
 
     public void onEndScreen() {
@@ -446,19 +447,51 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         buildEmptySlot(0, 0);
     }
     
-    private void buildEmptySlot(final int x, final int y) {
-        final int gridItemSize = (int) (DEFAULT_SLOT_SIZE * scale);
-        Element slotsPanel = screen.findElementByName("slots-container");
-        ControlBuilder slotPanel = new ControlBuilder("empty-slot") {{
-            parameter("droppableId", "slotX"+x+"Y"+y);
-            parameter("width", gridItemSize+"px");
-            parameter("height", gridItemSize+"px");
-            parameter("x", x*gridItemSize+"px");
-            parameter("y", y*gridItemSize+"px");
-        }};
-        Element element = slotPanel.build(nifty, screen, slotsPanel);
-        DroppableControl dropable = element.getControl(DroppableControl.class);
-        dropable.addFilter(this);
+    private void loadShipFromGame() {
+        // TODO: change ship id
+        BasicModule[][] modules = ServiceManager.getEditorManager().getShipModules(0);
+        //System.out.println(modules.length + "/" + modules[0].length);
+        for (int i=0; i<modules.length; i++) {
+            for (int j=0; j<modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    int slotX = i - (modules.length / 2);
+                    int slotY = j - (modules[0].length / 2);
+                    //System.out.println("array: " + i + "/" + j);
+                    //System.out.println("slot: " + slotX + "/" + slotY);
+                    // build slots
+                    Element parent = buildEmptySlot(slotX, slotY).getElements().get(0);
+                    buildNeighborSlots(slotX, slotY);
+                    
+                    // build module element
+                    modules[i][j].buildGuiElement(partIdCounter++, nifty, screen, parent);
+                    
+                    // add background data
+                    shipTiles.put(new Point(slotX, slotY), new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation()));
+                }
+            }
+        }
+    }
+    
+    private Element buildEmptySlot(final int x, final int y) {
+        Element e = screen.findElementByName("slotX" + x + "Y" + y);
+        if (e == null) {
+            final int gridItemSize = (int) (DEFAULT_SLOT_SIZE * scale);
+            Element slotsPanel = screen.findElementByName("slots-container");
+            ControlBuilder slotPanel = new ControlBuilder("empty-slot") {{
+                parameter("droppableId", "slotX"+x+"Y"+y);
+                parameter("width", gridItemSize+"px");
+                parameter("height", gridItemSize+"px");
+                parameter("x", x*gridItemSize+"px");
+                parameter("y", y*gridItemSize+"px");
+            }};
+            Element element = slotPanel.build(nifty, screen, slotsPanel);
+            DroppableControl dropable = element.getControl(DroppableControl.class);
+            dropable.addFilter(this);
+            
+            return element;
+        } else {
+            return e;
+        }
     }
 
     public boolean accept(Droppable dropSource, Draggable draggedItem, Droppable dropTarget) {
@@ -572,11 +605,17 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case WEAPON:
                         //System.out.println("setting weapon at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection.next().next());
+                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection);
                         break;
                     case ARMOR_DIAGONAL:
                         //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
                         modules[x+xOffset][y+yOffset] = new Armor();
+                        break;
+                        case SHIELD:
+                        modules[x+xOffset][y+yOffset] = new Shield(shield);
+                        break;
+                       case STORAGE:
+                        modules[x+xOffset][y+yOffset] = new Storage();
                         break;
                     default:
                         break;
