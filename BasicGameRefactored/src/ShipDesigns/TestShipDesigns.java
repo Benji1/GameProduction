@@ -42,11 +42,11 @@ public class TestShipDesigns {
     
     ArrayList<String> testFire;
     
-    public static final int CATEGORY_PLAYER = 1;
-    public static final int CATEGORY_ENEMY = 2;
-    public static final int CATEGORY_SCENERY = 3;
-    public static final int CATEGORY_PROJECTILE = 4;
-    public static final int CATEGORY_SHIELD = 5;
+    public static final int CATEGORY_PLAYER = 0x0001;
+    public static final int CATEGORY_ENEMY = 0x0002;
+    public static final int CATEGORY_SCENERY = 0x0004;
+    public static final int CATEGORY_PROJECTILE = 0x0008;
+    public static final int CATEGORY_SHIELD = 0x0010;
     
     public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
     public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE;
