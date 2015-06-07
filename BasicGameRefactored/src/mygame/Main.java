@@ -276,9 +276,9 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         
         while (!itemsToRemove.isEmpty()) {
-            Item p = itemsToRemove.get(0);
+            Item i = itemsToRemove.get(0);
             itemsToRemove.remove(0);
-            p.delete();
+            i.delete();
         }
         
         

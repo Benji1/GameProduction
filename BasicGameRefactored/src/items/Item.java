@@ -12,7 +12,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import gui.ModuleType;
 import java.util.ArrayList;
-import mygame.BasicShip;
 import mygame.JBox2dNode;
 import mygame.Main;
 import mygame.PhysicsWorld;
@@ -57,6 +56,7 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
             //s.setLocalTranslation(new Vector3f(spawnPoint.x, 0, spawnPoint.y));
             s.setLocalScale(0.5f);
         }
+        this.updateBoxPosition();
         app.getRootNode().attachChild(this);
     }
 
@@ -86,7 +86,7 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     }
     
     
-    protected void updateBoxPosition() {
+    protected final void updateBoxPosition() {
         Vector3f bodyPos = new Vector3f(
                 (float) body.getWorldPoint(body.getLocalCenter()).x,
                 0.0f,
@@ -121,7 +121,7 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     
     public void handleShipCollision(BasicModule m) {
         if(!collected) {
-            System.out.println("LOL");
+            //System.out.println("Collision");
             collected = true;
             m.getShip().collectItem(type);
             markForDeletion();

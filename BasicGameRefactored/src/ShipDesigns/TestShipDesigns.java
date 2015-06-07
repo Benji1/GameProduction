@@ -10,6 +10,7 @@ import Modules.EnergyGenerator;
 import Modules.FacingDirection;
 import Modules.LaserGun;
 import Modules.Shield;
+import Modules.Storage;
 import Modules.Thruster;
 import Modules.WeakThruster;
 import java.awt.Point;
@@ -122,7 +123,7 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Thruster(left, FacingDirection.RIGHT), new Point(-1, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Storage(), new Point(-1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(-2, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
