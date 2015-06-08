@@ -14,7 +14,6 @@ public class WeakThruster extends Thruster {
 
     public WeakThruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys, orientationDirection);
-        linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDampingWeak", float.class);
         moduleName = "WeakThruster";
     }
 }

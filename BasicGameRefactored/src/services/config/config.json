@@ -10,7 +10,7 @@
         "MaxStorage": 20
     },
     "Thruster": {
-        "ForceMagnitude": 300,
+        "ForceMagnitude": 500,
         "EnergyConsumptionPerSecond": 10,
         "LinearDamping": 0.5,
         "LinearDampingWeak": 2
