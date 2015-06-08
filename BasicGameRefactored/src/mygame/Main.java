@@ -54,6 +54,7 @@ public class Main extends SimpleApplication implements ActionListener {
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
     public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
+    private boolean useAdjustingCamera = false;
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
@@ -310,35 +311,47 @@ public class Main extends SimpleApplication implements ActionListener {
     float camPosChangeLerpValue = 0.03f;
 
     public void UpdateCamPos() {
-        previousCamPos = currentCamPos;
-        currentCamPos = new Vector3f();
+        
+        if (useAdjustingCamera){
+            previousCamPos = currentCamPos;
+            currentCamPos = new Vector3f();
 
-        float min = 0.1f;
-        float max = 100f;
-        float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
+            float min = 0.1f;
+            float max = 100f;
+            float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
 
-        speedFactor = Math.max(min, speedFactor);
-        speedFactor = Math.min(speedFactor, max);
-        float t = inverseLerp(0f, max + min, speedFactor);
-        float offsetFactor = 1f - t;
+            speedFactor = Math.max(min, speedFactor);
+            speedFactor = Math.min(speedFactor, max);
+            float t = inverseLerp(0f, max + min, speedFactor);
+            float offsetFactor = 1f - t;
 
-        currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
-        currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
+            currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
+            currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
 
-        float newY =
-                lerp(
-                previousCamPos.y,
-                this.cameraHeight + speedFactor,
-                camPosChangeLerpValue);
+            float newY =
+                    lerp(
+                    previousCamPos.y,
+                    this.cameraHeight + speedFactor,
+                    camPosChangeLerpValue);
 
-        if (!up || newY > previousCamPos.y) {
-            currentCamPos.y = newY;
-        } else {
-            currentCamPos.y = previousCamPos.y;
+            if (!up || newY > previousCamPos.y) {
+                currentCamPos.y = newY;
+            } else {
+                currentCamPos.y = previousCamPos.y;
+            }
+
+            camNode.setLocalTranslation(currentCamPos);
+            camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
         }
+        else
+        {
+            currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x;
+            currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + 0.1f;
+            currentCamPos.y = this.cameraHeight * 5f;
 
-        camNode.setLocalTranslation(currentCamPos);
-        camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+            camNode.setLocalTranslation(currentCamPos);
+            camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+        }
 
     }
 
