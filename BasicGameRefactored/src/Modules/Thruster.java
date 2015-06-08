@@ -45,7 +45,7 @@ public class Thruster extends InteractiveModule {
     public void update(float delta) {
         super.update(delta);
         fire.setLocalTranslation(this.body.getPosition().x, 0, this.body.getPosition().y);
-        fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(18f));
+        fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(5f));
     }
     
     @Override
