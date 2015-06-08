@@ -45,6 +45,7 @@ public class Thruster extends InteractiveModule {
     public void update(float delta) {
         super.update(delta);
         fire.setLocalTranslation(this.body.getPosition().x, 0, this.body.getPosition().y);
+        fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(18f));
     }
     
     @Override
@@ -80,8 +81,8 @@ public class Thruster extends InteractiveModule {
         //fire.setImagesX(2); fire.setImagesY(2); // 2x2 texture animation
         fire.setStartColor(  new ColorRGBA(0.6f, 0.9f, 1f, 0.9f));
         fire.setEndColor(new ColorRGBA(0.1f, 0f, 0f, 0f));
-        fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(8f));
-        fire.setStartSize(1f + (float)Math.random());
+        //fire.setStartSize(1f + (float)Math.random());
+        fire.setStartSize(1f);
         fire.setEndSize(0.1f);
         fire.setGravity(0,0,0);
         fire.setLowLife(0.5f);
@@ -97,8 +98,14 @@ public class Thruster extends InteractiveModule {
     
     public final Vector3f getParticleSpawnDirection(float initialVelocity)
     {   
-        Vector3f forward = new Vector3f(0,0,initialVelocity);
-        this.localToWorld(forward,forward);
+        if (getBody() == null)
+            return new Vector3f(0f, 0f, 0f);
+        
+        float angle = this.getBody().getAngle();
+        float x = (float)Math.cos(angle + 90f);        
+        float y = (float)Math.sin(angle + 90f);
+
+        Vector3f forward = new Vector3f(initialVelocity * x, 0 ,initialVelocity * y);
         return forward;
     }
 }
