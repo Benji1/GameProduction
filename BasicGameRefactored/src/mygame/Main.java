@@ -54,7 +54,7 @@ public class Main extends SimpleApplication implements ActionListener {
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
     public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
-    private boolean useAdjustingCamera = false;
+    private boolean useAdjustingCamera = true;
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
