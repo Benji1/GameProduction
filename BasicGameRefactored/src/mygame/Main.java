@@ -112,6 +112,11 @@ public class Main extends SimpleApplication implements ActionListener {
         this.rootNode.attachChild(camNode);
 
         cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
+        
+        Vector3f tmpPos = camNode.getLocalTranslation();
+        tmpPos.y = cameraHeight - 2f;
+        currentCamPos = tmpPos;
+        
         if (this.player.getShip().cockpit != null) {
             UpdateCamPos();
         }
@@ -149,7 +154,6 @@ public class Main extends SimpleApplication implements ActionListener {
         ambient.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(ambient);
     }
-    boolean up = false, down = false;
 
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
@@ -269,7 +273,7 @@ public class Main extends SimpleApplication implements ActionListener {
                     this.cameraHeight + speedFactor,
                     camPosChangeLerpValue);
 
-            if (!up || newY > previousCamPos.y) {
+            if (!player.getShip().hasActivatedThruster() || newY > previousCamPos.y) {
                 currentCamPos.y = newY;
             } else {
                 currentCamPos.y = previousCamPos.y;
