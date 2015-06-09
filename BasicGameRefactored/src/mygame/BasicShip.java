@@ -29,6 +29,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
     private Player player;
+    private int activatedThrusterCount;
 
     public BasicShip(Main app, String name) {
         this(app, name, null);
@@ -38,6 +39,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         app.getRootNode().attachChild(this);
         app.ships.add(this); 
         this.player = player;
+        activatedThrusterCount = 0;
     }
     
     public void setPlayer(Player player) {
@@ -45,6 +47,16 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     }
     public Player getPlayer() {
         return player;
+    }
+    
+    public void increaseActivatedThrusterCount() {
+        this.activatedThrusterCount++;
+    }
+    public void decreaseActivatedThrusterCount() {
+        this.activatedThrusterCount--;
+    }
+    public boolean hasActivatedThruster() {
+        return activatedThrusterCount > 0;
     }
 
     @Override

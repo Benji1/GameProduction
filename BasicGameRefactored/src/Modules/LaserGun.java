@@ -73,20 +73,22 @@ public class LaserGun extends Weapon {
     @Override
     public void handleKeyPressed(Integer keyCode) {
         if (keyCodes.contains(keyCode)) {
-            keyPressedCounter++;            
-        }
-        if (keyPressedCounter > 0) {
-            activate();
-        }
+            keyPressedCounter++;     
+            
+            if (keyPressedCounter > 0) {
+                activate();
+            }
+        }        
     }
 
     @Override
     public void handleKeyReleased(Integer keyCode) {
         if (keyCodes.contains(keyCode)) {
             keyPressedCounter--;
-        }
-        if (keyPressedCounter <= 0) {
-            deactivate();
-        }
+            
+            if (keyPressedCounter <= 0) {
+                deactivate();
+            }
+        }        
     }
 }
