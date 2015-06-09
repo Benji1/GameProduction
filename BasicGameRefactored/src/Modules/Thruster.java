@@ -9,6 +9,7 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
 import gui.ModuleType;
@@ -37,7 +38,7 @@ public class Thruster extends InteractiveModule {
     }
 
     protected void onActive() {
-        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude).mul(-1);
+        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude);
         body.applyForce(forceDirection, body.getPosition());
     }
    
@@ -71,8 +72,11 @@ public class Thruster extends InteractiveModule {
         Texture t = a.loadTexture("3dmodels/thruster_ao.png");
         material.setTexture("DiffuseMap", t);
         spatial.setMaterial(material);
-        
         materialActive.setTexture("DiffuseMap", t);
+        
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis(-(float) Math.atan2(FacingDirection.getDirectionVector(orientation).x, -FacingDirection.getDirectionVector(orientation).y), new Vector3f(0, 1, 0));
+        spatial.setLocalRotation(q);
         
         fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 100);
         Material mat_red = new Material(a, "Common/MatDefs/Misc/Particle.j3md");
