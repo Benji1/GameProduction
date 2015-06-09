@@ -55,8 +55,9 @@ public class Main extends SimpleApplication implements ActionListener {
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
     public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
-    private boolean useAdjustingCamera = true;
-    private float cameraHeight = 0f;
+    private int cameraType = 2; // 0, 1 or 2
+    private float cameraMinHeight = 0f;
+    private float cameraMaxHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
     float camYOffset = 20f;  // Camera height
@@ -111,14 +112,15 @@ public class Main extends SimpleApplication implements ActionListener {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
 
-        cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
+        cameraMinHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
+        cameraMaxHeight = cameraMinHeight * 5f;
         
         Vector3f tmpPos = camNode.getLocalTranslation();
-        tmpPos.y = cameraHeight - 2f;
+        tmpPos.y = cameraMinHeight - 2f;
         currentCamPos = tmpPos;
         
         if (this.player.getShip().cockpit != null) {
-            UpdateCamPos();
+            UpdateCamPos(0f);
         }
     }
 
@@ -229,7 +231,7 @@ public class Main extends SimpleApplication implements ActionListener {
         // update camera position
 
         if (this.player.getShip() != null && this.player.getShip().cockpit != null && !universeDebug) {
-            UpdateCamPos();
+            UpdateCamPos(delta);
         }
     }
 
@@ -249,9 +251,22 @@ public class Main extends SimpleApplication implements ActionListener {
     Vector3f currentCamPos = new Vector3f();
     float camPosChangeLerpValue = 0.03f;
 
-    public void UpdateCamPos() {
-        
-        if (useAdjustingCamera){
+    final float cooldown = 2f;
+    float cameraMoveBackCooldown = 0f;
+    float camYspeed = 10f;
+    float crap = 0f;
+    
+    public void UpdateCamPos(float delta) {
+        if (cameraType == 0)
+        {
+            currentCamPos.x = this.player.getShip().cockpit.getLocalTranslation().x;
+            currentCamPos.z = this.player.getShip().cockpit.getLocalTranslation().z + 0.1f;
+            currentCamPos.y = this.cameraMinHeight * 5f;
+
+            camNode.setLocalTranslation(currentCamPos);
+            camNode.lookAt(this.player.getShip().cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+        }
+        else if (cameraType == 1){
             previousCamPos = currentCamPos;
             currentCamPos = new Vector3f();
 
@@ -270,7 +285,7 @@ public class Main extends SimpleApplication implements ActionListener {
             float newY =
                     lerp(
                     previousCamPos.y,
-                    this.cameraHeight + speedFactor,
+                    this.cameraMinHeight + speedFactor,
                     camPosChangeLerpValue);
 
             if (!player.getShip().hasActivatedThruster() || newY > previousCamPos.y) {
@@ -282,12 +297,48 @@ public class Main extends SimpleApplication implements ActionListener {
             camNode.setLocalTranslation(currentCamPos);
             camNode.lookAt(this.player.getShip().cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
         }
-        else
+        else if (cameraType == 2)
         {
-            currentCamPos.x = this.player.getShip().cockpit.getLocalTranslation().x;
-            currentCamPos.z = this.player.getShip().cockpit.getLocalTranslation().z + 0.1f;
-            currentCamPos.y = this.cameraHeight * 5f;
+            previousCamPos = currentCamPos;
+            currentCamPos = new Vector3f();
+                        
+            float newY =
+                    lerp(
+                    previousCamPos.y,
+                    this.cameraMinHeight + crap,
+                    camPosChangeLerpValue);
 
+            
+            if (player.getShip().hasActivatedThruster()) 
+                cameraMoveBackCooldown = cooldown;
+            
+            
+            if(cameraMoveBackCooldown < 0f || 
+                    (player.getShip().hasActivatedThruster() && 
+                    newY > previousCamPos.y)) 
+                currentCamPos.y = newY;
+            else
+                currentCamPos.y = previousCamPos.y;
+            
+            
+            if (cameraMoveBackCooldown > 1.9f)
+                crap += delta * camYspeed;
+            else
+                crap -= delta * camYspeed;
+            
+            crap = Math.max(crap, cameraMinHeight);
+            crap = Math.min(crap, cameraMaxHeight);
+            
+            currentCamPos.x = this.player.getShip().cockpit.getLocalTranslation().x + camXOffset;
+            currentCamPos.z = this.player.getShip().cockpit.getLocalTranslation().z + camZOffset;
+
+            
+                
+                
+                
+            //*/
+            
+            cameraMoveBackCooldown -= delta;
             camNode.setLocalTranslation(currentCamPos);
             camNode.lookAt(this.player.getShip().cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
         }
