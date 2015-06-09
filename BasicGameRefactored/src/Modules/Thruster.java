@@ -79,19 +79,19 @@ public class Thruster extends InteractiveModule {
         q.fromAngleAxis(-(float) Math.atan2(FacingDirection.getDirectionVector(orientation).x, -FacingDirection.getDirectionVector(orientation).y), new Vector3f(0, 1, 0));
         spatial.setLocalRotation(q);
         
-        fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 100);
+        fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 60);
         Material mat_red = new Material(a, "Common/MatDefs/Misc/Particle.j3md");
         mat_red.setTexture("Texture", a.loadTexture("textures/flame.jpg"));
         fire.setMaterial(mat_red);        
         //fire.setImagesX(2); fire.setImagesY(2); // 2x2 texture animation
-        fire.setStartColor(  new ColorRGBA(0.6f, 0.9f, 1f, 0.9f));
+        fire.setStartColor(  new ColorRGBA(0.6f, 0.9f, 1f, 0.6f));
         fire.setEndColor(new ColorRGBA(0.1f, 0f, 0f, 0f));
         //fire.setStartSize(1f + (float)Math.random());
-        fire.setStartSize(1f);
-        fire.setEndSize(0.1f);
+        fire.setStartSize(0.5f);
+        fire.setEndSize(5f);
         fire.setGravity(0,0,0);
         fire.setLowLife(0.5f);
-        fire.setHighLife(3f);
+        fire.setHighLife(1.2f);
         fire.setRandomAngle(true);
         fire.getParticleInfluencer().setVelocityVariation(0.1f);
         fire.setParticlesPerSec(0f);
