@@ -51,13 +51,15 @@ public class Storage extends BasicModule {
     @Override
     public void onPlaced(BasicShip ship) {
         super.onPlaced(ship);
-        ship.getInventory().addStorage(this);
+        if (ship.getPlayer() != null) {
+            ship.getPlayer().getInventory().addStorage(this);
+        }
     }
     
     @Override
     public void onRemove() {
         super.onRemove();
-        ship.getInventory().removeStorage(this);
+        ship.getPlayer().getInventory().removeStorage(this);
     }
     
     public ArrayList<ModuleType> getStoredItems() {

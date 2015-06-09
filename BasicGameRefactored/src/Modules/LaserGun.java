@@ -21,9 +21,10 @@ import weapons.LaserProjectile;
 public class LaserGun extends Weapon {
     
     private AudioNode fire_sound;
+    private int keyPressedCounter = 0;
 
-    public LaserGun(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
-        super(hotkeys, orientationDirection);
+    public LaserGun(ArrayList<Integer> keyCodes, FacingDirection orientationDirection) {
+        super(keyCodes, orientationDirection);
         moduleName = "LaserGun";
 
         fireRate = cr.getFromMap(cr.getBaseMap("LaserGun"), "Firerate", float.class);
@@ -67,5 +68,25 @@ public class LaserGun extends Weapon {
         spatial.setMaterial(material);
 
         materialActive.setTexture("DiffuseMap", t);
+    }
+
+    @Override
+    public void handleKeyPressed(Integer keyCode) {
+        if (keyCodes.contains(keyCode)) {
+            keyPressedCounter++;            
+        }
+        if (keyPressedCounter > 0) {
+            activate();
+        }
+    }
+
+    @Override
+    public void handleKeyReleased(Integer keyCode) {
+        if (keyCodes.contains(keyCode)) {
+            keyPressedCounter--;
+        }
+        if (keyPressedCounter <= 0) {
+            deactivate();
+        }
     }
 }

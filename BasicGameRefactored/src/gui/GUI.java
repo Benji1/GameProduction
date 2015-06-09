@@ -8,6 +8,7 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import mygame.Main;
+import services.ServiceManager;
 
 public class GUI {
     
@@ -19,6 +20,7 @@ public class GUI {
     
     public GUI(Main app) {
         this.app = app;
+        ServiceManager.getEditorManager().setApp(app);
         initNifty();
     }
     

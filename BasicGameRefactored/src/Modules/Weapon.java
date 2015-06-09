@@ -16,8 +16,8 @@ public abstract class Weapon extends InteractiveModule {
     protected float fireRate;       // time between shots
     protected float fireRateTimer;
 
-    public Weapon(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
-        super(hotkeys);
+    public Weapon(ArrayList<Integer> keyCodes, FacingDirection orientationDirection) {
+        super(keyCodes);
         color = ColorRGBA.Brown;
         colorActive = ColorRGBA.Red;
         fireRateTimer = 0;

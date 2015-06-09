@@ -21,10 +21,12 @@ import static ShipDesigns.TestShipDesigns.CATEGORY_SCENERY;
 import static ShipDesigns.TestShipDesigns.CATEGORY_SHIELD;
 import static ShipDesigns.TestShipDesigns.MASK_ENEMY;
 import static ShipDesigns.TestShipDesigns.MASK_PLAYER;
+import com.jme3.input.KeyInput;
 import java.awt.Point;
 import java.util.ArrayList;
 import mygame.BasicShip;
 import mygame.Main;
+import mygame.Player;
 
 /**
  *
@@ -33,23 +35,23 @@ import mygame.Main;
 public class TestShipDesigns {
     Main main;
     
-    ArrayList<String> fwd;
-    ArrayList<String> fwdAndLeft;
-    ArrayList<String> fwdAndRight;
-    ArrayList<String> fwdAndLeftAndRight;
+    ArrayList<Integer> fwd;
+    ArrayList<Integer> fwdAndLeft;
+    ArrayList<Integer> fwdAndRight;
+    ArrayList<Integer> fwdAndLeftAndRight;
     
-    ArrayList<String> right;
-    ArrayList<String> left;
+    ArrayList<Integer> right;
+    ArrayList<Integer> left;
     
-    ArrayList<String> bckwd;
-    ArrayList<String> bckwdAndLeft;
-    ArrayList<String> bckwdAndRight;
-    ArrayList<String> bckwdAndLeftAndRight;
+    ArrayList<Integer> bckwd;
+    ArrayList<Integer> bckwdAndLeft;
+    ArrayList<Integer> bckwdAndRight;
+    ArrayList<Integer> bckwdAndLeftAndRight;
     
-    ArrayList<String> shield;
-    ArrayList<String> weapon;
+    ArrayList<Integer> shield;
+    ArrayList<Integer> weapon;
     
-    ArrayList<String> testFire;
+    ArrayList<Integer> testFire;
 
     public static final int CATEGORY_PLAYER = 0x0001;
     public static final int CATEGORY_ENEMY = 0x0002;
@@ -68,56 +70,74 @@ public class TestShipDesigns {
     public TestShipDesigns(Main main) {
         this.main = main;
         
-        fwd = new ArrayList<String>();
-        fwd.add("Up");
+        fwd = new ArrayList<Integer>();
+        fwd.add(KeyInput.KEY_UP);
+        fwd.add(KeyInput.KEY_W);
         
-        fwdAndLeft = new ArrayList<String>();
-        fwdAndLeft.add("Up");
-        fwdAndLeft.add("Left");
+        fwdAndLeft = new ArrayList<Integer>();
+        fwdAndLeft.add(KeyInput.KEY_UP);
+        fwdAndLeft.add(KeyInput.KEY_W);
+        fwdAndLeft.add(KeyInput.KEY_LEFT);
+        fwdAndLeft.add(KeyInput.KEY_A);
         
-        fwdAndRight = new ArrayList<String>();
-        fwdAndRight.add("Up");
-        fwdAndRight.add("Right");
+        fwdAndRight = new ArrayList<Integer>();
+        fwdAndRight.add(KeyInput.KEY_UP);
+        fwdAndRight.add(KeyInput.KEY_W);
+        fwdAndRight.add(KeyInput.KEY_RIGHT);
+        fwdAndRight.add(KeyInput.KEY_D);
         
-        fwdAndLeftAndRight = new ArrayList<String>();
-        fwdAndLeftAndRight.add("Up");
-        fwdAndLeftAndRight.add("Left");
-        fwdAndLeftAndRight.add("Right");
+        fwdAndLeftAndRight = new ArrayList<Integer>();
+        fwdAndLeftAndRight.add(KeyInput.KEY_UP);
+        fwdAndLeftAndRight.add(KeyInput.KEY_W);
+        fwdAndLeftAndRight.add(KeyInput.KEY_LEFT);
+        fwdAndLeftAndRight.add(KeyInput.KEY_A);
+        fwdAndLeftAndRight.add(KeyInput.KEY_RIGHT);
+        fwdAndLeftAndRight.add(KeyInput.KEY_D);
         
-        right = new ArrayList<String>();
-        right.add("Right");
+        right = new ArrayList<Integer>();
+        right.add(KeyInput.KEY_RIGHT);
+        right.add(KeyInput.KEY_D);
         
-        left = new ArrayList<String>();
-        left.add("Left");
+        left = new ArrayList<Integer>();
+        left.add(KeyInput.KEY_LEFT);
+        left.add(KeyInput.KEY_A);
         
-        bckwd = new ArrayList<String>();
-        bckwd.add("Down");
+        bckwd = new ArrayList<Integer>();
+        bckwd.add(KeyInput.KEY_DOWN);
+        bckwd.add(KeyInput.KEY_S);
         
-        bckwdAndLeft = new ArrayList<String>();
-        bckwdAndLeft.add("Down");
-        bckwdAndLeft.add("Left");
+        bckwdAndLeft = new ArrayList<Integer>();
+        bckwdAndLeft.add(KeyInput.KEY_DOWN);
+        bckwdAndLeft.add(KeyInput.KEY_S);
+        bckwdAndLeft.add(KeyInput.KEY_LEFT);
+        bckwdAndLeft.add(KeyInput.KEY_A);
         
-        bckwdAndRight = new ArrayList<String>();
-        bckwdAndRight.add("Down");
-        bckwdAndRight.add("Right");
+        bckwdAndRight = new ArrayList<Integer>();
+        bckwdAndRight.add(KeyInput.KEY_DOWN);
+        bckwdAndRight.add(KeyInput.KEY_S);
+        bckwdAndRight.add(KeyInput.KEY_RIGHT);
+        bckwdAndRight.add(KeyInput.KEY_D);
         
-        bckwdAndLeftAndRight = new ArrayList<String>();
-        bckwdAndLeftAndRight.add("Down");
-        bckwdAndLeftAndRight.add("Left");
-        bckwdAndLeftAndRight.add("Right");
+        bckwdAndLeftAndRight = new ArrayList<Integer>();
+        bckwdAndLeftAndRight.add(KeyInput.KEY_DOWN);
+        bckwdAndLeftAndRight.add(KeyInput.KEY_S);
+        bckwdAndLeftAndRight.add(KeyInput.KEY_LEFT);
+        bckwdAndLeftAndRight.add(KeyInput.KEY_A);
+        bckwdAndLeftAndRight.add(KeyInput.KEY_RIGHT);
+        bckwdAndLeftAndRight.add(KeyInput.KEY_D);
         
-        shield = new ArrayList<String>();
-        shield.add("Shield");
+        shield = new ArrayList<Integer>();
+        shield.add(KeyInput.KEY_F);
         
-        weapon = new ArrayList<String>();
-        weapon.add("Weapon");
+        weapon = new ArrayList<Integer>();
+        weapon.add(KeyInput.KEY_SPACE);
         
-        testFire = new ArrayList<String>();
-        testFire.add("TestFire");
+        testFire = new ArrayList<Integer>();
+        testFire.add(KeyInput.KEY_Q);
     }
 
-    public BasicShip createTestShip1() {
-        BasicShip s = new BasicShip(main, "PlayerShip");
+    public BasicShip createPlayerShip(Player player) {
+        BasicShip s = new BasicShip(main, "PlayerShip", player);
         
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
@@ -200,8 +220,8 @@ public class TestShipDesigns {
         return s;
     }
     
-    public BasicShip createStickShip() {
-        BasicShip s = new BasicShip(main, "PlayerShip");
+    public BasicShip createStickShip(Player player) {
+        BasicShip s = new BasicShip(main, "PlayerShip", player);
 
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
@@ -211,17 +231,17 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-2, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(2, 0));
         
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.FORWARD), new Point(1, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.FORWARD), new Point(-1, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.FORWARD), new Point(2, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.FORWARD), new Point(-2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(-2, 1));
         
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, -1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.BACKWARD), new Point(-1, -1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.BACKWARD), new Point(-2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(1, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(-2, -1));
         
         return s;
     }

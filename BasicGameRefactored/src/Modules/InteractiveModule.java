@@ -4,6 +4,13 @@
  */
 package Modules;
 
+import com.jme3.input.RawInputListener;
+import com.jme3.input.event.JoyAxisEvent;
+import com.jme3.input.event.JoyButtonEvent;
+import com.jme3.input.event.KeyInputEvent;
+import com.jme3.input.event.MouseButtonEvent;
+import com.jme3.input.event.MouseMotionEvent;
+import com.jme3.input.event.TouchEvent;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import java.awt.Point;
@@ -22,15 +29,15 @@ public abstract class InteractiveModule extends BasicModule {
     protected boolean disabled = false;
     protected ColorRGBA colorActive;
     protected Material materialActive;
-    protected ArrayList<String> hotkeys;
+    protected ArrayList<Integer> keyCodes;
     protected ArrayList<EnergyGenerator> eGens;
     protected float energyReceived;
     protected float energyConsumption;
     protected float energyAvailableInPercent;
 
-    public InteractiveModule(ArrayList<String> hotkeys) {
+    public InteractiveModule(ArrayList<Integer> keyCodes) {
         super();
-        this.hotkeys = hotkeys;
+        this.keyCodes = keyCodes;
     }
 
     @Override
@@ -118,8 +125,8 @@ public abstract class InteractiveModule extends BasicModule {
         deactivate();
     }
 
-    public ArrayList<String> getHotkeys() {
-        return hotkeys;
+    public ArrayList<Integer> getKeyCodes() {
+        return keyCodes;
     }
 
     protected EnergyGenerator getEnergyGeneratorWithMostEnergy() {
@@ -186,4 +193,7 @@ public abstract class InteractiveModule extends BasicModule {
         }
         return enough;
     }
+    
+    public abstract void handleKeyPressed(Integer keyCode);
+    public abstract void handleKeyReleased(Integer keyCode);
 }

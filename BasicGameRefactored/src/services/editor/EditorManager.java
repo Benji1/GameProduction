@@ -8,30 +8,34 @@ import Modules.BasicModule;
 import java.util.ArrayList;
 import java.util.Stack;
 import mygame.BasicShip;
+import mygame.Main;
+import mygame.Player;
 import services.Service;
 
 public class EditorManager extends Service {
     
-    private ArrayList<BasicShip> ships;
+    private ArrayList<Player> players;
     
     private ArrayList<IShipChangedListener> shipChangedListeners;
     private Stack<IShipChangedListener> shipChangedListenersToRemove;
     private Stack<IShipChangedListener> shipChangedListenersToAdd;
     
+    private Main app;
+    
     public EditorManager() {
-        ships = new ArrayList<BasicShip>();
+        players = new ArrayList<Player>();
         
         shipChangedListeners = new ArrayList<IShipChangedListener>();
         shipChangedListenersToAdd = new Stack<IShipChangedListener>();
         shipChangedListenersToRemove = new Stack<IShipChangedListener>();
     }
     
-    public void notifyShipChangedListeners(BasicModule[][] modules, int shipId) {
+    public void notifyShipChangedListeners(BasicModule[][] modules, int playerId) {
         addShipChangedListeners();
         removeShipChangedListeners();
         
         for (IShipChangedListener listener : shipChangedListeners) {
-            if (listener.getShipId() == shipId) {
+            if (listener.getPlayerId() == playerId) {
                 listener.onShipChanged(modules);
             }
         }
@@ -54,20 +58,27 @@ public class EditorManager extends Service {
             shipChangedListeners.remove(shipChangedListenersToRemove.pop());
         }
     }
-    public void addShip(BasicShip ship) {
-        this.ships.add(ship);
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
-    public void removeShip(BasicShip ship) {
-        this.ships.remove(ship);
+    public void removePlayer(Player player) {
+        this.players.remove(player);
     }
     
-    public BasicShip getShip(int shipId) {
-        for (BasicShip ship : ships) {
-            if (ship.getShipId() == shipId) {
-                return ship;
+    public Player getPlayer(int playerId) {
+        for (Player player : players) {
+            if (player.getPlayerId() == playerId) {
+                return player;
             }
         }
         
         return null;
     }    
+    
+    public void setApp(Main app) {
+        this.app = app;
+    }
+    public Main getApp() {
+        return app;
+    }
 }

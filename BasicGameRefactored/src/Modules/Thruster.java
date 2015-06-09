@@ -24,9 +24,10 @@ public class Thruster extends InteractiveModule {
 
     protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
     ParticleEmitter fire;
+    private int keyPressedCounter = 0;
 
-    public Thruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
-        super(hotkeys);
+    public Thruster(ArrayList<Integer> keyCodes, FacingDirection orientationDirection) {
+        super(keyCodes);
         moduleName = "Thruster";
         energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Thruster"), "EnergyConsumptionPerSecond", float.class);
 
@@ -111,6 +112,26 @@ public class Thruster extends InteractiveModule {
 
         Vector3f forward = new Vector3f(initialVelocity * x, 0 ,initialVelocity * y);
         return forward;
+    }
+
+    @Override
+    public void handleKeyPressed(Integer keyCode) {        
+        if (keyCodes.contains(keyCode)) {
+            keyPressedCounter++;            
+        }
+        if (keyPressedCounter > 0) {
+            activate();
+        }
+    }
+
+    @Override
+    public void handleKeyReleased(Integer keyCode) {
+        if (keyCodes.contains(keyCode)) {
+            keyPressedCounter--;
+        }
+        if (keyPressedCounter <= 0) {
+            deactivate();
+        }
     }
 }
 

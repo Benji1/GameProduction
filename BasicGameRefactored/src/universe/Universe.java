@@ -120,7 +120,7 @@ public class Universe {
     		s.update(tpf);
         
     	if(this.isDebug)
-    		this.app.textShipPos.setText("PosChunk: " + this.app.playersShip.getChunkX() + "/" + this.app.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.playersShip.getWorldTranslation().toString());
+    		this.app.textShipPos.setText("PosChunk: " + this.app.player.getShip().getChunkX() + "/" + this.app.player.getShip().getChunkX() + "\nPosCurChunk: " + this.app.player.getShip().getPosCurChunk().toString() + "\nPosAbs: " + this.app.player.getShip().getWorldTranslation().toString());
     }
     
     public void changedChunkForEntity(Abs_ChunkNode n, int movedX, int movedZ) {

@@ -12,8 +12,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import com.jme3.math.Vector3f;
 import gui.ModuleType;
-import services.ServiceManager;
-import services.editor.IShipChangedListener;
 import services.updater.IUpdateable;
 import universe.Abs_ChunkNode;
 
@@ -21,10 +19,8 @@ import universe.Abs_ChunkNode;
  *
  * @author 1337
  */
-public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChangedListener {
+public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
-    private static int idCounter = 0;
-    private int shipId;
     public int shipHeight = 22;
     public int shipWidth = 22;
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
@@ -32,17 +28,23 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public Cockpit cockpit;
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
-    private Inventory inventory;
+    private Player player;
 
     public BasicShip(Main app, String name) {
+        this(app, name, null);
+    }
+    public BasicShip(Main app, String name, Player player) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
-        app.ships.add(this);
-
-        this.shipId = idCounter++;
-        ServiceManager.getEditorManager().registerAsShipChangedListener(this);
-        ServiceManager.getEditorManager().addShip(this);
-        this.inventory = new Inventory(this);
+        app.ships.add(this); 
+        this.player = player;
+    }
+    
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+    public Player getPlayer() {
+        return player;
     }
 
     @Override
@@ -192,11 +194,11 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         return interactiveModules;
     }
 
-    public ArrayList<InteractiveModule> getInteractiveModulesWithHotkey(String hotkey) {
+    public ArrayList<InteractiveModule> getInteractiveModulesWithKeyCode(Integer keyCode) {
         ArrayList<InteractiveModule> ims = new ArrayList<InteractiveModule>();
         for (InteractiveModule im : getInteractiveModules()) {
-            for (String s : im.getHotkeys()) {
-                if (s.equals(hotkey)) {
+            for (Integer i : im.getKeyCodes()) {
+                if (i.equals(keyCode)) {
                     ims.add(im);
                 }
             }
@@ -204,15 +206,26 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         return ims;
     }
 
-    public void activateModules(String hotkey) {
-        for (InteractiveModule im : getInteractiveModulesWithHotkey(hotkey)) {
+    public void activateModules(Integer keyCode) {
+        for (InteractiveModule im : getInteractiveModulesWithKeyCode(keyCode)) {
             im.activate();
         }
     }
 
-    public void deactivateModules(String hotkey) {
-        for (InteractiveModule im : getInteractiveModulesWithHotkey(hotkey)) {
+    public void deactivateModules(Integer keyCode) {
+        for (InteractiveModule im : getInteractiveModulesWithKeyCode(keyCode)) {
             im.deactivate();
+        }
+    }
+    
+    public void handleKeyPressed(Integer keyCode) {
+        for (InteractiveModule im : interactiveModules) {
+            im.handleKeyPressed(keyCode);
+        }
+    }
+    public void handleKeyReleased(Integer keyCode) {
+        for (InteractiveModule im : interactiveModules) {
+            im.handleKeyReleased(keyCode);
         }
     }
 
@@ -241,7 +254,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         if (shipNumber > 2) { // more than one ship (cause it starts with one and gets a ++ at the end of the loop)
             for (int k = 3; k <= shipNumber; k++) {
                 // XXX
-                BasicShip newShip = new BasicShip(app, name + "" + idCounter);
+                BasicShip newShip = new BasicShip(app, name);
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
@@ -321,14 +334,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
                 }
             }
         }
-    }
-
-    public int getShipId() {
-        return shipId;
-    }
-    
-    public Inventory getInventory() {
-        return inventory;
     }
     
     public boolean hasStillModules() {

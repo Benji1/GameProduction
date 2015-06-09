@@ -10,10 +10,14 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.EnergyGenerator;
 import Modules.FacingDirection;
+import Modules.InteractiveModule;
 import Modules.LaserGun;
 import Modules.Shield;
 import Modules.Storage;
 import Modules.Thruster;
+import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
+import com.jme3.input.event.KeyInputEvent;
 import gui.dragAndDrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
@@ -23,6 +27,7 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
+import de.lessvoid.nifty.elements.events.NiftyMouseTertiaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseWheelEvent;
 import de.lessvoid.nifty.elements.render.ElementRenderer;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
@@ -53,36 +58,23 @@ import services.editor.EditorManager;
  */
 public class EditorScreenController implements ScreenController, DroppableDropFilter {
     
-    //****** test keyboard mappings
-    ArrayList<String> fwd;
-    ArrayList<String> fwdAndLeft;
-    ArrayList<String> fwdAndRight;
-    ArrayList<String> fwdAndLeftAndRight;
-    
-    ArrayList<String> right;
-    ArrayList<String> left;
-    
-    ArrayList<String> bckwd;
-    ArrayList<String> bckwdAndLeft;
-    ArrayList<String> bckwdAndRight;
-    ArrayList<String> bckwdAndLeftAndRight;
-    
-    ArrayList<String> shield;
-    ArrayList<String> weapon;
-    
-    ArrayList<String> testFire;
-    //*****************************
-    
     private class OrientedModule {
+        
         public ModuleType moduleType;
         public FacingDirection facingDirection;
+        public ArrayList<Integer> keyCodes;
         
         public OrientedModule(ModuleType moduleType) {
             this(moduleType, FacingDirection.FORWARD);
         }
         public OrientedModule(ModuleType moduleType, FacingDirection orientation) {
+            this(moduleType, orientation, new ArrayList<Integer>());
+        }
+        
+        public OrientedModule(ModuleType moduleType, FacingDirection orientation, ArrayList<Integer> keyCodes) {
             this.moduleType = moduleType;
             this.facingDirection = orientation;
+            this.keyCodes = keyCodes;
         }
 
         public void rotateRight() {
@@ -94,6 +86,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         public int getSpriteNumber() {
             return moduleType.getValue() * 4 + facingDirection.getSpriteValue();
         }
+        
     }
     
     Nifty nifty;
@@ -102,7 +95,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     private int partIdCounter = 0;
     private HashMap<Point , OrientedModule> shipTiles = new HashMap<Point, OrientedModule>();
     // TODO: change ship id
-    Inventory inventory = ServiceManager.getEditorManager().getShip(0).getInventory();
+    Inventory inventory = ServiceManager.getEditorManager().getPlayer(0).getInventory();
     private int[][] directions = new int[][] {{1,0},{0,1},{-1,0},{0,-1},{0,0}};
     //private int[][] directions = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{0,0}};
     
@@ -114,12 +107,13 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     private boolean realDragCancel = true;
     private boolean deleteOnDragCancel = true;
     
+    private KeyBindingInputHandler keyBindingInputHandler;
+    private InputManager inputManager = ServiceManager.getEditorManager().getApp().getInputManager();
+    
     public void bind(Nifty nifty, Screen screen) {
         //System.out.println("bind " + this.getClass().getSimpleName());
         this.nifty = nifty;
         this.screen = screen;
-        
-        setupTestKeyboardMappings();
     }
 
     public void onStartScreen() {
@@ -155,55 +149,6 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     public void exitMenu() {
         nifty.gotoScreen("start");
-    }
-    
-    private void setupTestKeyboardMappings() {
-        fwd = new ArrayList<String>();
-        fwd.add("Up");
-        
-        fwdAndLeft = new ArrayList<String>();
-        fwdAndLeft.add("Up");
-        fwdAndLeft.add("Left");
-        
-        fwdAndRight = new ArrayList<String>();
-        fwdAndRight.add("Up");
-        fwdAndRight.add("Right");
-        
-        fwdAndLeftAndRight = new ArrayList<String>();
-        fwdAndLeftAndRight.add("Up");
-        fwdAndLeftAndRight.add("Left");
-        fwdAndLeftAndRight.add("Right");
-        
-        right = new ArrayList<String>();
-        right.add("Right");
-        
-        left = new ArrayList<String>();
-        left.add("Left");
-        
-        bckwd = new ArrayList<String>();
-        bckwd.add("Down");
-        
-        bckwdAndLeft = new ArrayList<String>();
-        bckwdAndLeft.add("Down");
-        bckwdAndLeft.add("Left");
-        
-        bckwdAndRight = new ArrayList<String>();
-        bckwdAndRight.add("Down");
-        bckwdAndRight.add("Right");
-        
-        bckwdAndLeftAndRight = new ArrayList<String>();
-        bckwdAndLeftAndRight.add("Down");
-        bckwdAndLeftAndRight.add("Left");
-        bckwdAndLeftAndRight.add("Right");
-        
-        shield = new ArrayList<String>();
-        shield.add("Shield");
-        
-        weapon = new ArrayList<String>();
-        weapon.add("Weapon");
-        
-        testFire = new ArrayList<String>();
-        testFire.add("TestFire");
     }
     
     public void rotatePart(String id) {
@@ -251,9 +196,12 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     // counter-- of that module type in inventory
                     inventory.removeItemOfType(ModuleType.getType(Integer.parseInt(parentNr)));
                     // counter-- of that module type in gui
-                    TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter").getRenderer(TextRenderer.class);
-                    int count = inventory.getModuleCountInBase(ModuleType.getType(Integer.parseInt(parentNr)));
-                    textRenderer.setText("x" + (count < 10 ? "0" : "") + count);         
+                    Element counter = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter");
+                    if (counter != null) {
+                        TextRenderer textRenderer = counter.getRenderer(TextRenderer.class);
+                        int count = inventory.getModuleCountInBase(ModuleType.getType(Integer.parseInt(parentNr)));
+                        textRenderer.setText("x" + (count < 10 ? "0" : "") + count);         
+                    }
                     
                     SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
                     Element dragged = event.getDraggable().getElement();
@@ -316,9 +264,12 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             int parentId = Integer.parseInt(id.substring(11, id.lastIndexOf("-")));
             inventory.addItemOfType(ModuleType.getType(parentId));        
             // counter++ of that module type in gui        
-            TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter").getRenderer(TextRenderer.class);
-            int count = inventory.getModuleCountInBase(ModuleType.getType(parentId));
-            textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+            Element counter = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter");
+            if (counter != null) {
+                TextRenderer textRenderer = counter.getRenderer(TextRenderer.class);
+                int count = inventory.getModuleCountInBase(ModuleType.getType(parentId));
+                textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+            }
         }
         
         realDragCancel = true;
@@ -356,6 +307,54 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     }});
                 }}.build(nifty, screen, event.getElement().getParent());
             }
+        }
+    }
+    
+    @NiftyEventSubscriber(pattern="part-panel-.*")
+    public void onMiddleMouseButtonClicked(String id, NiftyMouseTertiaryClickedEvent event) {
+        // get slot parent to know the x/y coordinates of the module
+        String parentId = event.getElement().getParent().getId();
+        if (parentId.startsWith("slot")) {
+            int x = Integer.parseInt(parentId.substring(parentId.indexOf("X") + 1, parentId.indexOf("Y")));
+            int y = Integer.parseInt(parentId.substring(parentId.indexOf("Y") + 1, parentId.indexOf("#")));
+        
+            // TODO: maybe better check
+            // check if module can have key binding --> is interactive module
+            OrientedModule module = shipTiles.get(new Point(x, y));
+            if (module.moduleType.equals(ModuleType.SHIELD) || module.moduleType.equals(ModuleType.THRUSTER) || module.moduleType.equals(ModuleType.WEAPON)) {
+                setKeyBinding(new Point(x, y));
+            }
+        }
+    }
+    
+    private void setKeyBinding(Point modulePos) {
+        if (keyBindingInputHandler != null) {
+            // if last key binding process was startet but no key was assigned
+            inputManager.removeRawInputListener(keyBindingInputHandler);
+            keyBindingInputHandler = null;
+        }
+        
+        System.out.println("press any key to bind/unbind for " + modulePos.x + "/" + modulePos.y);
+        keyBindingInputHandler = new KeyBindingInputHandler(this, modulePos);
+        inputManager.addRawInputListener(keyBindingInputHandler);
+    }
+    
+    public void keyBindCallback(KeyInputEvent evt, Point modulePos) {
+        inputManager.removeRawInputListener(keyBindingInputHandler);
+        keyBindingInputHandler = null;
+        
+        doKeyBinding(modulePos, evt.getKeyCode());
+    }
+    
+    private void doKeyBinding(Point modulePos, int keyCode) {
+        OrientedModule module = shipTiles.get(modulePos);
+        
+        if (!module.keyCodes.contains(keyCode)) {
+            System.out.println("added new key binding " + keyCode);
+            module.keyCodes.add(new Integer(keyCode));
+        } else {
+            System.out.println("removed key code " + keyCode);
+            module.keyCodes.remove(new Integer(keyCode));
         }
     }
     
@@ -454,7 +453,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     private void loadShipFromGame() {
         // TODO: change ship id
-        BasicModule[][] modules = ServiceManager.getEditorManager().getShip(0).getModules();
+        BasicModule[][] modules = ServiceManager.getEditorManager().getPlayer(0).getShip().getModules();
         for (int i=0; i<modules.length; i++) {
             for (int j=0; j<modules[0].length; j++) {
                 if (modules[i][j] != null) {
@@ -469,7 +468,11 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     modules[i][j].buildGuiElement(partIdCounter++, nifty, screen, parent);
                     
                     // add background data
-                    shipTiles.put(new Point(slotX, slotY), new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation()));
+                    if (modules[i][j] instanceof InteractiveModule) {
+                        shipTiles.put(new Point(slotX, slotY), new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation(), ((InteractiveModule) modules[i][j]).getKeyCodes()));
+                    } else {
+                        shipTiles.put(new Point(slotX, slotY), new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation()));
+                    }
                 }
             }
         }
@@ -550,10 +553,13 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     // counter++ of that module type in inventory
                     int parentId = Integer.parseInt(elementToDelete.getId().substring(11, elementToDelete.getId().lastIndexOf("-")));
                     inventory.addItemOfType(ModuleType.getType(parentId));
-                    // counter++ of that module type in gui                    
-                    TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter").getRenderer(TextRenderer.class);
-                    int count = inventory.getModuleCountInBase(ModuleType.getType(parentId));
-                    textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+                    // counter++ of that module type in gui   
+                    Element counter = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter");
+                    if (counter != null) {
+                        TextRenderer textRenderer = counter.getRenderer(TextRenderer.class);
+                        int count = inventory.getModuleCountInBase(ModuleType.getType(parentId));
+                        textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
+                    }
                     
                     elementToDelete.markForRemoval();
                 }
@@ -607,7 +613,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case THRUSTER:
                         //System.out.println("setting thruster at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Thruster(fwd, type.facingDirection);
+                        modules[x+xOffset][y+yOffset] = new Thruster(type.keyCodes, type.facingDirection);
                         break;
                     case ENERGY_GENERATOR:
                         //System.out.println("setting energy at " + (x+xOffset)+"/"+(y+yOffset));
@@ -619,14 +625,14 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case WEAPON:
                         //System.out.println("setting weapon at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection);
+                        modules[x+xOffset][y+yOffset] = new LaserGun(type.keyCodes, type.facingDirection);
                         break;
                     case ARMOR_DIAGONAL:
                         //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
                         modules[x+xOffset][y+yOffset] = new Armor();
                         break;
                     case SHIELD:
-                        modules[x+xOffset][y+yOffset] = new Shield(shield);
+                        modules[x+xOffset][y+yOffset] = new Shield(type.keyCodes);
                         break;
                     case STORAGE:
                         modules[x+xOffset][y+yOffset] = new Storage();

@@ -9,6 +9,6 @@ import Modules.BasicModule;
 public interface IShipChangedListener {
     
     public void onShipChanged(BasicModule[][] modules);
-    public int getShipId();
+    public int getPlayerId();
     
 }

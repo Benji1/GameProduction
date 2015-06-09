@@ -44,7 +44,8 @@ public class Main extends SimpleApplication implements ActionListener {
     protected float maxSpeed = 5f;
     private GUI gui;
     public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
-    public BasicShip playersShip;
+    //public BasicShip playersShip;
+    public Player player;
     public BasicShip targetShip;
     
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
@@ -91,8 +92,12 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initShip() {
-        TestShipDesigns tsd = new TestShipDesigns(this);
-        playersShip = tsd.createTestShip1();
+        TestShipDesigns tsd = new TestShipDesigns(this);        
+        player = new Player(this);
+        BasicShip ship = tsd.createPlayerShip(player);
+        //BasicShip ship = tsd.createStickShip(player);
+        player.setShip(ship);
+        //playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
         targetShip = tsd.createTestTargetShip2();
@@ -107,22 +112,16 @@ public class Main extends SimpleApplication implements ActionListener {
         this.rootNode.attachChild(camNode);
 
         cameraHeight = camYOffset * (this.viewPort.getCamera().getWidth() / 1600f);
-        if (this.playersShip.cockpit != null) {
+        if (this.player.getShip().cockpit != null) {
             UpdateCamPos();
         }
     }
 
     private void initKeys() {
-        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
-        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
-        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
-        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
-        inputManager.addMapping("Weapon", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Shield", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
         inputManager.addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
 
-        inputManager.addListener(this, "Up", "Left", "Right", "Down", "Weapon", "Shield", "ToggleUniverseDebug", "ToggleEditor");
+        inputManager.addListener(this, /*"Up", "Left", "Right", "Down", "Weapon", "Shield",*/ "ToggleUniverseDebug", "ToggleEditor");
     }
 
     private void initHUD() {
@@ -154,70 +153,6 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
-        if (name.equals("Up")) {
-            playersShip.activateModules("Up");
-            up = true;
-            if (!keyPressed) {
-                playersShip.deactivateModules("Up");
-                up = false;
-            }
-        }
-
-        if (name.equals("Left")) {
-            playersShip.activateModules("Left");
-            if (!keyPressed) {
-                playersShip.deactivateModules("Left");
-                if (up) {
-                    playersShip.activateModules("Up");
-                } else if (down) {
-                    playersShip.activateModules("Down");
-                }
-            }
-        }
-
-        if (name.equals("Right")) {
-            playersShip.activateModules("Right");
-            if (!keyPressed) {
-                playersShip.deactivateModules("Right");
-                if (up) {
-                    playersShip.activateModules("Up");
-                } else if (down) {
-                    playersShip.activateModules("Down");
-                }
-            }
-        }
-
-        if (name.equals("Down")) {
-            playersShip.activateModules("Down");
-            down = true;
-            if (!keyPressed) {
-                playersShip.deactivateModules("Down");
-                down = false;
-            }
-        }
-
-        if (name.equals("Weapon")) {
-            playersShip.activateModules("Weapon");
-            if (!keyPressed) {
-                playersShip.deactivateModules("Weapon");
-            }
-        }
-
-        if (name.equals("Shield") && !keyPressed) {
-            // TODO: improve bool test
-            if (playersShip.getInteractiveModulesWithHotkey("Shield").size() > 0 && playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
-                if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
-                    playersShip.deactivateModules("Shield");
-                    targetShip.deactivateModules("Shield");
-                } else {
-                    playersShip.activateModules("Shield");
-                    targetShip.activateModules("Shield");
-                }
-            }
-
-
-
-        }
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
@@ -289,7 +224,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.background.updateBackground();
         // update camera position
 
-        if (this.playersShip != null && this.playersShip.cockpit != null && !universeDebug) {
+        if (this.player.getShip() != null && this.player.getShip().cockpit != null && !universeDebug) {
             UpdateCamPos();
         }
     }
@@ -318,15 +253,15 @@ public class Main extends SimpleApplication implements ActionListener {
 
             float min = 0.1f;
             float max = 100f;
-            float speedFactor = this.playersShip.cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
+            float speedFactor = this.player.getShip().cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
 
             speedFactor = Math.max(min, speedFactor);
             speedFactor = Math.min(speedFactor, max);
             float t = inverseLerp(0f, max + min, speedFactor);
             float offsetFactor = 1f - t;
 
-            currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
-            currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
+            currentCamPos.x = this.player.getShip().cockpit.getLocalTranslation().x + camXOffset * offsetFactor;
+            currentCamPos.z = this.player.getShip().cockpit.getLocalTranslation().z + camZOffset * offsetFactor;
 
             float newY =
                     lerp(
@@ -341,16 +276,16 @@ public class Main extends SimpleApplication implements ActionListener {
             }
 
             camNode.setLocalTranslation(currentCamPos);
-            camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+            camNode.lookAt(this.player.getShip().cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
         }
         else
         {
-            currentCamPos.x = this.playersShip.cockpit.getLocalTranslation().x;
-            currentCamPos.z = this.playersShip.cockpit.getLocalTranslation().z + 0.1f;
+            currentCamPos.x = this.player.getShip().cockpit.getLocalTranslation().x;
+            currentCamPos.z = this.player.getShip().cockpit.getLocalTranslation().z + 0.1f;
             currentCamPos.y = this.cameraHeight * 5f;
 
             camNode.setLocalTranslation(currentCamPos);
-            camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
+            camNode.lookAt(this.player.getShip().cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
         }
 
     }
