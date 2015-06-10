@@ -18,11 +18,11 @@ import mygame.JBox2dNode;
  *
  * @author Chris
  */
-public class Explosion extends JBox2dNode {
+public class ShieldHitExplosion extends JBox2dNode {
     ParticleEmitter fire;
     float duration = 0.6f;
     float timeAlive = 0f;
-    public Explosion(AssetManager a, Vector3f pos, Node root)
+    public ShieldHitExplosion(AssetManager a, Vector3f pos, Node root)
     {
         super();
         fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 60);
@@ -30,10 +30,10 @@ public class Explosion extends JBox2dNode {
         mat_red.setTexture("Texture", a.loadTexture("textures/flame.jpg"));
         fire.setMaterial(mat_red);        
         //fire.setImagesX(2); fire.setImagesY(2); // 2x2 texture animation
-        fire.setStartColor(  new ColorRGBA(1f, 0.8f, 0.3f, 1f));
-        fire.setEndColor(new ColorRGBA(1f, 0.1f, 0f, 0f));
-        fire.setStartSize(1f + (float)Math.random());
-        fire.setEndSize(5f);
+        fire.setStartColor(  new ColorRGBA(0.8f, 0.9f, 1f, 1f));
+        fire.setEndColor(new ColorRGBA(0.1f, 0.3f, 8f, 0.3f));
+        fire.setStartSize((float)Math.random()  + 0.5f);
+        fire.setEndSize(2f);
         fire.setGravity(0,0,0);
         fire.setLowLife(0.3f);
         fire.setHighLife(duration);

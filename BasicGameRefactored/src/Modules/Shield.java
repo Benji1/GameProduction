@@ -8,6 +8,7 @@ import static Modules.BasicModule.fillNotOverLimit;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
 import gui.ModuleType;
@@ -87,8 +88,14 @@ public class Shield extends InteractiveModule {
         this.delta = tpf;
     }
 
-    public void takeDamageOnShield(float amount) {
+    public void takeDamageOnShield(float amount, Vector3f hitpoint) {
         this.shieldPower -= amount;
+        
+        ShieldHitExplosion exp = new ShieldHitExplosion(
+                ship.getApp().getAssetManager(), 
+                hitpoint, 
+                ship.getApp().getRootNode()
+                );
     }
 
     @Override
