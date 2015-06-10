@@ -12,6 +12,9 @@ import services.ServiceManager;
 
 public class GUI {
     
+    public static final String EDITOR_SCREEN = "editor";
+    public static final String START_SCREEN = "start";
+    
     private Nifty nifty;
     private Main app;
     
@@ -38,8 +41,8 @@ public class GUI {
         nifty.addXml("Interface/EditorScreen.xml");
         nifty.addXml("Interface/StartScreen.xml");
         
-        editorScreen = nifty.getScreen("editor");
-        startScreen = nifty.getScreen("start");
+        editorScreen = nifty.getScreen(EDITOR_SCREEN);
+        startScreen = nifty.getScreen(START_SCREEN);
         
         goToStartScreen();
     }
