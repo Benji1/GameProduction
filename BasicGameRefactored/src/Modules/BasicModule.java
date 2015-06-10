@@ -4,6 +4,9 @@
  */
 package Modules;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -192,6 +195,12 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public void destroy() {
         onRemove();
+        
+        Explosion exp = new Explosion(
+                ship.getApp().getAssetManager(), 
+                new Vector3f (this.body.getPosition().x, 0, this.body.getPosition().y), 
+                ship.getApp().getRootNode()
+                );
         
         if(shouldSpawnItem()) {
             spawnItem();
