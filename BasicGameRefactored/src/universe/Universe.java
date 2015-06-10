@@ -94,7 +94,6 @@ public class Universe {
     		if (dis < mindis)
     			mindis = dis;
     	}
-    	System.out.println("dis: "+mindis);
     	return mindis < 15;
     }
     
