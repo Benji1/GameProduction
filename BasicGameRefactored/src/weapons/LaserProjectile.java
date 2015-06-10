@@ -92,7 +92,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
-        PhysicsWorld.world.setContactListener(this);
+        //PhysicsWorld.world.setContactListener(this);
         body.applyForce(direction.mul(startForce), body.getPosition());
     }
 
@@ -144,24 +144,25 @@ public class LaserProjectile extends Projectile implements ContactListener {
             }
             // DOES NOT GET CALLED!! WTF
             beDead = true;
-            markForDeletion();
+            //markForDeletion();
         }
     }
 
     public void handleBasicModuleCollision(BasicModule b) {
-        if (b instanceof Shield) {
-            Shield s = (Shield) b;
-            if(s.getShieldCollider() != null) {
-                // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
-            //  thus destroying the shield module, although it should not
-            }else {
-                s.takeDamage(100);
-            }
-            // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
-            //  thus destroying the shield module, although it should not
-        } else {
-            b.takeDamage(100);
-        }
+//        if (b instanceof Shield) {
+//            Shield s = (Shield) b;
+//            if(s.getShieldCollider() != null) {
+//                // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
+//            //  thus destroying the shield module, although it should not
+//            }else {
+//                s.takeDamage(100);
+//            }
+//            // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
+//            //  thus destroying the shield module, although it should not
+//        } else {
+//            b.takeDamage(100);
+//        }
+        b.takeDamage(100);
         markForDeletion();
     }
 

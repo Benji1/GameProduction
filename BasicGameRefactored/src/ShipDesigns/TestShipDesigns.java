@@ -215,7 +215,7 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -9));
         s.addModuleAtFromOffset(new Shield(shield), new Point(2, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(2, -7));
-        //s.activateModules("Shield");
+        s.activateModules(KeyInput.KEY_F);
         
         return s;
     }

@@ -15,16 +15,12 @@ import java.util.ArrayList;
 import mygame.JBox2dNode;
 import mygame.Main;
 import mygame.PhysicsWorld;
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.contacts.Contact;
 import services.ServiceManager;
 import services.updater.IUpdateable;
 
@@ -32,7 +28,7 @@ import services.updater.IUpdateable;
  *
  * @author 1337
  */
-public class Item extends JBox2dNode implements IUpdateable, ContactListener {
+public class Item extends JBox2dNode implements IUpdateable {
     
     protected ModuleType type;
     protected Body body;
@@ -82,7 +78,6 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
-        PhysicsWorld.world.setContactListener(this);
     }
     
     
@@ -109,15 +104,6 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
         super.update(tpf);
         updateBoxPosition();
     }
-
-    public void beginContact(Contact cntct) {
-        if (cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
-            handleShipCollision((BasicModule) cntct.getFixtureA().getBody().getUserData());
-        }
-        if (cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
-            handleShipCollision((BasicModule) cntct.getFixtureB().getBody().getUserData());
-        }
-    }
     
     public void handleShipCollision(BasicModule m) {
         if(!collected) {
@@ -140,14 +126,5 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     
     protected void markForDeletion() {
         app.itemsToRemove.add(this);
-    }
-
-    public void endContact(Contact cntct) {
-    }
-
-    public void preSolve(Contact cntct, Manifold mnfld) {
-    }
-
-    public void postSolve(Contact cntct, ContactImpulse ci) {
     }
 }

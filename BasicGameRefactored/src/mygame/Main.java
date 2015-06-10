@@ -20,6 +20,7 @@ import items.EncapsulatingItem;
 import items.Item;
 import java.util.ArrayList;
 import org.jbox2d.dynamics.Body;
+import services.collision.GameContactListener;
 import services.updater.UpdateableManager;
 import universe.Background;
 import universe.Universe;
@@ -62,6 +63,8 @@ public class Main extends SimpleApplication implements ActionListener {
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
     float camYOffset = 20f;  // Camera height
     boolean universeDebug = false;
+    
+    GameContactListener gameCollisionListener;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -90,6 +93,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.background = new Background(this);
         this.background.initBackground();
         this.gui = new GUI(this);
+        this.gameCollisionListener = new GameContactListener();
     }
 
     private void initShip() {
@@ -222,9 +226,6 @@ public class Main extends SimpleApplication implements ActionListener {
             itemsToRemove.remove(0);
             i.delete();
         }
-        
-        
-        
         
         this.u.update(delta);
         this.background.updateBackground();

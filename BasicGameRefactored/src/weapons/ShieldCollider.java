@@ -16,22 +16,18 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import mygame.PhysicsWorld;
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 /**
  *
  * @author 1337
  */
-public class ShieldCollider extends Node implements ContactListener {
+public class ShieldCollider extends Node {
 
     Shield s;
     protected ColorRGBA color = new ColorRGBA(0f, 0.5f, 0.5f, 0.3f);
@@ -75,18 +71,6 @@ public class ShieldCollider extends Node implements ContactListener {
         material.setColor("Diffuse", c);
     }
 
-    public void beginContact(Contact cntct) {
-    }
-
-    public void endContact(Contact cntct) {
-    }
-
-    public void preSolve(Contact cntct, Manifold mnfld) {
-    }
-
-    public void postSolve(Contact cntct, ContactImpulse ci) {
-    }
-
     public void putDamgeToShieldModule(float amount) {
         shieldDmg = 0;
         s.takeDamageOnShield(amount);
@@ -117,7 +101,6 @@ public class ShieldCollider extends Node implements ContactListener {
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
-        PhysicsWorld.world.setContactListener(this);
     }
 
     private void lockToShield() {

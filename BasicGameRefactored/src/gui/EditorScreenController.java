@@ -16,7 +16,6 @@ import Modules.Shield;
 import Modules.Storage;
 import Modules.Thruster;
 import com.jme3.input.InputManager;
-import com.jme3.input.KeyInput;
 import com.jme3.input.event.KeyInputEvent;
 import gui.dragAndDrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.Nifty;
@@ -29,8 +28,6 @@ import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseTertiaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseWheelEvent;
-import de.lessvoid.nifty.elements.render.ElementRenderer;
-import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -45,12 +42,10 @@ import gui.dragAndDrop.DroppableDropFilter;
 import gui.dragAndDrop.DroppableDroppedEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import mygame.Inventory;
 import services.ServiceManager;
-import services.editor.EditorManager;
 
 /**
  *
