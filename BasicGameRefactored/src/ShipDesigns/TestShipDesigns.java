@@ -152,7 +152,7 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
         s.addModuleAtFromOffset(new Storage(), new Point(-1, -1));
-        s.addModuleAtFromOffset(new Armor(), new Point(1, -1));
+        s.addModuleAtFromOffset(new Storage(), new Point(1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(-2, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
         s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 0));

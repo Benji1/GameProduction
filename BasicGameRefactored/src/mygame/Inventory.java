@@ -100,7 +100,7 @@ public class Inventory {
         return numOfEachItem;
     }
     
-    public boolean removeItemOfType(ModuleType type) {
+    public boolean removeItemFromBase(ModuleType type) {
         for (int i=0; i<itemsInBase.size(); i++) {
             if (itemsInBase.get(i).equals(type)) {
                 itemsInBase.remove(i);
@@ -110,8 +110,27 @@ public class Inventory {
         
         return false;
     }
-    public void addItemOfType(ModuleType type) {
+    public void addItemToBase(ModuleType type) {
         itemsInBase.add(type);
+    }
+    
+    public void MoveItemsFromShipToBaseStorage() {
+        System.out.println("items in base before: " + itemsInBase.size());
+        
+        for (Storage storage : storages) {
+            ArrayList<ModuleType> items = storage.getStoredItems();
+            System.out.println("items in storage before: " + storage.getStoredItems().size());
+            
+            for (ModuleType item : items) {
+                addItemToBase(item);
+            }
+            
+            storage.clearItems();
+            
+            System.out.println("items in storage after: " + storage.getStoredItems().size());
+        }
+        
+        System.out.println("items in base after: " + itemsInBase.size());
     }
     
 }

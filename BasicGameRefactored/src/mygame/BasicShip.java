@@ -185,17 +185,19 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         // TODO: player returns to base
     }
 
-    public void collectItem(ModuleType item) {
+    public boolean collectItem(ModuleType item) {
         // check for available item storage
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] instanceof Storage) {
                     if (((Storage) modules[i][j]).storeItem(item)) {
-                        break;
+                        return true;
                     }
                 }
             }
         }
+        
+        return false;
     }
 
     private Point offsetToActual(Point offset) {

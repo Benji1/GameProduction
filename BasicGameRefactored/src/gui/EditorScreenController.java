@@ -189,7 +189,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     newDraggable.setParent(parent);
 
                     // counter-- of that module type in inventory
-                    inventory.removeItemOfType(ModuleType.getType(Integer.parseInt(parentNr)));
+                    inventory.removeItemFromBase(ModuleType.getType(Integer.parseInt(parentNr)));
                     // counter-- of that module type in gui
                     Element counter = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter");
                     if (counter != null) {
@@ -257,7 +257,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         if (realDragCancel) {        
             // counter++ of that module type in inventory
             int parentId = Integer.parseInt(id.substring(11, id.lastIndexOf("-")));
-            inventory.addItemOfType(ModuleType.getType(parentId));        
+            inventory.addItemToBase(ModuleType.getType(parentId));        
             // counter++ of that module type in gui        
             Element counter = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter");
             if (counter != null) {
@@ -552,7 +552,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     
                     // counter++ of that module type in inventory
                     int parentId = Integer.parseInt(elementToDelete.getId().substring(11, elementToDelete.getId().lastIndexOf("-")));
-                    inventory.addItemOfType(ModuleType.getType(parentId));
+                    inventory.addItemToBase(ModuleType.getType(parentId));
                     // counter++ of that module type in gui   
                     Element counter = screen.findElementByName(ModuleType.getType(parentId).toString() + "-counter");
                     if (counter != null) {

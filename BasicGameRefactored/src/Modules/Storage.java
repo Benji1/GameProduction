@@ -62,6 +62,10 @@ public class Storage extends BasicModule {
         ship.getPlayer().getInventory().removeStorage(this);
     }
     
+    public void clearItems() {
+        itemsInStorage.clear();
+    }
+    
     public ArrayList<ModuleType> getStoredItems() {
         return itemsInStorage;
     }

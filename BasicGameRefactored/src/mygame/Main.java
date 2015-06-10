@@ -186,6 +186,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("ToggleEditor") && !keyPressed) {
             if (!gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
+                player.getInventory().MoveItemsFromShipToBaseStorage();
                 gui.goToEditorScreen();
             } else {
                 gui.goToStartScreen();
