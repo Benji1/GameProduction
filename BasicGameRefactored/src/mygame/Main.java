@@ -230,6 +230,9 @@ public class Main extends SimpleApplication implements ActionListener {
         
         this.u.update(delta);
         this.background.updateBackground();
+        
+        this.gameCollisionListener = new GameContactListener();
+        
         // update camera position
 
         if (this.player.getShip() != null && this.player.getShip().cockpit != null && !universeDebug) {

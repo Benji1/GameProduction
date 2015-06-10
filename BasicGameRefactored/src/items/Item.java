@@ -104,10 +104,10 @@ public class Item extends JBox2dNode implements IUpdateable {
     
     public void handleShipCollision(BasicModule m) {
         if(!collected) {
-            // TODO ONLY COLLECT IF ENOUGH SPACE IN STORAGE
-            collected = true;
-            m.getShip().collectItem(type);
-            markForDeletion();
+            if(m.getShip().collectItem(type)) {
+                collected = true;
+                markForDeletion();
+            }
         }
     }
     

@@ -7,6 +7,8 @@ package Modules;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.material.Material;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
 import gui.ModuleType;
 import java.util.ArrayList;
@@ -66,6 +68,10 @@ public class LaserGun extends Weapon {
         Texture t = a.loadTexture("3dmodels/gun_ao.png");
         material.setTexture("DiffuseMap", t);
         spatial.setMaterial(material);
+        
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis((float) Math.atan2(FacingDirection.getDirectionVector(orientation).x, FacingDirection.getDirectionVector(orientation).y), new Vector3f(0, 1, 0));
+        spatial.setLocalRotation(q);
 
         materialActive.setTexture("DiffuseMap", t);
     }

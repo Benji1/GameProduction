@@ -223,7 +223,6 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         onRemove();
         this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
-        // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 
     // HELPER METHOD MAYBE SOMEWHERE ELSE WOULD BE A BETTER PLACE
