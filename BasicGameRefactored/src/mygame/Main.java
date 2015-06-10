@@ -132,7 +132,7 @@ public class Main extends SimpleApplication implements ActionListener {
         inputManager.addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
         inputManager.addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
 
-        inputManager.addListener(this, /*"Up", "Left", "Right", "Down", "Weapon", "Shield",*/ "ToggleUniverseDebug", "ToggleEditor");
+        inputManager.addListener(this, "ToggleUniverseDebug", "ToggleEditor");
     }
 
     private void initHUD() {
@@ -185,7 +185,7 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("ToggleEditor") && !keyPressed) {
-            if (!gui.getCurrentScreenId().equals("editor")) {
+            if (!gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
                 gui.goToEditorScreen();
             } else {
                 gui.goToStartScreen();
