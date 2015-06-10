@@ -78,6 +78,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
             WeldJointDef wjDef = new WeldJointDef();
             wjDef.initialize(lockon.body, this.body, lockon.body.getPosition());
             wjDef.collideConnected = false;
+            wjDef.frequencyHz = 60;
             PhysicsWorld.world.createJoint(wjDef);
         }
     }
