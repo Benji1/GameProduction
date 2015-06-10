@@ -12,6 +12,8 @@ public class UniverseGenerator {
 		app.getRootNode().attachChild(sys);
 		sys.setLocalTranslation(-100, -5, 0);
 		u.systems.add(sys);
+		u.addStation(40, 20);
+		u.addStation(20, 50);
 	}
 	
 	public static void generateUniverse(Main app, Universe u){

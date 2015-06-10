@@ -3,14 +3,20 @@ package universe;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import universe.Abs_ChunkNode.ChunkNodeType;
+
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
+
 import mygame.Main;
 
 /**
@@ -37,6 +43,7 @@ public class Universe {
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
     public List<SolarSystem> systems;
+    public List<Spatial> stations;
     private int universeCenter = UNIVERSE_SIZE / 2;
     
     // Debug Stuff
@@ -61,9 +68,35 @@ public class Universe {
         
         this.initDebug();
         this.systems = new ArrayList<SolarSystem>();
+        this.stations = new ArrayList<Spatial>();
     }
     
+    public void addStation(float x, float z){
+    	Box shape = new Box(7, 2, 5);
+    	Geometry station = new Geometry("random station", shape);	
+		Material sphereMat = new Material(app.getAssetManager(), 
+				"Common/MatDefs/Light/Lighting.j3md");
+		sphereMat.setBoolean("UseMaterialColors", true);
+		
+		ColorRGBA color = ColorRGBA.randomColor();
+		sphereMat.setColor("Diffuse", color);
+		sphereMat.setColor("Ambient", color);
+		station.setMaterial(sphereMat);	
+		app.getRootNode().attachChild(station);
+		this.stations.add(station);
+		station.setLocalTranslation(x, -5, z);
+    }
     
+    public boolean nearStation(Vector3f shippos){
+    	float mindis = Float.MAX_VALUE;
+    	for (Spatial s: stations){
+    		float dis = (s.getLocalTranslation().subtract(shippos)).length();
+    		if (dis < mindis)
+    			mindis = dis;
+    	}
+    	System.out.println("dis: "+mindis);
+    	return mindis < 15;
+    }
     
     
     

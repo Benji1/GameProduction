@@ -184,11 +184,13 @@ public class Main extends SimpleApplication implements ActionListener {
             }
         }
 
-        if (name.equals("ToggleEditor") && !keyPressed) {
+        if (name.equals("ToggleEditor") && !keyPressed&& this.getUniverse().nearStation(this.player.getShip().cockpit.getWorldTranslation())) {
             if (!gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
-                player.getInventory().MoveItemsFromShipToBaseStorage();
+                player.getShip().ToggleDamping();
+            	player.getInventory().MoveItemsFromShipToBaseStorage();
                 gui.goToEditorScreen();
             } else {
+            	player.getShip().ToggleDamping();
                 gui.goToStartScreen();
             }
         }

@@ -60,11 +60,18 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected Material material;
     protected ModuleType type;
     protected FacingDirection orientation;
+    private float oldDamping = 10000f;
     
     public int group = 0;
 
     public BasicModule() {
         super();
+    }
+    
+    public void toggleDamping(){
+    	float temp = oldDamping;
+    	oldDamping = body.getLinearDamping();
+    	body.setLinearDamping(temp);
     }
 
     private void lockToShip() {

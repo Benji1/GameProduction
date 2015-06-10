@@ -72,6 +72,16 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         }
     }
     
+    public void ToggleDamping(){
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    modules[i][j].toggleDamping();
+                }
+            }
+        }
+    }
+    
     public BasicModule[][] getModules() {
         return modules;
     }
