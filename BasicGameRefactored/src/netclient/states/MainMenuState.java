@@ -7,8 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import netclient.WJSFClient;
-import netmsg.NetMessages;
 import netserver.WJSFServer;
+import netutil.NetMessages;
+
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;

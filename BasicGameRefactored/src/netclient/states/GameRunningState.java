@@ -1,11 +1,15 @@
 package netclient.states;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import netclient.ClientNetMsgManager;
+import netclient.ClientNetMsgListener;
 import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.GUI;
+import netserver.WJSFServer;
+import netutil.NetMessages.KeyPressedMsg;
 
 import org.jbox2d.dynamics.Body;
 
@@ -61,6 +65,10 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public ClientShip playerShip;
     public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
     
+    public enum InputTypes {
+    	MoveUp, MoveLeft, MoveRight, MoveDown, Weapon, Shield
+    }
+    
     //public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
     //public BasicShip playersShip;
     //public BasicShip targetShip;
@@ -71,13 +79,13 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     
     boolean up = false, down = false;
 
-	public ClientNetMsgManager msgManager;
+	public ClientNetMsgListener msgManager;
     
     public GameRunningState() {}
     
 	public GameRunningState(WJSFClient app) {
 		this.app = app;
-		this.msgManager = new ClientNetMsgManager(app);
+		this.msgManager = new ClientNetMsgListener(app);
 		this.localRootNode = new Node("GameRunningNode");
 	}
 	
@@ -145,17 +153,17 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     }
     
     public void initKeys() {
-        this.app.getInputManager().addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
-        this.app.getInputManager().addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
-        this.app.getInputManager().addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
-        this.app.getInputManager().addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
-        this.app.getInputManager().addMapping("Weapon", new KeyTrigger(KeyInput.KEY_SPACE));
-        this.app.getInputManager().addMapping("Shield", new KeyTrigger(KeyInput.KEY_F));
+        this.app.getInputManager().addMapping(InputTypes.MoveUp.toString(), new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
+        this.app.getInputManager().addMapping(InputTypes.MoveLeft.toString(), new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
+        this.app.getInputManager().addMapping(InputTypes.MoveRight.toString(), new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
+        this.app.getInputManager().addMapping(InputTypes.MoveDown.toString(), new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
+        this.app.getInputManager().addMapping(InputTypes.Weapon.toString(), new KeyTrigger(KeyInput.KEY_SPACE));
+        this.app.getInputManager().addMapping(InputTypes.Shield.toString(), new KeyTrigger(KeyInput.KEY_F));
         this.app.getInputManager().addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
         this.app.getInputManager().addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
         this.app.getInputManager().addMapping("ExitOverlay", new KeyTrigger(KeyInput.KEY_ESCAPE));
 
-        this.app.getInputManager().addListener(this, "Up", "Left", "Right", "Down", "Weapon", "Shield", "ToggleUniverseDebug", "ToggleEditor", "ExitOverlay");
+        this.app.getInputManager().addListener(this, InputTypes.MoveUp.toString(), InputTypes.MoveLeft.toString(), InputTypes.MoveRight.toString(), InputTypes.MoveDown.toString(), InputTypes.Weapon.toString(), InputTypes.Shield.toString(), "ToggleUniverseDebug", "ToggleEditor", "ExitOverlay");
     }
 
     private void initHUD() {
@@ -186,69 +194,17 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
-        if (name.equals("Up")) {
-            /*playersShip.activateModules("Up");
-            up = true;
-            if (!keyPressed) {
-                playersShip.deactivateModules("Up");
-                up = false;
-            }*/
-        }
-
-        if (name.equals("Left")) {
-            /*playersShip.activateModules("Left");
-            if (!keyPressed) {
-                playersShip.deactivateModules("Left");
-                if (up) {
-                    playersShip.activateModules("Up");
-                } else if (down) {
-                    playersShip.activateModules("Down");
-                }
-            }*/
-        }
-
-        if (name.equals("Right")) {
-            /*playersShip.activateModules("Right");
-            if (!keyPressed) {
-                playersShip.deactivateModules("Right");
-                if (up) {
-                    playersShip.activateModules("Up");
-                } else if (down) {
-                    playersShip.activateModules("Down");
-                }
-            }*/
-        }
-
-        if (name.equals("Down")) {
-            /*playersShip.activateModules("Down");
-            down = true;
-            if (!keyPressed) {
-                playersShip.deactivateModules("Down");
-                down = false;
-            }*/
-        }
-
-        if (name.equals("Weapon")) {
-            /*playersShip.activateModules("Weapon");
-            if (!keyPressed) {
-                playersShip.deactivateModules("Weapon");
-            }*/
-        }
-
-        if (name.equals("Shield") && !keyPressed) {
-            // TODO: improve bool test
-            /*if (playersShip.getInteractiveModulesWithHotkey("Shield").size() > 0 && playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
-                if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
-                    playersShip.deactivateModules("Shield");
-                    //targetShip.deactivateModules("Shield");
-                } else {
-                    playersShip.activateModules("Shield");
-                    //targetShip.activateModules("Shield");
-                }
-            }*/
-
-        }
-
+    	// NETWORKING INPUT
+    	try {
+    		KeyPressedMsg msg = new KeyPressedMsg(InputTypes.valueOf(name), keyPressed);
+    		msg.setReliable(true);
+            this.app.client.send(msg);
+    	} catch (IllegalArgumentException ex) {
+    		// name is no network input
+    		Logger.getLogger(GameRunningState.class.getName()).log(Level.WARNING, ex.toString());
+    	}
+        
+        // OFFLINE INPUT
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));

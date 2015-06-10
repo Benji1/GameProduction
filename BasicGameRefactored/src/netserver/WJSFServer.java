@@ -7,8 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import mygame.BasicShip;
-import netmsg.NetMessages;
-import netmsg.NetMessages.*;
+import netutil.NetMessages;
+import netutil.NetMessages.*;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
@@ -26,6 +26,7 @@ public class WJSFServer extends SimpleApplication {
 	
     private Server server;
     private ServerConManager conManager;
+    private ServerNetMsgListener msgListener;
     
     public Random rnd;
 
@@ -60,6 +61,8 @@ public class WJSFServer extends SimpleApplication {
         // init member
         this.rnd = new Random();
         this.conManager = new ServerConManager(this);
+        this.msgListener = new ServerNetMsgListener(this);
+        this.server.addMessageListener(this.msgListener);
     }
 
     @Override

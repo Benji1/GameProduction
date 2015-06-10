@@ -7,11 +7,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import netserver.WJSFServer;
+import netutil.NetMessages;
+import netutil.NetMessages.*;
 import netclient.gui.GUI;
 import netclient.states.GameRunningState;
 import netclient.states.MainMenuState;
-import netmsg.NetMessages;
-import netmsg.NetMessages.*;
 
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;

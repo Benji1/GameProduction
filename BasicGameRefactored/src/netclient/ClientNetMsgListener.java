@@ -5,9 +5,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import netmsg.NetMessages.ClientEnteredMsg;
-import netmsg.NetMessages.NetMsg;
 import netserver.WJSFServer;
+import netutil.NetMessages.ClientEnteredMsg;
+import netutil.NetMessages.NetMsg;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -19,7 +19,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
-public class ClientNetMsgManager implements MessageListener<Client> {
+public class ClientNetMsgListener implements MessageListener<Client> {
 	
 	/**********************************
      ********** CLASS FIELDS  *********
@@ -35,7 +35,7 @@ public class ClientNetMsgManager implements MessageListener<Client> {
      ********** CONSTRUCTORS  *********
      **********************************/
 	
-	public ClientNetMsgManager(WJSFClient app) {
+	public ClientNetMsgListener(WJSFClient app) {
 		this.app = app;
 		this.msgQueue = new ConcurrentLinkedQueue<String>();
 	}
@@ -103,6 +103,6 @@ public class ClientNetMsgManager implements MessageListener<Client> {
 		// handle string msgs
 		String msg = this.msgQueue.poll();
 		if(msg != null)
-			Logger.getLogger(ClientNetMsgManager.class.getName()).log(Level.INFO, msg);
+			Logger.getLogger(ClientNetMsgListener.class.getName()).log(Level.INFO, msg);
 	}
 }

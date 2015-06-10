@@ -6,10 +6,11 @@ import java.util.logging.Logger;
 
 import com.jme3.math.Vector3f;
 import com.jme3.network.ConnectionListener;
+import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;
 
-import netmsg.NetMessages.*;
+import netutil.NetMessages.*;
 
 public class ServerConManager implements ConnectionListener {
 	
@@ -43,25 +44,24 @@ public class ServerConManager implements ConnectionListener {
 	@Override
 	public void connectionAdded(Server arg0, HostedConnection arg1) {
 		// create new netplayer
-		this.players.add(new NetPlayer(this.app, arg1));
-		Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg1.toString());
+		NetPlayer newPl = new NetPlayer(this.app, arg1);
 		
 		// TODO: load player stuff
 		
 		// send player ship data
-    	int[][] ship =
-			{
-				{0, 0, 4, 0, 0},
-				{0, 2, 3, 2, 0},
-				{7, 2, 1, 2, 7},
-				{0, 5, 3, 5, 0},
-				{0, 0, 5, 0, 0}				
-			};
+    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.ship, newPl.pos, Vector3f.ZERO);
+    	msg.setReliable(true);
+		this.app.getServer().broadcast(msg);
 		
-		this.app.getServer().broadcast(new ClientEnteredMsg("PlayerName", arg1.getId(), ship, new Vector3f(this.app.rnd.nextFloat() * 5f, 0, this.app.rnd.nextFloat() * 5f), Vector3f.ZERO));
+		// send all other ships to the new player
+		for(NetPlayer pl : this.players) {
+			ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.ship, pl.pos, Vector3f.ZERO);
+			syncPl.setReliable(true);
+			this.app.getServer().broadcast(Filters.in(arg1), syncPl);
+		}
 		
-		// send the new player all other ships
-		
+		// add new player to list
+		this.players.add(newPl);
 	}
 
 	@Override
