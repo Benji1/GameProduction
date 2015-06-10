@@ -72,19 +72,20 @@ public class Universe {
     }
     
     public void addStation(float x, float z){
-    	Box shape = new Box(7, 2, 5);
-    	Geometry station = new Geometry("random station", shape);	
+    	//Box shape = new Box(7, 2, 5);
+    	Spatial station = app.getAssetManager().loadModel("3dmodels/station.obj");	
 		Material sphereMat = new Material(app.getAssetManager(), 
 				"Common/MatDefs/Light/Lighting.j3md");
 		sphereMat.setBoolean("UseMaterialColors", true);
 		
-		ColorRGBA color = ColorRGBA.randomColor();
+		ColorRGBA color = ColorRGBA.DarkGray;
 		sphereMat.setColor("Diffuse", color);
 		sphereMat.setColor("Ambient", color);
 		station.setMaterial(sphereMat);	
 		app.getRootNode().attachChild(station);
 		this.stations.add(station);
 		station.setLocalTranslation(x, -5, z);
+		station.setLocalScale(2f);
     }
     
     public boolean nearStation(Vector3f shippos){
