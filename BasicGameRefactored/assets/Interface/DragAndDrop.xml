@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty-controls>
-    <controlDefinition name="custom-draggable" childRootId="#draggableContent" controller="gui.dragAndDrop.DraggableControl">
+    <controlDefinition name="custom-draggable" childRootId="#draggableContent" controller="netclient.gui.dragAndDrop.DraggableControl">
         <interact onClick="dragStart()" onClickMouseMove="drag()" onRelease="dragStop()"/>
         <panel id="#draggableContent"/>
     </controlDefinition>
-    <controlDefinition name="custom-droppable" childRootId="#droppableContent" controller="gui.dragAndDrop.DroppableControl">
+    <controlDefinition name="custom-droppable" childRootId="#droppableContent" controller="netclient.gui.dragAndDrop.DroppableControl">
         <panel childLayout="absolute">
             <panel id="#droppableContent" x="0px" y="0px" width="100%" height="100%" childLayout="center"/>
         </panel>

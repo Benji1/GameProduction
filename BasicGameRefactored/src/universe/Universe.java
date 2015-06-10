@@ -4,7 +4,11 @@ package universe;
 import java.util.ArrayList;
 import java.util.List;
 
-import netclient.GameProductionClient;
+import netclient.WJSFClient;
+import universe.Abs_ChunkNode;
+import universe.SolarSystem;
+import universe.Universe;
+import universe.UniverseChunk;
 import universe.Abs_ChunkNode.ChunkNodeType;
 
 import com.jme3.font.BitmapFont;
@@ -34,7 +38,7 @@ public class Universe {
      ********** CLASS FIELDS  *********
      **********************************/
     
-    private GameProductionClient app;
+    private WJSFClient app;
     
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
@@ -51,7 +55,7 @@ public class Universe {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Universe(GameProductionClient app) {
+    public Universe(WJSFClient app) {
         this.app = app;
         
         this.universeChunks = new UniverseChunk[UNIVERSE_SIZE][UNIVERSE_SIZE];
@@ -121,8 +125,8 @@ public class Universe {
     	for (SolarSystem s: systems)
     		s.update(tpf);
         
-    	if(this.isDebug)
-    		this.app.gameRunState.textShipPos.setText("PosChunk: " + this.app.gameRunState.playersShip.getChunkX() + "/" + this.app.gameRunState.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.gameRunState.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.gameRunState.playersShip.getWorldTranslation().toString());
+    	//if(this.isDebug)
+    	//	this.app.gameRunState.textShipPos.setText("PosChunk: " + this.app.gameRunState.playersShip.getChunkX() + "/" + this.app.gameRunState.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.gameRunState.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.gameRunState.playersShip.getWorldTranslation().toString());
     }
     
     public void changedChunkForEntity(Abs_ChunkNode n, int movedX, int movedZ) {

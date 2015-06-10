@@ -1,6 +1,6 @@
 package universe;
 
-import netclient.GameProductionClient;
+import netclient.WJSFClient;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
@@ -18,9 +18,9 @@ public class Background {
     private Geometry parallaxTopLeft2;
     private Geometry parallaxBottomRight2;
     private Geometry parallaxBottomLeft2;
-    private GameProductionClient app;
+    private WJSFClient app;
     
-    public Background(GameProductionClient app){
+    public Background(WJSFClient app){
     	this.app = app;
     }
     

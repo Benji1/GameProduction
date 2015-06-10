@@ -1,4 +1,4 @@
-package states;
+package netclient.states;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import netclient.GameProductionClient;
-import netmsg.NetUtil;
-import netserver.GameProductionServer;
+import netclient.WJSFClient;
+import netmsg.NetMessages;
+import netserver.WJSFServer;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
@@ -24,7 +24,7 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 public class MainMenuState extends AbstractAppState implements ScreenController, ActionListener {
-	private GameProductionClient app;
+	private WJSFClient app;
 	private Node rootNode;
 	private ViewPort viewPort;
 	private Node guiNode;
@@ -33,7 +33,7 @@ public class MainMenuState extends AbstractAppState implements ScreenController,
 	
 	
 	
-	public MainMenuState(GameProductionClient app) {
+	public MainMenuState(WJSFClient app) {
 		this.app = app;
 		this.rootNode = app.getRootNode();
 		this.viewPort = app.getViewPort();
@@ -75,23 +75,19 @@ public class MainMenuState extends AbstractAppState implements ScreenController,
 
 	@Override
 	public void onStartScreen() {
-		// TODO Auto-generated method stub
-		
+		Element niftyElement = this.nifty.getCurrentScreen().findElementByName("loginLabel");
+		niftyElement.getRenderer(TextRenderer.class).setText("");
 	}
 	
 	public void pressLogIn() {
 		try {
-            this.app.client = Network.connectToServer("localhost", NetUtil.PORT);
-            
+            this.app.client = Network.connectToServer("localhost", NetMessages.PORT);
+            this.app.client.addClientStateListener(this.app);
             this.app.client.start();
-    		this.app.getStateManager().detach(this.app.mainMenuState);
-    		this.app.getStateManager().attach(this.app.gameRunState);
-            
-            
-            //client.addMessageListener(new NetworkMessageListener());
+            this.app.client.addMessageListener(this.app.gameRunState.msgManager);
         } catch (Exception e) {
         	// log error
-        	Logger.getLogger(GameProductionServer.class.getName()).log(Level.SEVERE, null, e);
+        	Logger.getLogger(WJSFServer.class.getName()).log(Level.SEVERE, null, e);
         	
         	Element niftyElement = this.nifty.getCurrentScreen().findElementByName("loginLabel");
         	niftyElement.getRenderer(TextRenderer.class).setText(e.getMessage().toString());

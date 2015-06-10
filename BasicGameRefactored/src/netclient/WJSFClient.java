@@ -1,24 +1,24 @@
 package netclient;
 
-import gui.GUI;
-
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import states.GameRunningState;
-import states.MainMenuState;
-import netserver.GameProductionServer;
-import netmsg.NetUtil;
-import netmsg.NetUtil.*;
+import netserver.WJSFServer;
+import netclient.gui.GUI;
+import netclient.states.GameRunningState;
+import netclient.states.MainMenuState;
+import netmsg.NetMessages;
+import netmsg.NetMessages.*;
 
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.font.BitmapFont;
 import com.jme3.network.Client;
+import com.jme3.network.ClientStateListener;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -26,7 +26,12 @@ import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
 
-public class GameProductionClient extends SimpleApplication {
+public class WJSFClient extends SimpleApplication implements ClientStateListener {
+	
+	/**********************************
+     ********** CLASS FIELDS  *********
+     **********************************/
+	
 	public AppSettings settings;
 	public BitmapFont defaultFont;
 	
@@ -36,10 +41,15 @@ public class GameProductionClient extends SimpleApplication {
 	public MainMenuState mainMenuState;
 	
     public Client client;
-    private ConcurrentLinkedQueue<String> msgQueue;
-
+    
+    
+    
+    /**********************************
+     ************ METHODS  ************
+     **********************************/
+    
     public static void main(String[] args) {
-    	NetUtil.initSerializables();
+    	NetMessages.initSerializables();
         
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(60);
@@ -49,7 +59,7 @@ public class GameProductionClient extends SimpleApplication {
         settings.setBitsPerPixel(24);
         settings.setSamples(16);
 
-        GameProductionClient app = new GameProductionClient();
+        WJSFClient app = new WJSFClient();
         app.setSettings(settings);
         app.settings = settings;
         
@@ -61,6 +71,7 @@ public class GameProductionClient extends SimpleApplication {
     @Override
     public void simpleInitApp() {
     	this.getFlyByCamera().setEnabled(false);
+    	this.pauseOnFocus = false;
         this.getStateManager().detach(this.getStateManager().getState(FlyCamAppState.class));
         
     	this.inputManager.clearMappings();
@@ -71,50 +82,43 @@ public class GameProductionClient extends SimpleApplication {
     	this.stateManager.attach(this.mainMenuState);
     	
     	this.gui = new GUI(this);
-    	
-    	this.msgQueue = new ConcurrentLinkedQueue<String>();
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-    	String msg = this.msgQueue.poll();
-    	
-    	if(msg != null) {
-    		fpsText.setText(msg);
-    	} else {
-    		fpsText.setText("FPS: " + tpf);
-    	}
-    }
-    
-    private class NetworkMessageListener implements MessageListener<Client> {
-
-		@Override
-		public void messageReceived(Client source, Message m) {
-			if(m instanceof NetMsg) {
-				NetMsg msg = (NetMsg)m;
-				msgQueue.add(msg.getMessage());
-			} else if (m instanceof PosMsg) {
-				/*PosMsg msg = (PosMsg)m;
-				
-				GameProductionClient.this.enqueue(new Callable() {
-					public Object call() throws Exception {
-						geom.setLocalTranslation(msg.getPos());
-						return null;
-					}
-				});*/
-			}
-		}
-    	
     }
     
     @Override
     public void destroy() {
-    	try {
-    		client.close();
-    	} catch(Exception e) {
-    		Logger.getLogger(GameProductionServer.class.getName()).log(Level.SEVERE, null, e);
+    	if(client != null && client.isConnected()) {
+	    	try {
+	    		client.close();
+	    	} catch(Exception e) {
+	    		Logger.getLogger(WJSFServer.class.getName()).log(Level.SEVERE, null, e);
+	    	}
     	}
     	
         super.destroy();
     }
+
+	@Override
+	public void clientConnected(Client arg0) {
+		Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
+		
+		this.stateManager.detach(this.mainMenuState);
+		this.stateManager.attach(this.gameRunState);
+	}
+
+	@Override
+	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
+		Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
+		
+		this.stateManager.detach(this.gameRunState);
+		this.stateManager.attach(this.mainMenuState);
+	}
+    
+    
+    /**********************************
+     ******** GETTER & SETTER  ********
+     **********************************/
 }

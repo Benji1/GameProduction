@@ -1,5 +1,6 @@
-package gui.dragAndDrop.builder;
+package netclient.gui.dragAndDrop.builder;
 
+import netclient.gui.dragAndDrop.Droppable;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyIdCreator;
 import de.lessvoid.nifty.controls.dynamic.attributes.ControlAttributes;
@@ -7,26 +8,25 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.loaderv2.types.ControlType;
 import de.lessvoid.nifty.loaderv2.types.ElementType;
 import de.lessvoid.nifty.screen.Screen;
-import gui.dragAndDrop.Draggable;
 
-public class CreateDraggable extends ControlAttributes {
-  public CreateDraggable() {
+public class CreateDroppable extends ControlAttributes {
+  public CreateDroppable() {
     setAutoId(NiftyIdCreator.generate());
-    setName("custom-draggable");
+    setName("custom-droppable");
   }
 
-  public CreateDraggable(final String id) {
+  public CreateDroppable(final String id) {
     setId(id);
-    setName("custom-draggable");
+    setName("custom-droppable");
   }
 
-  public Draggable create(
+  public Droppable create(
       final Nifty nifty,
       final Screen screen,
       final Element parent) {
     nifty.addControl(screen, parent, getStandardControl());
     nifty.addControlsWithoutStartScreen();
-    return parent.findNiftyControl(attributes.get("id"), Draggable.class);
+    return parent.findNiftyControl(attributes.get("id"), Droppable.class);
   }
 
   @Override

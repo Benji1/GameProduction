@@ -1,4 +1,4 @@
-package gui.dragAndDrop.builder;
+package netclient.gui.dragAndDrop.builder;
 
 import de.lessvoid.nifty.builder.ControlBuilder;
 

@@ -16,7 +16,7 @@ import Modules.WeakThruster;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import netclient.GameProductionClient;
+import netclient.WJSFClient;
 import mygame.BasicShip;
 
 /**
@@ -24,7 +24,7 @@ import mygame.BasicShip;
  * @author 1337
  */
 public class TestShipDesigns {
-	GameProductionClient main;
+	WJSFClient main;
     
     ArrayList<String> fwd;
     ArrayList<String> fwdAndLeft;
@@ -56,7 +56,7 @@ public class TestShipDesigns {
     public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
     public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
     
-    public TestShipDesigns(GameProductionClient main) {
+    public TestShipDesigns(WJSFClient main) {
         this.main = main;
         
         fwd = new ArrayList<String>();

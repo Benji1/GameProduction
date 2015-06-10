@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package netclient.gui;
 
-import netclient.GameProductionClient;
+import netclient.WJSFClient;
 
 import com.jme3.niftygui.NiftyJmeDisplay;
 
@@ -14,14 +14,14 @@ import de.lessvoid.nifty.screen.Screen;
 public class GUI {
     
     private Nifty nifty;
-    private GameProductionClient app;
+    private WJSFClient app;
     
     private Screen editorScreen;
     private Screen startScreen;
     private Screen emptyScreen;
     private Screen exitOverlayScreen;
     
-    public GUI(GameProductionClient app) {
+    public GUI(WJSFClient app) {
         this.app = app;
         initNifty();
     }

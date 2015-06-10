@@ -1,6 +1,10 @@
 package universe;
 
-import netclient.GameProductionClient;
+import netclient.WJSFClient;
+import universe.Abs_ChunkNode;
+import universe.CBNameGenerator;
+import universe.Planet;
+import universe.Sun;
 import universe.Abs_ChunkNode.ChunkNodeType;
 
 public class SolarSystem extends Abs_ChunkNode {
@@ -12,7 +16,7 @@ public class SolarSystem extends Abs_ChunkNode {
 	public float timescale = 100f;
 	public float sizescale = 1f;
 	
-	public SolarSystem(GameProductionClient app){
+	public SolarSystem(WJSFClient app){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
 		this.init();
 	}

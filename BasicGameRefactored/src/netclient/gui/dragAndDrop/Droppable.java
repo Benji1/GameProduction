@@ -1,4 +1,4 @@
-package gui.dragAndDrop;
+package netclient.gui.dragAndDrop;
 
 import de.lessvoid.nifty.controls.NiftyControl;
 

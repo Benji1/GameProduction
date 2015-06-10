@@ -1,4 +1,4 @@
-package gui.dragAndDrop;
+package netclient.gui.dragAndDrop;
 
 import java.util.List;
 import java.util.ListIterator;

@@ -1,13 +1,13 @@
-package gui.dragAndDrop;
+package netclient.gui.dragAndDrop;
 
 import de.lessvoid.nifty.NiftyEvent;
 
 @SuppressWarnings("rawtypes")
-public class DraggableDragCanceledEvent implements NiftyEvent {
+public class DraggableDragStartedEvent implements NiftyEvent {
   private Droppable source;
   private Draggable draggable;
 
-  public DraggableDragCanceledEvent(final Droppable source, final Draggable draggable) {
+  public DraggableDragStartedEvent(final Droppable source, final Draggable draggable) {
     this.source = source;
     this.draggable = draggable;
   }

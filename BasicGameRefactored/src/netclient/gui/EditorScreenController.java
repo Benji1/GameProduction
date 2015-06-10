@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package netclient.gui;
 
 import Modules.Armor;
 import Modules.BasicModule;
@@ -12,7 +12,6 @@ import Modules.FacingDirection;
 import Modules.LaserGun;
 import Modules.Shield;
 import Modules.Thruster;
-import gui.dragAndDrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.builder.ControlBuilder;
@@ -25,18 +24,21 @@ import de.lessvoid.nifty.elements.events.NiftyMouseWheelEvent;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import gui.dragAndDrop.Draggable;
-import gui.dragAndDrop.DraggableControl;
-import gui.dragAndDrop.DraggableDragCanceledEvent;
-import gui.dragAndDrop.DraggableDragStartedEvent;
-import gui.dragAndDrop.Droppable;
-import gui.dragAndDrop.DroppableControl;
-import gui.dragAndDrop.DroppableDropFilter;
-import gui.dragAndDrop.DroppableDroppedEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import netclient.gui.dragAndDrop.Draggable;
+import netclient.gui.dragAndDrop.DraggableControl;
+import netclient.gui.dragAndDrop.DraggableDragCanceledEvent;
+import netclient.gui.dragAndDrop.DraggableDragStartedEvent;
+import netclient.gui.dragAndDrop.Droppable;
+import netclient.gui.dragAndDrop.DroppableControl;
+import netclient.gui.dragAndDrop.DroppableDropFilter;
+import netclient.gui.dragAndDrop.DroppableDroppedEvent;
+import netclient.gui.dragAndDrop.builder.DraggableBuilder;
 import services.ServiceManager;
 
 /**

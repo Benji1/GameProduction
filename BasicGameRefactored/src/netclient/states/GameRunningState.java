@@ -1,12 +1,14 @@
-package states;
+package netclient.states;
 
 import java.util.ArrayList;
 
-import netclient.GameProductionClient;
+import netclient.ClientNetMsgManager;
+import netclient.ClientShip;
+import netclient.WJSFClient;
+import netclient.gui.GUI;
 
 import org.jbox2d.dynamics.Body;
 
-import gui.GUI;
 import services.ServiceManager;
 import services.updater.UpdateableManager;
 import universe.Background;
@@ -41,7 +43,9 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController {
-	private GameProductionClient app;
+	
+	private WJSFClient app;
+	
 	public Node localRootNode;
 	
 	public CameraNode camNode;
@@ -54,26 +58,54 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
 
-    public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
-    public BasicShip playersShip;
-    public BasicShip targetShip;
+    public ClientShip playerShip;
+    public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
+    
+    //public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
+    //public BasicShip playersShip;
+    //public BasicShip targetShip;
 	
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     
+    boolean up = false, down = false;
+
+	public ClientNetMsgManager msgManager;
+    
     public GameRunningState() {}
     
-	public GameRunningState(GameProductionClient app) {
+	public GameRunningState(WJSFClient app) {
 		this.app = app;
+		this.msgManager = new ClientNetMsgManager(app);
+		this.localRootNode = new Node("GameRunningNode");
 	}
-
+	
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
+		super.initialize(stateManager, app);
+		
+		this.initWorld();
+        this.initLight();
+        this.initHUD();
+        //this.initShip();
+		//this.initKeys();
+        this.initCamera();
+        this.background = new Background(this.app);
+        this.background.initBackground();
+        
+        this.app.getRootNode().attachChild(this.localRootNode);
+        
+        this.app.gui.goToEmptyScreen();
+        this.app.getInputManager().setCursorVisible(false);
+	}
+	
     private void initShip() {
         TestShipDesigns tsd = new TestShipDesigns(this.app);
-        playersShip = tsd.createTestShip1();
+        //playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
-        targetShip = tsd.createTestTargetShip2();
+        //targetShip = tsd.createTestTargetShip2();
         
         Spatial spatial;
         Material material;    
@@ -94,18 +126,25 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         System.out.println(spatial.getLocalTranslation());
     }
 
-    private void initCamera() {
+    public void initCamera() {
         camNode = new CameraNode("Camera Node", this.app.getViewPort().getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.localRootNode.attachChild(camNode);
-        camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
         
-            if(this.playersShip.cockpit != null) {
-                camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y);
-            }
-       }
-
-    private void initKeys() {
+        if(this.playerShip != null) {
+        	camNode.setLocalTranslation(new Vector3f(this.playerShip.shipRoot.getLocalTranslation().x, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), this.playerShip.shipRoot.getLocalTranslation().z + 0.1f));
+            camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+        }
+    }
+    
+    public void updateCamera() {
+    	if(this.playerShip != null) {
+            camNode.setLocalTranslation(new Vector3f(this.playerShip.shipRoot.getLocalTranslation().x, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), this.playerShip.shipRoot.getLocalTranslation().z + 0.1f));
+            camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+    	}
+    }
+    
+    public void initKeys() {
         this.app.getInputManager().addMapping("Up", new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
         this.app.getInputManager().addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
         this.app.getInputManager().addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
@@ -144,22 +183,20 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         ambient.setColor(ColorRGBA.White.mult(1f));
         this.localRootNode.addLight(ambient);
     }
-
-    boolean up = false, down = false;
     
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         if (name.equals("Up")) {
-            playersShip.activateModules("Up");
+            /*playersShip.activateModules("Up");
             up = true;
             if (!keyPressed) {
                 playersShip.deactivateModules("Up");
                 up = false;
-            }
+            }*/
         }
 
         if (name.equals("Left")) {
-            playersShip.activateModules("Left");
+            /*playersShip.activateModules("Left");
             if (!keyPressed) {
                 playersShip.deactivateModules("Left");
                 if (up) {
@@ -167,11 +204,11 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                 } else if (down) {
                     playersShip.activateModules("Down");
                 }
-            }
+            }*/
         }
 
         if (name.equals("Right")) {
-            playersShip.activateModules("Right");
+            /*playersShip.activateModules("Right");
             if (!keyPressed) {
                 playersShip.deactivateModules("Right");
                 if (up) {
@@ -179,39 +216,37 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                 } else if (down) {
                     playersShip.activateModules("Down");
                 }
-            }
+            }*/
         }
 
         if (name.equals("Down")) {
-            playersShip.activateModules("Down");
+            /*playersShip.activateModules("Down");
             down = true;
             if (!keyPressed) {
                 playersShip.deactivateModules("Down");
                 down = false;
-            }
+            }*/
         }
 
         if (name.equals("Weapon")) {
-            playersShip.activateModules("Weapon");
+            /*playersShip.activateModules("Weapon");
             if (!keyPressed) {
                 playersShip.deactivateModules("Weapon");
-            }
+            }*/
         }
 
         if (name.equals("Shield") && !keyPressed) {
             // TODO: improve bool test
-            if (playersShip.getInteractiveModulesWithHotkey("Shield").size() > 0 && playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
+            /*if (playersShip.getInteractiveModulesWithHotkey("Shield").size() > 0 && playersShip.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
                 if (playersShip.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
                     playersShip.deactivateModules("Shield");
-                    targetShip.deactivateModules("Shield");
+                    //targetShip.deactivateModules("Shield");
                 } else {
                     playersShip.activateModules("Shield");
-                    targetShip.activateModules("Shield");
+                    //targetShip.activateModules("Shield");
                 }
-            }
-            
-            
-            
+            }*/
+
         }
 
         if (name.equals("ToggleUniverseDebug")) {
@@ -255,7 +290,9 @@ public class GameRunningState extends AbstractAppState implements ActionListener
 	
 	@Override
 	public void update(float tpf) {
-		Spatial spatial;
+		this.msgManager.update(tpf);
+		
+		/*Spatial spatial;
         Material material;    
         
         Box box = new Box(1, 0.4f, 1);
@@ -268,57 +305,26 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         material.setColor("Diffuse", color);
 
         spatial.setMaterial(material);
-        this.localRootNode.attachChild(spatial);
+        this.localRootNode.attachChild(spatial);*/
+        
+        //phyicsUpdate(tpf);
         
         
-        phyicsUpdate(tpf);
+        /*for (BasicShip s : ships)
+            s.update(tpf);*/
         
-        
-         for (BasicShip s : ships) {
-            s.update(tpf);
-        }
-        //System.out.println(ships.size());
         updateableManager.update(tpf);
         
-        
-        
-        for(Body b: bodiesToRemove) {
-            //System.out.println(b);
+        for(Body b: bodiesToRemove)
             PhysicsWorld.world.destroyBody(b);
-        }
-        bodiesToRemove.clear();
 
+        bodiesToRemove.clear();
        
         this.u.update(tpf);
         this.background.updateBackground();
-        // update camera position
         
-        if(this.playersShip != null && this.playersShip.cockpit != null) {
-            camNode.setLocalTranslation(new Vector3f(this.playersShip.cockpit.getLocalTranslation().x, this.camNode.getLocalTranslation().y, this.playersShip.cockpit.getLocalTranslation().z + 0.1f));
-            camNode.lookAt(this.playersShip.cockpit.getLocalTranslation(), Vector3f.UNIT_Y); 
-        }
-	}
-	
-	@Override
-	public void initialize(AppStateManager stateManager, Application app) {
-		super.initialize(stateManager, app);
-		
-		this.localRootNode = new Node("GameRunningNode");
-		
-		this.initWorld();
-        this.initShip();
-        this.initLight();
-        this.initKeys();
-        this.initHUD();
-        this.initCamera();
-        this.background = new Background(this.app);
-        this.background.initBackground();
-        
-        this.app.getRootNode().attachChild(this.localRootNode);
-        
-        this.app.gui.goToEmptyScreen();
-        this.app.getInputManager().setCursorVisible(false);
-	}
+        this.updateCamera();
+	}	
 	
 	@Override
 	public void cleanup() {

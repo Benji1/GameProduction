@@ -17,7 +17,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
 import mygame.PhysicsWorld;
-import netclient.GameProductionClient;
+import netclient.WJSFClient;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -36,7 +36,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     protected Spatial spatial;
     protected Material material;
 
-    public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, GameProductionClient app) {
+    public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, WJSFClient app) {
         super(spawnPoint, fireDirection, app);
         this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
         this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);

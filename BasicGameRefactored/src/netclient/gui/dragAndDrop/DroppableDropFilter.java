@@ -1,4 +1,4 @@
-package gui.dragAndDrop;
+package netclient.gui.dragAndDrop;
 
 
 public interface DroppableDropFilter {

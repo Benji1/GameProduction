@@ -1,6 +1,7 @@
 package universe;
 
-import netclient.GameProductionClient;
+import universe.Universe;
+import netclient.WJSFClient;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -25,7 +26,7 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CLASS FIELDS  *********
      **********************************/
 	
-    protected GameProductionClient app;  				// the main game class
+    protected WJSFClient app;  				// the main game class
     private ChunkNodeType type;		// the type of the Node
     private int chunkX;            	// the current chunkX
     private int chunkZ;            	// the current chunkZ
@@ -43,7 +44,7 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Abs_ChunkNode(GameProductionClient app, String name, ChunkNodeType t, int chunkX, int chunkZ, Vector3f posInChunk) {
+    public Abs_ChunkNode(WJSFClient app, String name, ChunkNodeType t, int chunkX, int chunkZ, Vector3f posInChunk) {
     	super(name);
     	
         this.app = app;
@@ -58,11 +59,11 @@ public abstract class Abs_ChunkNode extends Node {
         this.app.gameRunState.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
     }
     
-    public Abs_ChunkNode(GameProductionClient app, String name, ChunkNodeType t, int chunkX, int chunkZ) {
+    public Abs_ChunkNode(WJSFClient app, String name, ChunkNodeType t, int chunkX, int chunkZ) {
         this(app, name, t, chunkX, chunkZ, Vector3f.ZERO);
     }
     
-    public Abs_ChunkNode(GameProductionClient app, String name, ChunkNodeType t) {
+    public Abs_ChunkNode(WJSFClient app, String name, ChunkNodeType t) {
         this(app, name, t, 0, 0, Vector3f.ZERO);
     }
     
