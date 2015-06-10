@@ -115,22 +115,15 @@ public class Inventory {
     }
     
     public void MoveItemsFromShipToBaseStorage() {
-        System.out.println("items in base before: " + itemsInBase.size());
-        
         for (Storage storage : storages) {
             ArrayList<ModuleType> items = storage.getStoredItems();
-            System.out.println("items in storage before: " + storage.getStoredItems().size());
             
             for (ModuleType item : items) {
                 addItemToBase(item);
             }
             
             storage.clearItems();
-            
-            System.out.println("items in storage after: " + storage.getStoredItems().size());
         }
-        
-        System.out.println("items in base after: " + itemsInBase.size());
     }
     
 }
