@@ -53,7 +53,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 			NetMsg msg = (NetMsg)m;
 			msgQueue.add(msg.getMessage());
 		} else if (m instanceof ClientEnteredMsg) {
-			ClientEnteredMsg msg = (ClientEnteredMsg)m;
+			final ClientEnteredMsg msg = (ClientEnteredMsg)m;
 			
 			this.app.enqueue(new Callable() {
 				public Object call() throws Exception {
@@ -95,7 +95,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 				}
 			});
 		} else if (m instanceof PosMsg) {
-			PosMsg msg = (PosMsg)m;
+			final PosMsg msg = (PosMsg)m;
 			
 			this.app.enqueue(new Callable() {
 				public Object call() throws Exception {

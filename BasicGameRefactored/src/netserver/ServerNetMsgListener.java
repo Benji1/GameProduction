@@ -23,7 +23,8 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 	@Override
 	public void messageReceived(HostedConnection client, Message m) {
 		if(m instanceof KeyPressedMsg) {
-			KeyPressedMsg msg = (KeyPressedMsg)m;
+			final KeyPressedMsg msg = (KeyPressedMsg)m;
+			
 			this.app.enqueue(new Callable() {
 				public Object call() throws Exception {
 					// find player and update input status
