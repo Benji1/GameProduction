@@ -11,13 +11,13 @@ import netclient.gui.GUI;
 import netclient.universe.Background;
 import netserver.BasicShip;
 import netserver.WJSFServer;
+import netserver.NetInput.InputTypes;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.UpdateableManager;
 import netserver.shipdesigns.TestShipDesigns;
 import netserver.universe.Universe;
 import netserver.universe.UniverseGenerator;
-import netutil.NetInput.InputTypes;
 import netutil.NetMessages.KeyPressedMsg;
 
 import org.jbox2d.dynamics.Body;
@@ -227,7 +227,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
 	public void update(float tpf) {
 		this.msgManager.update(tpf);
         
-        this.background.updateBackground();
+        //this.background.updateBackground();
         
         this.updateCamera();
 	}	

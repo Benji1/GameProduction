@@ -101,6 +101,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 				public Object call() throws Exception {
 					if(app.gameRunState.playerShip.id == msg.getId()) {
 						app.gameRunState.playerShip.shipRoot.setLocalTranslation(msg.getPos());
+						Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, msg.getPos().toString());
 					} else {
 						for(ClientShip s : app.gameRunState.clientShips) {
 							if(s.id == msg.getId()) {

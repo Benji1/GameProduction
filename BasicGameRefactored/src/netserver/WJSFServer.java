@@ -17,8 +17,11 @@ import netserver.universe.UniverseGenerator;
 import netutil.NetMessages;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.math.Vector3f;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
+import com.jme3.scene.CameraNode;
+import com.jme3.scene.control.CameraControl;
 import com.jme3.system.JmeContext;
 
 
@@ -43,16 +46,13 @@ public class WJSFServer extends SimpleApplication {
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
     private Universe u;
-    
-    //public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
-    //public BasicShip playersShip;
-    //public BasicShip targetShip;
 	
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     
-    //boolean up = false, down = false;
+    
+    
     
     /**********************************
      ************ METHODS  ************
@@ -69,7 +69,7 @@ public class WJSFServer extends SimpleApplication {
     @Override
     public void simpleInitApp() {
     	// jme settings
-    	//this.flyCam.setEnabled(false);
+    	this.flyCam.setEnabled(false);
     	this.pauseOnFocus = false;
     	
     	// start server
@@ -90,11 +90,23 @@ public class WJSFServer extends SimpleApplication {
         
         // init game
         this.initWorld();
+        
+        // init debug stuff
+        this.initCamera();
     }
 
     private void initWorld() {
         this.u = new Universe(this);
         UniverseGenerator.debugSystem(this, u);
+    }
+    
+    public void initCamera() {
+        CameraNode camNode = new CameraNode("Camera Node", this.getViewPort().getCamera());
+        camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
+        this.rootNode.attachChild(camNode);
+        
+    	camNode.setLocalTranslation(new Vector3f(0, 700 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+        camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
     
     @Override

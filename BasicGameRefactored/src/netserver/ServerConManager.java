@@ -56,13 +56,13 @@ public class ServerConManager implements ConnectionListener {
 				// TODO: load player stuff
 				
 				// send player ship data
-		    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, newPl.pos, Vector3f.ZERO);
+		    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
 		    	msg.setReliable(true);
 				app.getServer().broadcast(msg);
 				
 				// send all other ships to the new player
 				for(NetPlayer pl : players) {
-					ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, pl.pos, Vector3f.ZERO);
+					ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
 					syncPl.setReliable(true);
 					app.getServer().broadcast(Filters.in(arg1), syncPl);
 				}
@@ -79,6 +79,7 @@ public class ServerConManager implements ConnectionListener {
 	public void connectionRemoved(Server arg0, HostedConnection arg1) {
 		for(NetPlayer pl : this.players) {
 			if(pl.con == arg1) {
+				this.app.getRootNode().getChildren().remove(pl.ship);
 				this.players.remove(pl);
 				Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg1.toString());
 			}
@@ -94,7 +95,7 @@ public class ServerConManager implements ConnectionListener {
 		this.curPosUpdate += tpf;
 		if(this.curPosUpdate >= this.posUpdate) {
 			for(NetPlayer pl : this.players) {
-				this.app.getServer().broadcast(new PosMsg(pl.pos, pl.con.getId()));
+				this.app.getServer().broadcast(new PosMsg(pl.ship.cockpit.getLocalTranslation(), pl.con.getId()));
 			}
 			
 			this.curPosUpdate = 0;

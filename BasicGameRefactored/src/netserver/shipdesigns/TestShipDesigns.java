@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import netclient.WJSFClient;
 import netserver.BasicShip;
 import netserver.WJSFServer;
+import netserver.NetInput.InputTypes;
 import netserver.modules.Armor;
 import netserver.modules.Cockpit;
 import netserver.modules.EnergyGenerator;
@@ -60,48 +61,48 @@ public class TestShipDesigns {
         this.main = main;
         
         fwd = new ArrayList<String>();
-        fwd.add("Up");
+        fwd.add(InputTypes.MoveUp.toString());
         
         fwdAndLeft = new ArrayList<String>();
-        fwdAndLeft.add("Up");
-        fwdAndLeft.add("Left");
+        fwdAndLeft.add(InputTypes.MoveUp.toString());
+        fwdAndLeft.add(InputTypes.MoveLeft.toString());
         
         fwdAndRight = new ArrayList<String>();
-        fwdAndRight.add("Up");
-        fwdAndRight.add("Right");
+        fwdAndRight.add(InputTypes.MoveUp.toString());
+        fwdAndRight.add(InputTypes.MoveRight.toString());
         
         fwdAndLeftAndRight = new ArrayList<String>();
-        fwdAndLeftAndRight.add("Up");
-        fwdAndLeftAndRight.add("Left");
-        fwdAndLeftAndRight.add("Right");
+        fwdAndLeftAndRight.add(InputTypes.MoveUp.toString());
+        fwdAndLeftAndRight.add(InputTypes.MoveLeft.toString());
+        fwdAndLeftAndRight.add(InputTypes.MoveRight.toString());
         
         right = new ArrayList<String>();
-        right.add("Right");
+        right.add(InputTypes.MoveRight.toString());
         
         left = new ArrayList<String>();
-        left.add("Left");
+        left.add(InputTypes.MoveLeft.toString());
         
         bckwd = new ArrayList<String>();
-        bckwd.add("Down");
+        bckwd.add(InputTypes.MoveDown.toString());
         
         bckwdAndLeft = new ArrayList<String>();
-        bckwdAndLeft.add("Down");
-        bckwdAndLeft.add("Left");
+        bckwdAndLeft.add(InputTypes.MoveDown.toString());
+        bckwdAndLeft.add(InputTypes.MoveLeft.toString());
         
         bckwdAndRight = new ArrayList<String>();
-        bckwdAndRight.add("Down");
-        bckwdAndRight.add("Right");
+        bckwdAndRight.add(InputTypes.MoveDown.toString());
+        bckwdAndRight.add(InputTypes.MoveRight.toString());
         
         bckwdAndLeftAndRight = new ArrayList<String>();
-        bckwdAndLeftAndRight.add("Down");
-        bckwdAndLeftAndRight.add("Left");
-        bckwdAndLeftAndRight.add("Right");
+        bckwdAndLeftAndRight.add(InputTypes.MoveDown.toString());
+        bckwdAndLeftAndRight.add(InputTypes.MoveLeft.toString());
+        bckwdAndLeftAndRight.add(InputTypes.MoveRight.toString());
         
         shield = new ArrayList<String>();
-        shield.add("Shield");
+        shield.add(InputTypes.Shield.toString());
         
         weapon = new ArrayList<String>();
-        weapon.add("Weapon");
+        weapon.add(InputTypes.Weapon.toString());
         
         testFire = new ArrayList<String>();
         testFire.add("TestFire");

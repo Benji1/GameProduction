@@ -1,10 +1,7 @@
-package netutil;
+package netserver;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import netserver.NetPlayer;
-import netserver.WJSFServer;
 
 public class NetInput {
 	public static enum InputTypes {
@@ -20,12 +17,30 @@ public class NetInput {
 	}
 	
 	public void updateInputStatus(InputTypes type, boolean keyPressed) {
+		// keep track of input status
 		for(int i = 0; i < InputTypes.values().length; i++) {
 			if(InputTypes.values()[i] == type) {
 				inputStatus[i] = keyPressed;
-				Logger.getLogger(NetInput.class.getName()).log(Level.INFO, "InputType " + type.toString() + " set to " + keyPressed + " on client " + this.player.con.getId());
-				return;
+				break;
 			}
+		}
+		
+		// update ship modules
+		if(	type == InputTypes.Shield) {
+			if (this.player.ship.getInteractiveModulesWithHotkey("Shield").size() > 0 && this.player.ship.getInteractiveModulesWithHotkey("Shield").get(0) != null) {
+		        if (this.player.ship.getInteractiveModulesWithHotkey("Shield").get(0).isActive()) {
+		        	this.player.ship.deactivateModules("Shield");
+		            //targetShip.deactivateModules("Shield");
+		        } else {
+		        	this.player.ship.activateModules("Shield");
+		            //targetShip.activateModules("Shield");
+		        }
+		    }
+		} else {
+			if(keyPressed)
+				this.player.ship.activateModules(type.toString());
+			else
+				this.player.ship.deactivateModules(type.toString());
 		}
 	}
 	

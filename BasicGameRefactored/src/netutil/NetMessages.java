@@ -3,7 +3,7 @@ package netutil;
 
 
 
-import netutil.NetInput.InputTypes;
+import netserver.NetInput.InputTypes;
 
 import com.jme3.input.KeyInput;
 import com.jme3.math.Vector3f;

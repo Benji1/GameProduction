@@ -1,5 +1,6 @@
 package netserver;
 
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,18 +19,24 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 		this.app = app;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void messageReceived(HostedConnection client, Message m) {
 		if(m instanceof KeyPressedMsg) {
 			KeyPressedMsg msg = (KeyPressedMsg)m;
-			
-			// find player and update input status
-			for(NetPlayer pl : this.app.getConManager().players) {
-				if(pl.con.getId() == client.getId()) {
-					pl.input.updateInputStatus(msg.getInput(), msg.getKeyPressed());
-					return;
+			this.app.enqueue(new Callable() {
+				public Object call() throws Exception {
+					// find player and update input status
+					for(NetPlayer pl : app.getConManager().players) {
+						if(pl.con.getId() == client.getId()) {
+							pl.input.updateInputStatus(msg.getInput(), msg.getKeyPressed());
+							return null;
+						}
+					}
+					
+					return null;
 				}
-			}
+			});
 		}
 	}
 }
