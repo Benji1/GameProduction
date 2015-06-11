@@ -21,7 +21,7 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void messageReceived(HostedConnection client, Message m) {
+	public void messageReceived(final HostedConnection client, Message m) {
 		if(m instanceof KeyPressedMsg) {
 			final KeyPressedMsg msg = (KeyPressedMsg)m;
 			

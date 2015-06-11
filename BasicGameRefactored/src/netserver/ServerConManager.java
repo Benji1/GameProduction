@@ -47,7 +47,7 @@ public class ServerConManager implements ConnectionListener {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void connectionAdded(Server arg0, HostedConnection arg1) {
+	public void connectionAdded(Server arg0, final HostedConnection arg1) {
 		this.app.enqueue(new Callable() {
 			public Object call() throws Exception {
 				// create new netplayer
