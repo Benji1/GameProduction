@@ -105,9 +105,20 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         module.onPlaced(this);
         informOtherModulesOfAddedModule(module, p);
     }
+    
+    public void addModuleAtBody(BasicModule module, Point p) {
+        modules[p.x][p.y] = module;
+
+        module.onPlacedBody(this);
+        informOtherModulesOfAddedModule(module, p);
+    }
 
     public void addModuleAtFromOffset(BasicModule module, Point offset) {
         addModuleAt(module, offsetToActual(offset));
+    }
+    
+    public void addModuleAtFromOffsetBody(BasicModule module, Point offset) {
+        addModuleAtBody(module, offsetToActual(offset));
     }
 
     private void informOtherModulesOfAddedModule(BasicModule module, Point p) {

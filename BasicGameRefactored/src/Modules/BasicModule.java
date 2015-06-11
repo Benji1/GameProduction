@@ -4,9 +4,6 @@
  */
 package Modules;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -33,6 +30,7 @@ import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
@@ -61,34 +59,33 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected ModuleType type;
     protected FacingDirection orientation;
     private float oldDamping = 10000f;
-    
     public int group = 0;
 
     public BasicModule() {
         super();
     }
-    
-    public void toggleDamping(){
-    	float temp = oldDamping;
-    	oldDamping = body.getLinearDamping();
-    	body.setLinearDamping(temp);
+
+    public void toggleDamping() {
+        float temp = oldDamping;
+        oldDamping = body.getLinearDamping();
+        body.setLinearDamping(temp);
     }
 
     private void lockToShip() {
         Point pos = ship.getActualPositionInGrid(this);
-        
-        lockTo(ship.getModule(new Point(pos.x+1, pos.y)));
-        lockTo(ship.getModule(new Point(pos.x-1, pos.y)));
-        lockTo(ship.getModule(new Point(pos.x, pos.y+1)));
-        lockTo(ship.getModule(new Point(pos.x, pos.y-1)));
+
+        lockTo(ship.getModule(new Point(pos.x + 1, pos.y)));
+        lockTo(ship.getModule(new Point(pos.x - 1, pos.y)));
+        lockTo(ship.getModule(new Point(pos.x, pos.y + 1)));
+        lockTo(ship.getModule(new Point(pos.x, pos.y - 1)));
     }
-    
+
     private void lockTo(BasicModule lockon) {
-        if(lockon != null) {
+        if (lockon != null) {
             WeldJointDef wjDef = new WeldJointDef();
             wjDef.initialize(lockon.body, this.body, lockon.body.getPosition());
             wjDef.collideConnected = false;
-            wjDef.frequencyHz = 60;
+            wjDef.frequencyHz = 0;
             PhysicsWorld.world.createJoint(wjDef);
         }
     }
@@ -100,15 +97,15 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     public Body getBody() {
         return body;
     }
-    
+
     public BasicShip getShip() {
         return ship;
     }
-    
+
     public Spatial getSpatial() {
-    	return this.spatial;
+        return this.spatial;
     }
-    
+
     public Material getMaterial() {
         return this.material;
     }
@@ -132,23 +129,44 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     public void onPlaced(BasicShip ship) {
         this.ship = ship;
-        
+
         create3DBody();
         int x = ship.getActualPositionInGrid(this).x * 2;
         int y = ship.getActualPositionInGrid(this).y * 2;
-        if(ship != null && ship.cockpitPos != null){
-        		x += ship.cockpitPos.x;
-        		y += ship.cockpitPos.z;
+        if (ship.cockpitPos != null) {
+            x += ship.cockpitPos.x;
+            y += ship.cockpitPos.z;
         }
-        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
+
+        generatePhysicsFixture(x, y, ship.colliderType, ship.collidingWith);
         setPhysicsCenter(body);
-        
+
         this.attachChild(spatial);
         ship.attachChild(this);
-        
+
         lockToShip();
     }
-    
+
+    public void onPlacedBody(BasicShip ship) {
+        this.ship = ship;
+
+        create3DBody();
+        int x = ship.getActualPositionInGrid(this).x * 2;
+        int y = ship.getActualPositionInGrid(this).y * 2;
+        if (ship.cockpitPos != null) {
+            x += ship.cockpitPos.x;
+            y += ship.cockpitPos.z;
+        }
+
+        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
+        setPhysicsCenter(body);
+
+        this.attachChild(spatial);
+        ship.attachChild(this);
+
+        lockToShip();
+    }
+
     protected void create3DBody() {
         Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
@@ -160,15 +178,14 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
         spatial.setMaterial(material);
     }
-    
-    
-    public void onMovedToOtherShip (BasicShip s) {
+
+    public void onMovedToOtherShip(BasicShip s) {
         this.ship = s;
     }
-    
+
     public void onRemove() {
         ship.removeModuleAt(ship.getActualPositionInGrid(this));
-        if(!ship.hasStillModules()) {
+        if (!ship.hasStillModules()) {
             ship.delete();
         }
     }
@@ -179,9 +196,31 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     public void otherModuleRemoved(BasicModule module, Point p) {
     }
 
+    private void generatePhysicsFixture(int x, int y, int colliderType, int collidingWith) {
+        PolygonShape square = new PolygonShape();
+        square.setAsBox(1, 1, new Vec2(x, y), 0);
+
+        FixtureDef fDef = new FixtureDef();
+        fDef.shape = square;
+        fDef.density = 1.0f;
+        fDef.friction = 0.6f;
+        fDef.filter.categoryBits = colliderType;
+        fDef.filter.maskBits = collidingWith;
+
+        for (int i = 0; i < this.ship.modules.length; i++)
+            for (int j = 0; j < this.ship.modules[0].length; j++)
+                if (this.ship.modules[i][j] != null) 
+                    this.body = this.ship.modules[i][j].body;
+                
+        body.createFixture(fDef);
+        body.setUserData(this);
+        body.setLinearDamping(linearDampingFactor);
+        PhysicsWorld.world.setContactListener(this);
+    }
+
     private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1);
+        square.setAsBox(1, 1, new Vec2(x, y), 0);
 
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
@@ -193,50 +232,49 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
-        
+
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
         body.setLinearDamping(linearDampingFactor);
         PhysicsWorld.world.setContactListener(this);
     }
-    
+
     public void destroy() {
         onRemove();
-        
+
         Explosion exp = new Explosion(
-                ship.getApp().getAssetManager(), 
-                new Vector3f (this.body.getPosition().x, 0, this.body.getPosition().y), 
-                ship.getApp().getRootNode()
-                );
-        
-        if(shouldSpawnItem()) {
+                ship.getApp().getAssetManager(),
+                new Vector3f(this.body.getPosition().x, 0, this.body.getPosition().y),
+                ship.getApp().getRootNode());
+
+        if (shouldSpawnItem()) {
             spawnItem();
         }
         this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
         ship.sperateInNewShips();
     }
-    
+
     public boolean shouldSpawnItem() {
         Random rn = new Random();
         return rn.nextFloat() <= dropRateInPercent / 100;
     }
-    
+
     public void spawnItem() {
         float angleRad = body.getAngle();
         Quaternion q = new Quaternion();
         q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-        
+
         ArrayList<Spatial> saveSpatials = new ArrayList<Spatial>();
-        for(Spatial s : children) {
+        for (Spatial s : children) {
             saveSpatials.add(s.clone());
         }
-        
+
         ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, body.getPosition(), q, ship.getApp()));
     }
-    
-     public void destroyWithoutSeperation() {
+
+    public void destroyWithoutSeperation() {
         onRemove();
         this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
@@ -262,28 +300,32 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
     }
-    
-    public void buildGuiElement(int idCounter, Nifty nifty, Screen screen, Element targetParent) {
-        String newId = "part-panel-"+type.getValue()+"-"+idCounter;
 
-        Element element = new DraggableBuilder(newId) {{
-            visibleToMouse(true);
-            childLayout(ElementBuilder.ChildLayoutType.Center);
-            panel(new PanelBuilder() {{
-                backgroundImage("Interface/Images/Parts.png");
-                width("100%");
-                height("100%");
-                imageMode("sprite:100,100,"+(type.getValue()*4 + orientation.getSpriteValue()));
-            }});
-        }}.build(nifty, screen, targetParent);
-        
+    public void buildGuiElement(int idCounter, Nifty nifty, Screen screen, Element targetParent) {
+        String newId = "part-panel-" + type.getValue() + "-" + idCounter;
+
+        Element element = new DraggableBuilder(newId) {
+            {
+                visibleToMouse(true);
+                childLayout(ElementBuilder.ChildLayoutType.Center);
+                panel(new PanelBuilder() {
+                    {
+                        backgroundImage("Interface/Images/Parts.png");
+                        width("100%");
+                        height("100%");
+                        imageMode("sprite:100,100," + (type.getValue() * 4 + orientation.getSpriteValue()));
+                    }
+                });
+            }
+        }.build(nifty, screen, targetParent);
+
         element.setParent(targetParent);
     }
-    
+
     public ModuleType getType() {
         return type;
     }
-   
+
     public FacingDirection getOrientation() {
         return orientation;
     }

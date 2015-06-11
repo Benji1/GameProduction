@@ -16,7 +16,7 @@ import mygame.BasicShip;
  * @author 1337
  */
 public class Cockpit extends BasicModule {
-
+    
     public Cockpit() {
         super();
         moduleName = "Cockpit";

@@ -105,7 +105,7 @@ public class Main extends SimpleApplication implements ActionListener {
         //playersShip = tsd.createTestShip1();
         //playersShip = tsd.createStickShip();
         //playersShip = tsd.createBasicShip();
-        targetShip = tsd.createTestTargetShip2();
+        //targetShip = tsd.createTestTargetShip2();
     }
 
     private void initCamera() {

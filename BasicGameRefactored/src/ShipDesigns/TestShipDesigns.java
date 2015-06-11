@@ -142,7 +142,7 @@ public class TestShipDesigns {
         s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
         Cockpit cp = new Cockpit();
-        s.addModuleAtFromOffset(cp, new Point(0,0));
+        s.addModuleAtFromOffsetBody(cp, new Point(0,0));
         s.addModuleAtFromOffset(new Armor(), new Point(-1, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(1, 0));
         s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(0, -2)); // Backwards is strange
