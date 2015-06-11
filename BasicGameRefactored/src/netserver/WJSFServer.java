@@ -8,12 +8,12 @@ import java.util.logging.Logger;
 
 import org.jbox2d.dynamics.Body;
 
-import services.ServiceManager;
-import services.updater.UpdateableManager;
-import universe.Universe;
-import universe.UniverseGenerator;
-import mygame.BasicShip;
-import mygame.PhysicsWorld;
+import netserver.physics.BasicShip;
+import netserver.physics.PhysicsWorld;
+import netserver.services.ServiceManager;
+import netserver.services.updater.UpdateableManager;
+import netserver.universe.Universe;
+import netserver.universe.UniverseGenerator;
 import netutil.NetMessages;
 import netutil.NetMessages.*;
 

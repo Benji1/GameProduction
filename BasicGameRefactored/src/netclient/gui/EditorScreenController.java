@@ -4,14 +4,6 @@
  */
 package netclient.gui;
 
-import Modules.Armor;
-import Modules.BasicModule;
-import Modules.Cockpit;
-import Modules.EnergyGenerator;
-import Modules.FacingDirection;
-import Modules.LaserGun;
-import Modules.Shield;
-import Modules.Thruster;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.builder.ControlBuilder;
@@ -39,7 +31,15 @@ import netclient.gui.dragAndDrop.DroppableControl;
 import netclient.gui.dragAndDrop.DroppableDropFilter;
 import netclient.gui.dragAndDrop.DroppableDroppedEvent;
 import netclient.gui.dragAndDrop.builder.DraggableBuilder;
-import services.ServiceManager;
+import netserver.modules.Armor;
+import netserver.modules.BasicModule;
+import netserver.modules.Cockpit;
+import netserver.modules.EnergyGenerator;
+import netserver.modules.FacingDirection;
+import netserver.modules.LaserGun;
+import netserver.modules.Shield;
+import netserver.modules.Thruster;
+import netserver.services.ServiceManager;
 
 /**
  *

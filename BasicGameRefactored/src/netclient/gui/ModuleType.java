@@ -4,7 +4,7 @@
  */
 package netclient.gui;
 
-import Modules.FacingDirection;
+import netserver.modules.FacingDirection;
 
 public enum ModuleType {
 

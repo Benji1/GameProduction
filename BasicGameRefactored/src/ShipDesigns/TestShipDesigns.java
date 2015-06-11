@@ -4,21 +4,20 @@
  */
 package ShipDesigns;
 
-import Modules.Armor;
-import Modules.Cockpit;
-import Modules.EnergyGenerator;
-import Modules.FacingDirection;
-import Modules.LaserGun;
-import Modules.Shield;
-import Modules.Thruster;
-import Modules.WeakThruster;
-
 import java.awt.Point;
 import java.util.ArrayList;
 
 import netclient.WJSFClient;
 import netserver.WJSFServer;
-import mygame.BasicShip;
+import netserver.modules.Armor;
+import netserver.modules.Cockpit;
+import netserver.modules.EnergyGenerator;
+import netserver.modules.FacingDirection;
+import netserver.modules.LaserGun;
+import netserver.modules.Shield;
+import netserver.modules.Thruster;
+import netserver.modules.WeakThruster;
+import netserver.physics.BasicShip;
 
 /**
  *

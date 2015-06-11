@@ -8,19 +8,19 @@ import netclient.ClientNetMsgListener;
 import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.GUI;
+import netclient.universe.Background;
 import netserver.WJSFServer;
+import netserver.physics.BasicShip;
+import netserver.physics.PhysicsWorld;
+import netserver.services.ServiceManager;
+import netserver.services.updater.UpdateableManager;
+import netserver.universe.Universe;
+import netserver.universe.UniverseGenerator;
 import netutil.NetInput.InputTypes;
 import netutil.NetMessages.KeyPressedMsg;
 
 import org.jbox2d.dynamics.Body;
 
-import services.ServiceManager;
-import services.updater.UpdateableManager;
-import universe.Background;
-import universe.Universe;
-import universe.UniverseGenerator;
-import mygame.BasicShip;
-import mygame.PhysicsWorld;
 import ShipDesigns.TestShipDesigns;
 
 import com.jme3.app.Application;

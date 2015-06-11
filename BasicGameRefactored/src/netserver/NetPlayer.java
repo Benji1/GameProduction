@@ -3,13 +3,12 @@ package netserver;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import netserver.physics.BasicShip;
 import netutil.NetInput;
 import netutil.NetInput.InputTypes;
 
 import com.jme3.math.Vector3f;
 import com.jme3.network.HostedConnection;
-
-import mygame.BasicShip;
 
 public class NetPlayer {
 	
