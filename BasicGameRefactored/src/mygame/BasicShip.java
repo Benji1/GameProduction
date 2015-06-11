@@ -8,9 +8,13 @@ import Modules.BasicModule;
 import Modules.Cockpit;
 import Modules.InteractiveModule;
 import Modules.Storage;
+
 import java.awt.Point;
 import java.util.ArrayList;
+
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+
 import gui.ModuleType;
 import services.updater.IUpdateable;
 import universe.Abs_ChunkNode;
@@ -67,6 +71,16 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null) {
                     modules[i][j].update(tpf);
+                }
+            }
+        }
+    }
+    
+    public void ToggleDamping(){
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    modules[i][j].toggleDamping();
                 }
             }
         }
@@ -340,6 +354,14 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
             }
         }
         modules = new BasicModule[modulesNewShip.length][modulesNewShip[0].length];
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[i].length; j++) {
+            	if(modulesNewShip[i][j] != null && modulesNewShip[i][j] instanceof Cockpit) {
+            		System.out.println("cp pos: "+i+" "+j);
+            		this.cockpitPos = new Vector3f(cockpitPos.x - 2*i, 0, cockpitPos.z - 2*j);
+            	}
+            }
+        }
 
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {

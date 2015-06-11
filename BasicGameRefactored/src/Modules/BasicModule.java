@@ -4,6 +4,9 @@
  */
 package Modules;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -57,11 +60,18 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected Material material;
     protected ModuleType type;
     protected FacingDirection orientation;
+    private float oldDamping = 10000f;
     
     public int group = 0;
 
     public BasicModule() {
         super();
+    }
+    
+    public void toggleDamping(){
+    	float temp = oldDamping;
+    	oldDamping = body.getLinearDamping();
+    	body.setLinearDamping(temp);
     }
 
     private void lockToShip() {
@@ -193,6 +203,12 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public void destroy() {
         onRemove();
+        
+        Explosion exp = new Explosion(
+                ship.getApp().getAssetManager(), 
+                new Vector3f (this.body.getPosition().x, 0, this.body.getPosition().y), 
+                ship.getApp().getRootNode()
+                );
         
         if(shouldSpawnItem()) {
             spawnItem();

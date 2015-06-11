@@ -2,39 +2,48 @@
 <nifty-styles>
     <style id="custom-panel">
         <attributes backgroundImage="Interface/Images/Panel.png"
-                    imageMode="resize:214,115,141,49,214,115,141,41,214,115,141,40"
-                    padding="38,10,28,10"/>
+                    imageMode="resize:240,10,240,70,240,10,240,12,240,10,240,70"
+                    padding="50,21,42,21"/>
     </style>
-    <style id="custom-button">
+    <style id="custom-button#panel">
         <attributes backgroundImage="Interface/Images/BigButtons.png"
                     imageMode="sprite-resize:450,62,0,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
+        <effect>
+            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,1,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+        </effect>
     </style>
-    <!--<style id="custom-button#text" base="button-font">
-        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
-    </style>-->
-    <style id="custom-button-top">
-        <attributes backgroundImage="Interface/Images/BigButtons.png"
-                    imageMode="sprite-resize:450,62,1,129,192,129,13,129,192,129,36,129,192,129,13"
+    <style id="small-button#panel">
+        <attributes backgroundImage="Interface/Images/SmallButtons.png"
+                    imageMode="sprite-resize:84,48,0,10,64,10,10,10,64,10,28,10,64,10,10"
                     childLayout="center"/>
+        <effect>
+            <onHover name="imageOverlay" filename="Interface/Images/SmallButtons.png" imageMode="sprite-resize:84,48,1,10,64,10,10,10,64,10,28,10,64,10,10" post="true"/>
+            <onFocus name="imageOverlay" filename="Interface/Images/SmallButtons.png" imageMode="sprite-resize:84,48,2,10,64,10,10,10,64,10,28,10,64,10,10" post="true"/>
+        </effect>
     </style>
-    <!--<style id="custom-button-top#text" base="button-font">
-        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
-    </style>-->
-    <style id="custom-button-middle">
+    <style id="custom-button-top#panel">
         <attributes backgroundImage="Interface/Images/BigButtons.png"
                     imageMode="sprite-resize:450,62,2,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
+        <effect>
+            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,3,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+        </effect>
     </style>
-    <!--<style id="custom-button-middle#text" base="button-font">
-        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
-    </style>-->
-    <style id="custom-button-bottom">
+    <style id="custom-button-middle#panel">
         <attributes backgroundImage="Interface/Images/BigButtons.png"
-                    imageMode="sprite-resize:450,62,3,129,192,129,13,129,192,129,36,129,192,129,13"
+                    imageMode="sprite-resize:450,62,4,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
+        <effect>
+            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,5,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+        </effect>
     </style>
-    <!--<style id="custom-button-bottom#text" base="button-font">
-        <attributes font="Interface/Fonts/Agency-FB-24.fnt"/>
-    </style>-->
+    <style id="custom-button-bottom#panel">
+        <attributes backgroundImage="Interface/Images/BigButtons.png"
+                    imageMode="sprite-resize:450,62,6,129,192,129,13,129,192,129,36,129,192,129,13"
+                    childLayout="center"/>
+        <effect>
+            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,7,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+        </effect>
+    </style>
 </nifty-styles>

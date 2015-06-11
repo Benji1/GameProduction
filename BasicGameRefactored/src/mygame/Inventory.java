@@ -24,36 +24,18 @@ public class Inventory {
     }
     
     private void fillWithStartItems() {
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.ARMOR_DIAGONAL);
-        itemsInBase.add(ModuleType.WEAPON);
-        itemsInBase.add(ModuleType.WEAPON);
-        itemsInBase.add(ModuleType.WEAPON);
-        itemsInBase.add(ModuleType.THRUSTER);
-        itemsInBase.add(ModuleType.THRUSTER);
-        itemsInBase.add(ModuleType.THRUSTER);
-        itemsInBase.add(ModuleType.THRUSTER);
-        itemsInBase.add(ModuleType.COCKPIT);
-        itemsInBase.add(ModuleType.ENERGY_GENERATOR);
-        itemsInBase.add(ModuleType.ENERGY_GENERATOR);
-        itemsInBase.add(ModuleType.ENERGY_GENERATOR);
+        addMultipleItems(ModuleType.ARMOR, 99);//12
+        addMultipleItems(ModuleType.ARMOR_DIAGONAL, 99);//7
+        addMultipleItems(ModuleType.WEAPON, 99);//3
+        addMultipleItems(ModuleType.THRUSTER, 99);//4
+        addMultipleItems(ModuleType.COCKPIT, 99);//1
+        addMultipleItems(ModuleType.ENERGY_GENERATOR, 99);//3
+    }
+    
+    private void addMultipleItems(ModuleType moduleType, int count) {
+        for (int i = 0; i < count; ++i) {
+            itemsInBase.add(moduleType);
+        }
     }
     
     public void addStorage(Storage storage) {

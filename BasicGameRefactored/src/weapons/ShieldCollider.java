@@ -5,11 +5,13 @@
 package weapons;
 
 import static Modules.BasicModule.fillNotOverLimit;
+import Modules.Explosion;
 import Modules.Shield;
 import ShipDesigns.TestShipDesigns;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -71,9 +73,9 @@ public class ShieldCollider extends Node {
         material.setColor("Diffuse", c);
     }
 
-    public void putDamgeToShieldModule(float amount) {
+    public void putDamgeToShieldModule(float amount, Vector3f hitpoint) {
         shieldDmg = 0;
-        s.takeDamageOnShield(amount);
+        s.takeDamageOnShield(amount, hitpoint);
     }
 
     public void die() {

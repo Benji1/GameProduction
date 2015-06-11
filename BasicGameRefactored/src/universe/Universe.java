@@ -3,14 +3,21 @@ package universe;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import universe.Abs_ChunkNode.ChunkNodeType;
+
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
+
 import mygame.Main;
 
 /**
@@ -37,6 +44,7 @@ public class Universe {
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
     public List<SolarSystem> systems;
+    public List<Spatial> stations;
     private int universeCenter = UNIVERSE_SIZE / 2;
     
     // Debug Stuff
@@ -61,9 +69,45 @@ public class Universe {
         
         this.initDebug();
         this.systems = new ArrayList<SolarSystem>();
+        this.stations = new ArrayList<Spatial>();
     }
     
+    public void addStation(float x, float z){
+    	//Box shape = new Box(7, 2, 5);
+    	Spatial station = app.getAssetManager().loadModel("3dmodels/station.obj");	
+		Material sphereMat = new Material(app.getAssetManager(), 
+				"Common/MatDefs/Light/Lighting.j3md");
+		sphereMat.setBoolean("UseMaterialColors", true);
+		
+		ColorRGBA color = ColorRGBA.DarkGray;
+		sphereMat.setColor("Diffuse", color);
+		sphereMat.setColor("Ambient", color);
+		station.setMaterial(sphereMat);	
+		app.getRootNode().attachChild(station);
+		this.stations.add(station);
+		station.setLocalTranslation(x, -5, z);
+		station.setLocalScale(2f);
+		
+        BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
+        BitmapText info = new BitmapText(f, true);
+        info.setColor(ColorRGBA.Green);
+        info.rotate((float) -Math.PI/2f,0,0);
+        info.scale(0.2f);
+        info.setQueueBucket(Bucket.Transparent);
+        info.setText("Press 'E' to enter");
+        info.setLocalTranslation(x-13, 3, z);
+        app.getRootNode().attachChild(info);
+    }
     
+    public boolean nearStation(Vector3f shippos){
+    	float mindis = Float.MAX_VALUE;
+    	for (Spatial s: stations){
+    		float dis = (s.getLocalTranslation().subtract(shippos)).length();
+    		if (dis < mindis)
+    			mindis = dis;
+    	}
+    	return mindis < 15;
+    }
     
     
     
