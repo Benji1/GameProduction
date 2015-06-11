@@ -69,7 +69,7 @@ public class WJSFServer extends SimpleApplication {
     @Override
     public void simpleInitApp() {
     	// jme settings
-    	this.flyCam.setEnabled(false);
+    	//this.flyCam.setEnabled(false);
     	this.pauseOnFocus = false;
     	
     	// start server
@@ -86,6 +86,7 @@ public class WJSFServer extends SimpleApplication {
         this.conManager = new ServerConManager(this);
         this.msgListener = new ServerNetMsgListener(this);
         this.server.addMessageListener(this.msgListener);
+        this.designs = new TestShipDesigns(this);
         
         // init game
         this.initWorld();

@@ -1,5 +1,6 @@
 package netserver;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,27 +45,34 @@ public class ServerConManager implements ConnectionListener {
      ************ METHODS  ************
      **********************************/
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void connectionAdded(Server arg0, HostedConnection arg1) {
-		// create new netplayer
-		NetPlayer newPl = new NetPlayer(this.app, arg1);
-		
-		// TODO: load player stuff
-		
-		// send player ship data
-    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, newPl.pos, Vector3f.ZERO);
-    	msg.setReliable(true);
-		this.app.getServer().broadcast(msg);
-		
-		// send all other ships to the new player
-		for(NetPlayer pl : this.players) {
-			ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, pl.pos, Vector3f.ZERO);
-			syncPl.setReliable(true);
-			this.app.getServer().broadcast(Filters.in(arg1), syncPl);
-		}
-		
-		// add new player to list
-		this.players.add(newPl);
+		this.app.enqueue(new Callable() {
+			public Object call() throws Exception {
+				// create new netplayer
+				NetPlayer newPl = new NetPlayer(app, arg1);
+				
+				// TODO: load player stuff
+				
+				// send player ship data
+		    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, newPl.pos, Vector3f.ZERO);
+		    	msg.setReliable(true);
+				app.getServer().broadcast(msg);
+				
+				// send all other ships to the new player
+				for(NetPlayer pl : players) {
+					ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, pl.pos, Vector3f.ZERO);
+					syncPl.setReliable(true);
+					app.getServer().broadcast(Filters.in(arg1), syncPl);
+				}
+				
+				// add new player to list
+				players.add(newPl);
+				
+				return null;
+			}
+		});
 	}
 
 	@Override

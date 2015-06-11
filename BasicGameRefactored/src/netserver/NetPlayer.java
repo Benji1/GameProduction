@@ -39,9 +39,10 @@ public class NetPlayer {
 	public NetPlayer(WJSFServer app, HostedConnection con) {
 		this.app = app;
 		this.con = con;
-
-		this.input = new NetInput(this);
 		this.pos = new Vector3f(this.app.rnd.nextFloat() * 20f, 0, this.app.rnd.nextFloat() * 20f);
+		this.ship = this.app.designs.createTestShip1();
+		this.ship.setLocalTranslation(this.pos);
+		this.input = new NetInput(this);
 	}
 	
 	

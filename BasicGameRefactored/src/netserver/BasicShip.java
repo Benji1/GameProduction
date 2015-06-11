@@ -43,7 +43,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
 
     public BasicShip(WJSFServer app, String name) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
-        //app.gameRunState.localRootNode.attachChild(this);
+        app.getRootNode().attachChild(this);
         //app.gameRunState.ships.add(this);
 
         this.shipId = idCounter++;

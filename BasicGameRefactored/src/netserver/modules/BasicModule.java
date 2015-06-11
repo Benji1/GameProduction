@@ -11,8 +11,11 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
 import java.awt.Point;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import netserver.BasicShip;
+import netserver.WJSFServer;
 import netserver.physics.JBox2dNode;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
@@ -115,7 +118,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         }
         generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
         setPhysicsCenter(body);
-        
+
         this.attachChild(spatial);
         ship.attachChild(this);
         

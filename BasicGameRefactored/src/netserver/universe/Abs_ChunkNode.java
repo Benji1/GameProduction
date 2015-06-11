@@ -57,7 +57,7 @@ public abstract class Abs_ChunkNode extends Node {
         this.posCurChunk = new Vector3f(posInChunk.x % (Universe.CHUNK_SIZE / 2), posInChunk.y, posInChunk.z % (Universe.CHUNK_SIZE / 2));
         this.lastAbsPos = this.getLocalTranslation();
         
-        //this.app.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
+        this.app.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
     }
     
     public Abs_ChunkNode(WJSFServer app, String name, ChunkNodeType t, int chunkX, int chunkZ) {
@@ -111,52 +111,21 @@ public abstract class Abs_ChunkNode extends Node {
             //this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         }
         
-        //this.app.gameRunState.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
+        this.app.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
         
         // check universe if we discovered a new chunk
-        //if(this.discoveredNewChunk(this.chunkX, this.chunkZ))
+        this.discoveredNewChunk(this.chunkX, this.chunkZ);
         //    this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
     }
-    /*
+    
     private boolean discoveredNewChunk(int chunkX, int chunkZ) {
-        if(this.app.gameRunState.getUniverse().getChunk(chunkX, chunkZ).visited == true)
+        if(this.app.getUniverse().getChunk(chunkX, chunkZ).visited == true)
             return false;
         
-        this.app.gameRunState.getUniverse().getChunk(chunkX, chunkZ).visited = true;
+        this.app.getUniverse().getChunk(chunkX, chunkZ).visited = true;
         return true;
-    }*/
-    
-    
-    
-    
-    
-    
-    /**********************************
-     **** OVERRIDE NODE & PHYSICS  ****
-     **********************************/
-    
-    
-    /*@Override
-    public Spatial move(Vector3f offset) {
-        this.posCurChunk.addLocal(offset);
-        
-        this.recalcChunkPos();
-        super.move(offset);
-        return this;
     }
-    
-    @Override
-    public Spatial move(float x, float y, float z) {
-        this.posCurChunk.x += x;
-        this.posCurChunk.z += z;
-        
-        this.recalcChunkPos();
-        super.move(x, y, z);
-        return this;
-    }
-    */
-    
-    
+
     
     
     
