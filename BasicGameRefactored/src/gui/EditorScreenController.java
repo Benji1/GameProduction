@@ -127,7 +127,28 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         
         clearPartsPanel();
         clearSlotsPanel();
+        clearDescriptionPanel();
         shipTiles.clear();
+    }
+    
+    public void clearDescriptionPanel() {
+        Element descriptionPanel = screen.findElementByName("description-panel");
+        for (Element key : descriptionPanel.getElements()) {
+            key.markForRemoval();
+        }
+    }
+    
+    public void showKeyBindings() {
+        clearDescriptionPanel();
+        String keys = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+        Element descriptionPanel = screen.findElementByName("description-panel");
+        ControlBuilder keyBuilder = new ControlBuilder("key");
+        for (int i = 0; i < 1 + (int) (Math.random() * 12); ++i) {
+            keyBuilder.parameter("text", Character.toString(keys.charAt((int) (Math.random() * keys.length()))));
+            keyBuilder.parameter("x", Integer.toString(74 * (i % 6)));
+            keyBuilder.parameter("y", Integer.toString(74 * (i / 6)));
+            keyBuilder.build(nifty, screen, descriptionPanel);
+        }
     }
     
     public void switchToMap() {
