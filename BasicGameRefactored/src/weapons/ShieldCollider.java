@@ -93,7 +93,7 @@ public class ShieldCollider extends Node implements ContactListener {
     }
 
     public void die() {
-        s.getShip().getApp().gameRunState.bodiesToRemove.add(body);
+        s.getShip().getApp().bodiesToRemove.add(body);
         spatial.removeFromParent();
         this.removeFromParent();
     }

@@ -1,6 +1,7 @@
 package universe;
 
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 import universe.Abs_ChunkNode;
 import universe.CBNameGenerator;
 import universe.SolarSystem;
@@ -20,7 +21,7 @@ public class Sun extends Abs_ChunkNode {
         public float radius;
 	SolarSystem system;
         
-	public Sun(WJSFClient app, SolarSystem parent){
+	public Sun(WJSFServer app, SolarSystem parent){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
 		this.system = parent;
 		this.init();
@@ -43,7 +44,7 @@ public class Sun extends Abs_ChunkNode {
 		light.setColor((new ColorRGBA(1f, 0.9f,0.6f,0f)).mult(3f));
 		light.setRadius(radius*100);
 		light.setPosition(this.getWorldTranslation());
-		app.gameRunState.localRootNode.addLight(light);
+		app.getRootNode().addLight(light);
 	}
 	
 	public void update(float tpf){

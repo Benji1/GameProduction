@@ -18,6 +18,7 @@ import com.jme3.scene.shape.Box;
 
 import mygame.PhysicsWorld;
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -36,7 +37,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     protected Spatial spatial;
     protected Material material;
 
-    public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, WJSFClient app) {
+    public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, WJSFServer app) {
         super(spawnPoint, fireDirection, app);
         this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
         this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);
@@ -57,8 +58,8 @@ public class LaserProjectile extends Projectile implements ContactListener {
 
         
         
-        app.gameRunState.localRootNode.attachChild(spatial);
-        app.gameRunState.localRootNode.attachChild(this);
+        app.getRootNode().attachChild(spatial);
+        app.getRootNode().attachChild(this);
         
         spatial.setLocalTranslation(new Vector3f(spawnPoint.x, 0, spawnPoint.y));
         this.setLocalTranslation(0, 0, 0);
@@ -120,7 +121,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
     public void die() {
         super.die();
         //System.out.println("Should be dead now");
-        app.gameRunState.bodiesToRemove.add(body);
+        app.bodiesToRemove.add(body);
         spatial.removeFromParent();
         this.removeFromParent();
     }

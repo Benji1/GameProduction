@@ -1,6 +1,7 @@
 package universe;
 
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 import universe.Abs_ChunkNode;
 import universe.CBNameGenerator;
 import universe.Planet;
@@ -16,7 +17,7 @@ public class SolarSystem extends Abs_ChunkNode {
 	public float timescale = 100f;
 	public float sizescale = 1f;
 	
-	public SolarSystem(WJSFClient app){
+	public SolarSystem(WJSFServer app){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
 		this.init();
 	}

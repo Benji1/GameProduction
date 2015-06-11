@@ -17,6 +17,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 import mygame.BasicShip;
 
 /**
@@ -24,7 +25,7 @@ import mygame.BasicShip;
  * @author 1337
  */
 public class TestShipDesigns {
-	WJSFClient main;
+	WJSFServer main;
     
     ArrayList<String> fwd;
     ArrayList<String> fwdAndLeft;
@@ -56,7 +57,7 @@ public class TestShipDesigns {
     public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
     public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
     
-    public TestShipDesigns(WJSFClient main) {
+    public TestShipDesigns(WJSFServer main) {
         this.main = main;
         
         fwd = new ArrayList<String>();

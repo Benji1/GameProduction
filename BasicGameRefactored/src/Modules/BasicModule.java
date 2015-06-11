@@ -170,7 +170,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     public void destroy() {
         onRemove();
         this.detachAllChildren();
-        ship.getApp().gameRunState.bodiesToRemove.add(body);
+        ship.getApp().bodiesToRemove.add(body);
         ship.sperateInNewShips();
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
@@ -178,7 +178,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
      public void destroyWithoutSeperation() {
         onRemove();
         spatial.removeFromParent();
-        ship.getApp().gameRunState.bodiesToRemove.add(body);
+        ship.getApp().bodiesToRemove.add(body);
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 

@@ -4,6 +4,7 @@ import universe.Abs_ChunkNode;
 import universe.CBNameGenerator;
 import universe.SolarSystem;
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -20,7 +21,7 @@ public class Planet extends Abs_ChunkNode {
 	float orbitspeed = 0;
 	float ellypsiness = 1.25f;
 	
-	public Planet(WJSFClient app, SolarSystem system){
+	public Planet(WJSFServer app, SolarSystem system){
 		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
 		this.system = system;
                 this.init();

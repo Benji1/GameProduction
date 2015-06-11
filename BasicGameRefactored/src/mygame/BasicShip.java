@@ -13,6 +13,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 
 import com.jme3.math.Vector3f;
 
@@ -37,9 +38,9 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
 
-    public BasicShip(WJSFClient app, String name) {
+    public BasicShip(WJSFServer app, String name) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
-        app.gameRunState.localRootNode.attachChild(this);
+        //app.gameRunState.localRootNode.attachChild(this);
         //app.gameRunState.ships.add(this);
 
         this.shipId = idCounter++;
@@ -59,7 +60,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         }
     }
 
-    public WJSFClient getApp() {
+    public WJSFServer getApp() {
         return this.app;
     }
 

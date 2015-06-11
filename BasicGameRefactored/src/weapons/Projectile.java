@@ -8,6 +8,7 @@ import com.jme3.scene.Node;
 
 import mygame.JBox2dNode;
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 import services.updater.IUpdateable;
 
 import org.jbox2d.common.Vec2;
@@ -21,12 +22,12 @@ public abstract class Projectile extends JBox2dNode implements IUpdateable {
     protected float lifetime;       // in seconds
     protected float lifetimeCounter;
     
-    protected WJSFClient app;
+    protected WJSFServer app;
     protected Vec2 direction;
     
     ConfigReader cr = ServiceManager.getConfigReader();
     
-    public Projectile(Vec2 spawnPoint, Vec2 fireDirection, WJSFClient app) {
+    public Projectile(Vec2 spawnPoint, Vec2 fireDirection, WJSFServer app) {
         super();
         this.app = app;
         this.direction = fireDirection;

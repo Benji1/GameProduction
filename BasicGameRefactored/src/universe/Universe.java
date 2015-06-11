@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import netclient.WJSFClient;
+import netserver.WJSFServer;
 import universe.Abs_ChunkNode;
 import universe.SolarSystem;
 import universe.Universe;
@@ -38,7 +39,7 @@ public class Universe {
      ********** CLASS FIELDS  *********
      **********************************/
     
-    private WJSFClient app;
+    private WJSFServer app;
     
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
@@ -55,7 +56,7 @@ public class Universe {
      ********** CONSTRUCTORS  *********
      **********************************/
     
-    public Universe(WJSFClient app) {
+    public Universe(WJSFServer app) {
         this.app = app;
         
         this.universeChunks = new UniverseChunk[UNIVERSE_SIZE][UNIVERSE_SIZE];
@@ -156,9 +157,9 @@ public class Universe {
     public void toggleUniverseDebug() {
     	this.isDebug = !this.isDebug;
     	
-    	if(this.isDebug)
+    	/*if(this.isDebug)
     		this.app.gameRunState.localRootNode.attachChild(this.debugBoxes);
     	else
-    		this.app.gameRunState.localRootNode.detachChild(this.debugBoxes);
+    		this.app.gameRunState.localRootNode.detachChild(this.debugBoxes);*/
     }
 }
