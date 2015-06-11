@@ -10,7 +10,7 @@ import com.jme3.math.ColorRGBA;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import netserver.physics.BasicShip;
+import netserver.BasicShip;
 
 /**
  *

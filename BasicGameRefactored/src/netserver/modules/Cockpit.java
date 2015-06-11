@@ -4,7 +4,7 @@
  */
 package netserver.modules;
 
-import netserver.physics.BasicShip;
+import netserver.BasicShip;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;

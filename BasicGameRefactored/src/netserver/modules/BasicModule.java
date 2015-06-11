@@ -12,7 +12,7 @@ import com.jme3.scene.shape.Box;
 
 import java.awt.Point;
 
-import netserver.physics.BasicShip;
+import netserver.BasicShip;
 import netserver.physics.JBox2dNode;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;

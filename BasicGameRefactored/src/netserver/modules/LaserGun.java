@@ -11,7 +11,7 @@ import com.jme3.texture.Texture;
 
 import java.util.ArrayList;
 
-import netserver.physics.BasicShip;
+import netserver.BasicShip;
 import netserver.weapons.LaserProjectile;
 
 import org.jbox2d.common.Vec2;

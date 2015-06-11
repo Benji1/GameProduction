@@ -4,8 +4,6 @@
  */
 package netserver.weapons;
 
-import ShipDesigns.TestShipDesigns;
-
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -19,6 +17,7 @@ import netserver.WJSFServer;
 import netserver.modules.BasicModule;
 import netserver.modules.Shield;
 import netserver.physics.PhysicsWorld;
+import netserver.shipdesigns.TestShipDesigns;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;

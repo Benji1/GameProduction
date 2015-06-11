@@ -8,7 +8,7 @@ import com.jme3.math.ColorRGBA;
 
 import java.util.ArrayList;
 
-import netserver.physics.Item;
+import netserver.Item;
 
 /**
  *

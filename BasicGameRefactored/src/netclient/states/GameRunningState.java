@@ -9,19 +9,18 @@ import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.GUI;
 import netclient.universe.Background;
+import netserver.BasicShip;
 import netserver.WJSFServer;
-import netserver.physics.BasicShip;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.UpdateableManager;
+import netserver.shipdesigns.TestShipDesigns;
 import netserver.universe.Universe;
 import netserver.universe.UniverseGenerator;
 import netutil.NetInput.InputTypes;
 import netutil.NetMessages.KeyPressedMsg;
 
 import org.jbox2d.dynamics.Body;
-
-import ShipDesigns.TestShipDesigns;
 
 import com.jme3.app.Application;
 import com.jme3.app.FlyCamAppState;

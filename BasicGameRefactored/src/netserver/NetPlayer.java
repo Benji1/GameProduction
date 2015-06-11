@@ -3,7 +3,6 @@ package netserver;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import netserver.physics.BasicShip;
 import netutil.NetInput;
 import netutil.NetInput.InputTypes;
 
@@ -41,7 +40,6 @@ public class NetPlayer {
 		this.app = app;
 		this.con = con;
 
-		//this.ship = ShipDesigns.TestShipDesigns.
 		this.input = new NetInput(this);
 		this.pos = new Vector3f(this.app.rnd.nextFloat() * 20f, 0, this.app.rnd.nextFloat() * 20f);
 	}

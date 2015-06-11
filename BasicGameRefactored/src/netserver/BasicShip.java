@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package netserver.physics;
+package netserver;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -11,8 +11,9 @@ import java.util.ArrayList;
 
 
 
+
+
 import netclient.WJSFClient;
-import netserver.WJSFServer;
 import netserver.modules.BasicModule;
 import netserver.modules.Cockpit;
 import netserver.modules.InteractiveModule;

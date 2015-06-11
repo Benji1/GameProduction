@@ -8,20 +8,17 @@ import java.util.logging.Logger;
 
 import org.jbox2d.dynamics.Body;
 
-import netserver.physics.BasicShip;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.UpdateableManager;
+import netserver.shipdesigns.TestShipDesigns;
 import netserver.universe.Universe;
 import netserver.universe.UniverseGenerator;
 import netutil.NetMessages;
-import netutil.NetMessages.*;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.math.Vector3f;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
-import com.jme3.scene.Geometry;
 import com.jme3.system.JmeContext;
 
 
@@ -40,7 +37,7 @@ public class WJSFServer extends SimpleApplication {
 
     
     
-    
+    public TestShipDesigns designs;
     protected float shipSpeed = 0;
     protected float shipRotation = 1.5f;
     protected int rotDir = 0;

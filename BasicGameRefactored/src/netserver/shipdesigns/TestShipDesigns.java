@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ShipDesigns;
+package netserver.shipdesigns;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
 import netclient.WJSFClient;
+import netserver.BasicShip;
 import netserver.WJSFServer;
 import netserver.modules.Armor;
 import netserver.modules.Cockpit;
@@ -17,7 +18,6 @@ import netserver.modules.LaserGun;
 import netserver.modules.Shield;
 import netserver.modules.Thruster;
 import netserver.modules.WeakThruster;
-import netserver.physics.BasicShip;
 
 /**
  *
