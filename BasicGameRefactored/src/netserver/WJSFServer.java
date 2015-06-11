@@ -6,7 +6,14 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jbox2d.dynamics.Body;
+
+import services.ServiceManager;
+import services.updater.UpdateableManager;
+import universe.Universe;
+import universe.UniverseGenerator;
 import mygame.BasicShip;
+import mygame.PhysicsWorld;
 import netutil.NetMessages;
 import netutil.NetMessages.*;
 
@@ -24,12 +31,31 @@ public class WJSFServer extends SimpleApplication {
      ********** CLASS FIELDS  *********
      **********************************/
 	
+	// Networking
     private Server server;
     private ServerConManager conManager;
     private ServerNetMsgListener msgListener;
     
     public Random rnd;
 
+    
+    
+    
+    protected float shipSpeed = 0;
+    protected float shipRotation = 1.5f;
+    protected int rotDir = 0;
+    protected float maxSpeed = 5f;
+    private Universe u;
+    
+    //public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
+    //public BasicShip playersShip;
+    //public BasicShip targetShip;
+	
+    UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
+    
+    public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
+    
+    //boolean up = false, down = false;
     
     /**********************************
      ************ METHODS  ************
@@ -63,8 +89,16 @@ public class WJSFServer extends SimpleApplication {
         this.conManager = new ServerConManager(this);
         this.msgListener = new ServerNetMsgListener(this);
         this.server.addMessageListener(this.msgListener);
+        
+        // init game
+        this.initWorld();
     }
 
+    private void initWorld() {
+        this.u = new Universe(this);
+        UniverseGenerator.debugSystem(this, u);
+    }
+    
     @Override
     public void destroy() {
         
@@ -75,19 +109,31 @@ public class WJSFServer extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-    	/*this.counter += tpf;
+    	//
+    	// UPDATE GAME
+    	//
     	
-    	if(this.counter >= 0.5f) {
-    		Vector3f newPos = new Vector3f(rnd.nextFloat() * 3, rnd.nextFloat() * 3, rnd.nextFloat() * 3);
-    		server.broadcast(new PosMsg(newPos));
-    		geom.setLocalTranslation(newPos);
-    		this.counter = 0;
-    	}
+    	phyicsUpdate(tpf);
     	
-        server.broadcast(new NetMsg("Hello World!!!" + tpf));*/
+    	updateableManager.update(tpf);
+        
+        for(Body b: bodiesToRemove)
+            PhysicsWorld.world.destroyBody(b);
+
+        bodiesToRemove.clear();
+        
+        this.u.update(tpf);
+        
+        //
+        // UPDATE NET
+        //
+        
+        this.conManager.update(tpf);
     }
     
-    
+    public void phyicsUpdate(float delta) {
+        PhysicsWorld.world.step(delta, 8, 8);
+    }
     
     
     /**********************************
@@ -95,5 +141,10 @@ public class WJSFServer extends SimpleApplication {
      **********************************/
     
     public Server getServer() {return this.server;}
-
+    public ServerConManager getConManager() {return this.conManager;}
+    public ServerNetMsgListener getMsgListener() {return this.msgListener;}
+    
+    public Universe getUniverse() {
+        return this.u;
+    }
 }

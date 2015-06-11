@@ -21,6 +21,9 @@ public class ServerConManager implements ConnectionListener {
 	private WJSFServer app;
 	public ConcurrentLinkedQueue<NetPlayer> players;
 	
+	private final float posUpdate = 0.1f;
+	private float curPosUpdate = 0;
+	
 	
 	/**********************************
      ********** CONSTRUCTORS  *********
@@ -49,13 +52,13 @@ public class ServerConManager implements ConnectionListener {
 		// TODO: load player stuff
 		
 		// send player ship data
-    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.ship, newPl.pos, Vector3f.ZERO);
+    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, newPl.pos, Vector3f.ZERO);
     	msg.setReliable(true);
 		this.app.getServer().broadcast(msg);
 		
 		// send all other ships to the new player
 		for(NetPlayer pl : this.players) {
-			ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.ship, pl.pos, Vector3f.ZERO);
+			ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, pl.pos, Vector3f.ZERO);
 			syncPl.setReliable(true);
 			this.app.getServer().broadcast(Filters.in(arg1), syncPl);
 		}
@@ -73,8 +76,22 @@ public class ServerConManager implements ConnectionListener {
 			}
 		}
 	}
-
 	
+	public void update(float tpf) {
+		// update player
+		for(NetPlayer pl : this.players)
+			pl.update(tpf);
+		
+		// pos update
+		this.curPosUpdate += tpf;
+		if(this.curPosUpdate >= this.posUpdate) {
+			for(NetPlayer pl : this.players) {
+				this.app.getServer().broadcast(new PosMsg(pl.pos, pl.con.getId()));
+			}
+			
+			this.curPosUpdate = 0;
+		}
+	}
 	
 	/**********************************
      ******** GETTER & SETTER  ********

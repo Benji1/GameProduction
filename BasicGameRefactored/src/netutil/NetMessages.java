@@ -1,7 +1,9 @@
 package netutil;
 
 
-import netclient.states.GameRunningState.InputTypes;
+
+
+import netutil.NetInput.InputTypes;
 
 import com.jme3.input.KeyInput;
 import com.jme3.math.Vector3f;
@@ -47,29 +49,25 @@ public class NetMessages {
     		this.dir = dir;
     	}
     	
-    	public Vector3f getPos() {
-    		return this.pos;
-    	}
-    	
-    	public Vector3f getDir() {
-    		return this.dir;
-    	}
+    	public Vector3f getPos() {return this.pos;}
+    	public Vector3f getDir() {return this.dir;}
     }
     
     @Serializable
     public static class PosMsg extends AbstractMessage {
     	
     	private Vector3f pos;
+    	private int id;
     	
     	public PosMsg() {}
     	
-    	public PosMsg(Vector3f pos) {
+    	public PosMsg(Vector3f pos, int id) {
     		this.pos = pos;
+    		this.id = id;
     	}
     	
-    	public Vector3f getPos() {
-    		return this.pos;
-    	}
+    	public Vector3f getPos() {return this.pos;}
+    	public int getId() {return this.id;}
     }
     
     @Serializable
@@ -85,9 +83,7 @@ public class NetMessages {
             this.message = msg;
         }
 
-        public String getMessage() {
-            return this.message;
-        }
+        public String getMessage() {return this.message;}
     }
     
     /*
@@ -114,25 +110,11 @@ public class NetMessages {
             this.dir = dir;
         }
 
-        public String getName() {
-            return this.name;
-        }
-        
-        public int getId() {
-        	return this.id;
-        }
-        
-        public int[][] getShip() {
-        	return this.ship;
-        }
-        
-        public Vector3f getPos() {
-        	return this.pos;
-        }
-        
-        public Vector3f getDir() {
-        	return this.dir;
-        }
+        public String getName() {return this.name;}
+        public int getId() {return this.id;}
+        public int[][] getShip() {return this.ship;}
+        public Vector3f getPos() {return this.pos;}
+        public Vector3f getDir() {return this.dir;}
     }
     
     @Serializable
@@ -147,13 +129,8 @@ public class NetMessages {
     		this.keyPressed = keyPressed;
     	}
     	
-    	public InputTypes getInput() {
-    		return this.input;
-    	}
-    	
-    	public boolean getKeyPressed() {
-    		return this.keyPressed;
-    	}
+    	public InputTypes getInput() {return this.input;}
+    	public boolean getKeyPressed() {return this.keyPressed;}
     }
     
     /**********************************
