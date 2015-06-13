@@ -50,4 +50,8 @@ public class ClientShip {
         public OrientedModule[][] getModules() {
             return modules;
         }
+        
+        public void setModules(OrientedModule[][] modules) {
+            this.modules = modules;
+        }
 }
