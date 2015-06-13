@@ -24,6 +24,7 @@ import com.jme3.scene.CameraNode;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.system.JmeContext;
 import netserver.items.EncapsulatingItem;
+import netserver.items.Item;
 import netserver.weapons.Projectile;
 
 
@@ -54,7 +55,7 @@ public class WJSFServer extends SimpleApplication {
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
-    
+    public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
     /**********************************
      ************ METHODS  ************
@@ -146,6 +147,12 @@ public class WJSFServer extends SimpleApplication {
 
             // Create new body in world.
             encItem.init();
+        }
+        
+        while (!itemsToRemove.isEmpty()) {
+            Item p = itemsToRemove.get(0);
+            itemsToRemove.remove(0);
+            p.delete();
         }
         
         this.u.update(tpf);

@@ -9,14 +9,14 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import netserver.BasicShip;
+import netclient.gui.ModuleType;
 import netserver.WJSFServer;
+import netserver.modules.BasicModule;
 import netserver.physics.JBox2dNode;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.IUpdateable;
 import netserver.shipdesigns.TestShipDesigns;
-import netserver.weapons.ShieldCollider;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
@@ -34,16 +34,22 @@ import org.jbox2d.dynamics.contacts.Contact;
  */
 public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     
+    protected ModuleType type;
     protected Body body;
     protected ArrayList<Spatial> spatials;
     protected Material material;
     protected WJSFServer app;
+    protected boolean collected;
     
-    public Item (ArrayList<Spatial> spatials, Vec2 spawnPoint, Quaternion rotation, WJSFServer app) {
+    public Item (ModuleType type, ArrayList<Spatial> spatials, Vec2 spawnPoint, Quaternion rotation, WJSFServer app) {
         super();
         this.app = app;
+        this.type = type;
         this.spatials = spatials;
         ServiceManager.getUpdateableManager().addUpdateable(this);
+        
+        generatePhysicsBody(spawnPoint.x, spawnPoint.y);
+        setPhysicsCenter(body);
 
         for(Spatial s: spatials) {
             app.getRootNode().attachChild(s);
@@ -51,14 +57,11 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
             s.setLocalScale(0.5f);
         }
         app.getRootNode().attachChild(this);
-       
-        generatePhysicsBody(spawnPoint.x, spawnPoint.y);
-        setPhysicsCenter(body);
     }
 
     private void generatePhysicsBody(float x, float y) {
         PolygonShape rect = new PolygonShape();
-        rect.setAsBox(0.9f, 0.9f);
+        rect.setAsBox(0.5f, 0.5f);
 
         FixtureDef fDef = new FixtureDef();
         fDef.shape = rect;
@@ -107,17 +110,30 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     }
 
     public void beginContact(Contact cntct) {
-        if (cntct.getFixtureA().getBody().getUserData() instanceof ShieldCollider) {
-            handleShipCollision((BasicShip) cntct.getFixtureA().getBody().getUserData());
-        }
-        if (cntct.getFixtureB().getBody().getUserData() instanceof ShieldCollider) {
-            handleShipCollision((BasicShip) cntct.getFixtureB().getBody().getUserData());
+    }
+   
+   public void handleShipCollision(BasicModule m) {
+        if(!collected) {
+            System.out.println("LOL");
+            collected = true;
+            m.getShip().collectItem(type);
+            markForDeletion();
         }
     }
     
-    public void handleShipCollision(BasicShip s) {
-        //s.collectItem(this);
+    public void delete() {
+        ServiceManager.getUpdateableManager().removeUpdateable(this);
+        PhysicsWorld.world.destroyBody(body);
+        
+        for(Spatial s: spatials) {
+                s.removeFromParent();
+            }
+        this.removeFromParent();
     }
+    
+    protected void markForDeletion() {
+        app.itemsToRemove.add(this);
+     }
 
     public void endContact(Contact cntct) {
     }

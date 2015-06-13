@@ -8,6 +8,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
+import netclient.gui.ModuleType;
 import netserver.WJSFServer;
 import org.jbox2d.common.Vec2;
 
@@ -19,18 +20,20 @@ public class EncapsulatingItem {
     
     protected ArrayList<Spatial> spatials;
     protected Material material;
+    protected ModuleType type;
     protected WJSFServer app;
     protected Vec2 spawnPoint;
     protected Quaternion rotation;
     
-    public EncapsulatingItem(ArrayList<Spatial> spatials, Vec2 spawnPoint, Quaternion rotation, WJSFServer app) {
+    public EncapsulatingItem(ModuleType type, ArrayList<Spatial> spatials, Vec2 spawnPoint, Quaternion rotation, WJSFServer app) {
         this.app = app;
+        this.type = type;
         this.spatials = spatials;
         this.spawnPoint = spawnPoint;
         this.rotation = rotation;
     }
     
     public void init() {
-        Item i = new Item(spatials, spawnPoint, rotation, app);
+        Item i = new Item(type, spatials, spawnPoint, rotation, app);
     }
 }
