@@ -53,6 +53,10 @@ public class ClientShip {
             return modules;
         }
         
+        public void setModules(OrientedModule[][] modules) {
+            this.modules = modules;
+        }
+        
         public GraphicalModule createOrientedModuleGraphics(OrientedModule om, float x, float y) {
             return new GraphicalModule(om, shipRoot, x, y, app);
         }

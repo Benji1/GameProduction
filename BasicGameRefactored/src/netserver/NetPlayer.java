@@ -29,18 +29,12 @@ public class NetPlayer {
      ********** CONSTRUCTORS  *********
      **********************************/
 	
-	public NetPlayer(WJSFServer app, HostedConnection con) {
-            this.shipArray = new OrientedModule[][]{
-                {null, null, new OrientedModule(ModuleType.WEAPON, FacingDirection.FORWARD), null, null}, 
-                {null, new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.ENERGY_GENERATOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), null}, 
-                {new OrientedModule(ModuleType.SHIELD, FacingDirection.FORWARD), new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.COCKPIT, FacingDirection.FORWARD), new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.SHIELD, FacingDirection.FORWARD)}, 
-                {null, new OrientedModule(ModuleType.THRUSTER, FacingDirection.FORWARD), new OrientedModule(ModuleType.ENERGY_GENERATOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.THRUSTER, FacingDirection.FORWARD), null}, 
-                {null, null, new OrientedModule(ModuleType.THRUSTER, FacingDirection.FORWARD), null, null}};
-            
+	public NetPlayer(WJSFServer app, HostedConnection con) {            
             this.app = app;
             this.con = con;
             this.ship = this.app.designs.createTestShip1();
             this.input = new NetInput(this);
+            this.shipArray = ship.getOrientedModuleArray();
 	}
 	
 	

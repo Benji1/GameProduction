@@ -10,6 +10,7 @@ import netutil.NetMessages.NetMsg;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
+import netutil.NetMessages.ShipChangedMsg;
 
 public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 	
@@ -38,6 +39,23 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 					return null;
 				}
 			});
-		}
+		} else if (m instanceof ShipChangedMsg) {
+                    final ShipChangedMsg msg = (ShipChangedMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {                            
+                            for (NetPlayer pl : app.getConManager().players) {
+                                if (pl.con.getId() == client.getId()) {
+                                    // update ship on server
+                                    pl.ship.onShipChanged(msg.getModules());
+                                }                                
+                            }
+                            // send update to all clients
+                            app.getServer().broadcast(msg);
+                            
+                            return null;
+                        }
+                    });
+                }
 	}
 }

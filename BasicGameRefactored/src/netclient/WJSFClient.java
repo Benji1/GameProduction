@@ -25,6 +25,7 @@ import com.jme3.network.Network;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
+import netserver.services.ServiceManager;
 
 public class WJSFClient extends SimpleApplication implements ClientStateListener {
 	
@@ -82,6 +83,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
     	this.stateManager.attach(this.mainMenuState);
     	
     	this.gui = new GUI(this);
+        ServiceManager.getEditorManager().setClient(this);
     }
     
     @Override

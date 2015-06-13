@@ -20,6 +20,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import netserver.services.ServiceManager;
+import netutil.NetMessages.ShipChangedMsg;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
 	
@@ -115,7 +116,25 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 					return null;
 				}
 			});
-		}
+		} else if (m instanceof ShipChangedMsg) {
+                    final ShipChangedMsg msg = (ShipChangedMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            if (app.gameRunState.playerShip.id == msg.getShipId()) {
+                                app.gameRunState.playerShip.setModules(msg.getModules());
+                            } else {
+                                for (ClientShip s : app.gameRunState.clientShips) {
+                                    if (s.id == msg.getShipId()) {
+                                        s.setModules(msg.getModules());
+                                    }
+                                }
+                            }
+                            
+                            return null;
+                        }
+                    });
+                }
 	}
 	
 	public void update(float tpf) {

@@ -24,7 +24,14 @@ import netserver.services.updater.IUpdateable;
 import netserver.universe.Abs_ChunkNode;
 
 import com.jme3.math.Vector3f;
+import java.util.Map;
 import netclient.gui.ModuleType;
+import netclient.gui.OrientedModule;
+import netserver.modules.Armor;
+import netserver.modules.EnergyGenerator;
+import netserver.modules.LaserGun;
+import netserver.modules.Shield;
+import netserver.modules.Thruster;
 
 /**
  *
@@ -308,7 +315,44 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         }
     }
 
-    public void onShipChanged(BasicModule[][] modulesNewShip) {
+    public void onShipChanged(OrientedModule[][] modulesNewShip) {
+        BasicModule[][] newModules = new BasicModule[modulesNewShip.length][modulesNewShip[0].length];
+        
+        for (int i=0; i<modulesNewShip.length; i++) {
+            for (int j=0; j<modulesNewShip[0].length; j++) {
+                if (modulesNewShip[i][j] != null) {
+                    switch(modulesNewShip[i][j].moduleType) {
+                        case COCKPIT:
+                            newModules[i][j] = new Cockpit();
+                            break;
+                        case THRUSTER:
+                            newModules[i][j] = new Thruster(null, modulesNewShip[i][j].facingDirection);
+                            break;
+                        case ENERGY_GENERATOR:
+                            newModules[i][j] = new EnergyGenerator();
+                            break;
+                        case ARMOR:
+                            newModules[i][j] = new Armor();
+                            break;
+                        case WEAPON:
+                            newModules[i][j] = new LaserGun(null, modulesNewShip[i][j].facingDirection);
+                            break;
+                        case ARMOR_DIAGONAL:
+                            newModules[i][j] = new Armor();
+                            break;
+                        case SHIELD:
+                            newModules[i][j] = new Shield(null);
+                            break;
+                        case STORAGE:
+                            newModules[i][j] = new Storage();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        
         this.cockpitPos = this.cockpit.getBodyPos().clone();
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
@@ -317,12 +361,12 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
                 }
             }
         }
-        modules = new BasicModule[modulesNewShip.length][modulesNewShip[0].length];
+        modules = new BasicModule[newModules.length][newModules[0].length];
 
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
-                if(modulesNewShip[i][j] != null) {
-                    addModuleAt(modulesNewShip[i][j], new Point(i, j));
+                if(newModules[i][j] != null) {
+                    addModuleAt(newModules[i][j], new Point(i, j));
                 }
             }
         }
@@ -330,5 +374,19 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public int getShipId() {
         return shipId;
+    }
+    
+    public OrientedModule[][] getOrientedModuleArray() {
+       OrientedModule[][] oModules = new OrientedModule[modules.length][modules[0].length];
+       
+       for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    oModules[i][j] = new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation());
+                }
+            }
+        }
+       
+       return oModules;
     }
 }

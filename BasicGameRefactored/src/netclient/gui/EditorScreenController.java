@@ -554,16 +554,17 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             }
 
             // create new module array and fill it
-            BasicModule[][] modules = new BasicModule[maxX-minX+1][maxY-minY+1];
+            OrientedModule[][] modules = new OrientedModule[maxX-minX+1][maxY-minY+1];
             
             int xOffset = minX*-1;
             int yOffset = minY*-1;
             
             for (Map.Entry pair : shipTiles.entrySet()) {
-                OrientedModule type = ((OrientedModule)pair.getValue());
+                OrientedModule module = ((OrientedModule)pair.getValue());
                 int x = ((Point)pair.getKey()).x;
                 int y = ((Point)pair.getKey()).y;
-                switch(type.moduleType) {
+                modules[x+xOffset][y+yOffset] = module;
+                /*switch(type.moduleType) {
                     case COCKPIT:
                         //System.out.println("setting cockpit at " + (x+xOffset)+"/"+(y+yOffset));
                         modules[x+xOffset][y+yOffset] = new Cockpit();
@@ -596,7 +597,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     default:
                         break;
-                }
+                }*/
             }
 
             ServiceManager.getEditorManager().notifyOfShipChange(modules);

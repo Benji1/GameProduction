@@ -37,6 +37,7 @@ public class NetMessages {
         Serializer.registerClass(ClientEnteredMsg.class);
         Serializer.registerClass(KeyPressedMsg.class);
         Serializer.registerClass(OrientedModule.class);
+        Serializer.registerClass(ShipChangedMsg.class);
     }
 
     @Serializable
@@ -129,6 +130,22 @@ public class NetMessages {
     	
     	public InputTypes getInput() {return this.input;}
     	public boolean getKeyPressed() {return this.keyPressed;}
+    }
+    
+    @Serializable
+    public static class ShipChangedMsg extends AbstractMessage {
+        private int shipId;
+        private OrientedModule[][] modules;
+        
+        public ShipChangedMsg() {}
+        
+        public ShipChangedMsg(int shipId, OrientedModule[][] modules) {
+            this.shipId = shipId;
+            this.modules = modules;
+        }
+        
+        public int getShipId() {return this.shipId;}
+        public OrientedModule[][] getModules() {return this.modules;}
     }
     
     /**********************************
