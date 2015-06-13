@@ -133,10 +133,11 @@ public class WJSFServer extends SimpleApplication {
 
         bodiesToRemove.clear();
         
-        for (Projectile p : projectilesToRemove) {
-            p.delete();
-        }
-        projectilesToRemove.clear();
+        while (projectilesToRemove.size() > 0) {
+            Projectile p = projectilesToRemove.get(0);
+            projectilesToRemove.remove(0);
+             p.delete();
+         }
         
         this.u.update(tpf);
         
