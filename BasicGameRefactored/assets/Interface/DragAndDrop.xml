@@ -3,9 +3,6 @@
     <controlDefinition name="custom-draggable" childRootId="#draggableContent" controller="gui.dragAndDrop.DraggableControl">
         <interact onClick="dragStart()" onClickMouseMove="drag()" onRelease="dragStop()" onMouseOver="mouseOver()"/>
         <panel id="#draggableContent">
-            <effect>
-                <onStartHover name="nop" onStartEffect="showKeyBindings()"/>
-            </effect>
         </panel>
     </controlDefinition>
     <controlDefinition name="custom-droppable" childRootId="#droppableContent" controller="gui.dragAndDrop.DroppableControl">
