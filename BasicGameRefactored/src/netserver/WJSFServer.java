@@ -150,9 +150,9 @@ public class WJSFServer extends SimpleApplication {
         }
         
         while (!itemsToRemove.isEmpty()) {
-            Item p = itemsToRemove.get(0);
+            Item i = itemsToRemove.get(0);
             itemsToRemove.remove(0);
-            p.delete();
+            i.delete();
         }
         
         this.u.update(tpf);

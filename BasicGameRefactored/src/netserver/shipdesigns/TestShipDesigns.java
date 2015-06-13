@@ -17,6 +17,7 @@ import netserver.modules.EnergyGenerator;
 import netserver.modules.FacingDirection;
 import netserver.modules.LaserGun;
 import netserver.modules.Shield;
+import netserver.modules.Storage;
 import netserver.modules.Thruster;
 import netserver.modules.WeakThruster;
 
@@ -125,7 +126,7 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Thruster(right, FacingDirection.RIGHT), new Point(-1, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Storage(), new Point(-1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(-2, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
