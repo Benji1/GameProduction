@@ -76,55 +76,29 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     
     public GameRunningState() {}
     
-	public GameRunningState(WJSFClient app) {
-		this.app = app;
-		this.msgManager = new ClientNetMsgListener(app);
-		this.localRootNode = new Node("GameRunningNode");
-	}
-	
-	@Override
-	public void initialize(AppStateManager stateManager, Application app) {
-		super.initialize(stateManager, app);
-		
+    public GameRunningState(WJSFClient app) {
+            this.app = app;
+            this.msgManager = new ClientNetMsgListener(app);
+            this.localRootNode = new Node("GameRunningNode");
+    }
+
+    @Override
+    public void initialize(AppStateManager stateManager, Application app) {
+        super.initialize(stateManager, app);
+
         this.initLight();
         this.initHUD();
         //this.initShip();
-		//this.initKeys();
+                //this.initKeys();
         this.initCamera();
         this.background = new Background(this.app);
         this.background.initBackground();
-        
+
         this.app.getRootNode().attachChild(this.localRootNode);
-        
+
         this.app.gui.goToEmptyScreen();
         this.app.getInputManager().setCursorVisible(false);
-	}
-	
-    /*private void initShip() {
-        TestShipDesigns tsd = new TestShipDesigns(this.app);
-        //playersShip = tsd.createTestShip1();
-        //playersShip = tsd.createStickShip();
-        //playersShip = tsd.createBasicShip();
-        //targetShip = tsd.createTestTargetShip2();
-        
-        Spatial spatial;
-        Material material;    
-        
-        Box box = new Box(1, 0.4f, 1);
-        spatial = new Geometry("Box", box);
-        material = new Material(this.app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-        ColorRGBA color = ColorRGBA.Blue;
-        material.setBoolean("UseMaterialColors", true);
-        material.setColor("Ambient", color);
-        material.setColor("Diffuse", color);
-
-        spatial.setMaterial(material);
-        this.localRootNode.attachChild(spatial);
-        
-        System.out.println(this.localRootNode.getLocalTranslation());
-        System.out.println(spatial.getLocalTranslation());
-    }*/
+    }
 
     public void initCamera() {
         camNode = new CameraNode("Camera Node", this.app.getViewPort().getCamera());

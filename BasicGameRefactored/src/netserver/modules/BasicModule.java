@@ -11,18 +11,13 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.builder.ElementBuilder;
-import de.lessvoid.nifty.builder.PanelBuilder;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.screen.Screen;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import netclient.gui.ModuleType;
-import netclient.gui.dragAndDrop.builder.DraggableBuilder;
 
 import netserver.BasicShip;
 import netserver.WJSFServer;
@@ -191,8 +186,23 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     }
     
     public void destroy() {
-        onRemove();
+        onRemove();        
         
+        if (shouldSpawnItem()) {
+            spawnItem();
+        }
+        
+        this.detachAllChildren();
+        ship.getApp().bodiesToRemove.add(body);
+        ship.sperateInNewShips();
+    }
+    
+    public boolean shouldSpawnItem() {
+        Random rn = new Random();
+        return rn.nextFloat() <= dropRateInPercent / 100;
+    }
+    
+    public void spawnItem() {
         float angleRad = body.getAngle();
         Quaternion q = new Quaternion();
         q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
@@ -203,10 +213,6 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         }
         
         ship.getApp().itemsToCreate.add(new EncapsulatingItem(saveSpatials, body.getPosition(), q, ship.getApp()));
-        
-        this.detachAllChildren();
-        ship.getApp().bodiesToRemove.add(body);
-        ship.sperateInNewShips();
     }
     
      public void destroyWithoutSeperation() {

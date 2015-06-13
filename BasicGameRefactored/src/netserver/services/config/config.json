@@ -1,7 +1,7 @@
 {
     "Basic": {
         "MaxHealth": 100,
-        "DropRateInPercent": 2
+        "DropRateInPercent": 25
     },
     "Armor": {
         "MaxHealth": 500

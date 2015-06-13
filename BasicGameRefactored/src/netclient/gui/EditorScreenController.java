@@ -563,41 +563,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 OrientedModule module = ((OrientedModule)pair.getValue());
                 int x = ((Point)pair.getKey()).x;
                 int y = ((Point)pair.getKey()).y;
+                
                 modules[x+xOffset][y+yOffset] = module;
-                /*switch(type.moduleType) {
-                    case COCKPIT:
-                        //System.out.println("setting cockpit at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Cockpit();
-                        break;
-                    case THRUSTER:
-                        //System.out.println("setting thruster at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Thruster(fwd, type.facingDirection);
-                        break;
-                    case ENERGY_GENERATOR:
-                        //System.out.println("setting energy at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new EnergyGenerator();
-                        break;
-                    case ARMOR:
-                        //System.out.println("setting armor at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Armor();
-                        break;
-                    case WEAPON:
-                        //System.out.println("setting weapon at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection);
-                        break;
-                    case ARMOR_DIAGONAL:
-                        //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Armor();
-                        break;
-                    case SHIELD:
-                        modules[x+xOffset][y+yOffset] = new Shield(shield);
-                        break;
-                    case STORAGE:
-                        modules[x+xOffset][y+yOffset] = new Storage();
-                        break;
-                    default:
-                        break;
-                }*/
             }
 
             ServiceManager.getEditorManager().notifyOfShipChange(modules);

@@ -7,12 +7,6 @@ package netserver;
 import java.awt.Point;
 import java.util.ArrayList;
 
-
-
-
-
-
-
 import netclient.WJSFClient;
 import netserver.modules.BasicModule;
 import netserver.modules.Cockpit;

@@ -120,7 +120,7 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-1, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(1, 0));
         s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(0, -2)); // Backwards is strange
-        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
         s.addModuleAtFromOffset(new Thruster(left, FacingDirection.LEFT), new Point(1, 1));
         s.addModuleAtFromOffset(new Thruster(right, FacingDirection.RIGHT), new Point(-1, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
@@ -205,17 +205,17 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-2, 0));
         s.addModuleAtFromOffset(new Armor(), new Point(2, 0));
         
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(1, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(-1, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.BACKWARD), new Point(2, 1));
-        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(-2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.FORWARD), new Point(1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.FORWARD), new Point(-1, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndRight, FacingDirection.FORWARD), new Point(2, 1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.FORWARD), new Point(-2, 1));
         
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.FORWARD), new Point(0, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(1, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(-1, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndLeft, FacingDirection.FORWARD), new Point(2, -1));
-        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.FORWARD), new Point(-2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, -1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(1, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.BACKWARD), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Thruster(fwdAndLeft, FacingDirection.BACKWARD), new Point(2, -1));
+        s.addModuleAtFromOffset(new Thruster(bckwdAndRight, FacingDirection.BACKWARD), new Point(-2, -1));
         
         return s;
     }
@@ -230,11 +230,11 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
         s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
  //       s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
-        s.addModuleAtFromOffset(new WeakThruster(left, FacingDirection.RIGHT), new Point(-1, 2));
-        s.addModuleAtFromOffset(new WeakThruster(right, FacingDirection.LEFT), new Point(1, 2));
-        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, 2));
-        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(-1, 0)); // Backwards is strange
-        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new WeakThruster(right, FacingDirection.RIGHT), new Point(-1, 2));
+        s.addModuleAtFromOffset(new WeakThruster(left, FacingDirection.LEFT), new Point(1, 2));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(-1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(1, 0)); // Backwards is strange
         
         return s;
     }
@@ -249,11 +249,11 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Armor(), new Point(-1, 1));
         s.addModuleAtFromOffset(new Armor(), new Point(1, 1));
  //       s.addModuleAtFromOffset(new Thruster(fwdAndLeftAndRight, FacingDirection.BACKWARD), new Point(0, 1));
-        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.RIGHT), new Point(-1, 2));
-        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.LEFT), new Point(1, 2));
-        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.BACKWARD), new Point(0, 2));
-        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(-1, 0)); // Backwards is strange
-        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.BACKWARD), new Point(1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new Thruster(right, FacingDirection.RIGHT), new Point(-1, 2));
+        s.addModuleAtFromOffset(new Thruster(left, FacingDirection.LEFT), new Point(1, 2));
+        s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(-1, 0)); // Backwards is strange
+        s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(1, 0)); // Backwards is strange
         s.addModuleAtFromOffset(new Shield(shield), new Point(2, 1));
         s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 1));
         
