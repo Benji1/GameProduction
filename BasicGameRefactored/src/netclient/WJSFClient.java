@@ -43,8 +43,6 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 	
     public Client client;
     
-    
-    
     /**********************************
      ************ METHODS  ************
      **********************************/
