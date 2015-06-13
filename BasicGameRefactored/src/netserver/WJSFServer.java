@@ -23,6 +23,7 @@ import com.jme3.network.Server;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.system.JmeContext;
+import netserver.items.EncapsulatingItem;
 import netserver.weapons.Projectile;
 
 
@@ -52,7 +53,7 @@ public class WJSFServer extends SimpleApplication {
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
     public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
-    
+    public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
     
     
     /**********************************
@@ -133,11 +134,19 @@ public class WJSFServer extends SimpleApplication {
 
         bodiesToRemove.clear();
         
-        while (projectilesToRemove.size() > 0) {
+        while (!projectilesToRemove.isEmpty()) {
             Projectile p = projectilesToRemove.get(0);
             projectilesToRemove.remove(0);
              p.delete();
          }
+        
+        while (!itemsToCreate.isEmpty()) {
+            // Remove object from queue.
+            EncapsulatingItem encItem =  itemsToCreate.remove(0);
+
+            // Create new body in world.
+            encItem.init();
+        }
         
         this.u.update(tpf);
         

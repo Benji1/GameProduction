@@ -6,16 +6,20 @@ package netserver.modules;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import netserver.BasicShip;
 import netserver.WJSFServer;
+import netserver.items.EncapsulatingItem;
 import netserver.physics.JBox2dNode;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
@@ -87,6 +91,10 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public Spatial getSpatial() {
     	return this.spatial;
+    }
+    
+    public Material getMaterial() {
+        return this.material;
     }
 
     @Override
@@ -175,10 +183,21 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public void destroy() {
         onRemove();
+        
+        float angleRad = body.getAngle();
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
+        
+        ArrayList<Spatial> saveSpatials = new ArrayList<Spatial>();
+        for(Spatial s : children) {
+            saveSpatials.add(s.clone());
+        }
+        
+        ship.getApp().itemsToCreate.add(new EncapsulatingItem(saveSpatials, body.getPosition(), q, ship.getApp()));
+        
         this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
         ship.sperateInNewShips();
-        // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
     
      public void destroyWithoutSeperation() {
