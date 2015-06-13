@@ -66,9 +66,14 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
-    float camYOffset = 50f;  // Camera height
+    float camYOffset = 20f;  // Camera height
     boolean universeDebug = false;
         
+    /** for camera working in client*/
+    boolean up;
+    
+    
+    
     public GameRunningState() {}
     
 	public GameRunningState(WJSFClient app) {
@@ -187,6 +192,13 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         // OFFLINE INPUT
     	//
     	
+        if(name.equals(InputTypes.MoveUp.toString())) {
+            up = true;
+        } else {
+            up = false;
+        }
+        
+        
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
@@ -268,15 +280,47 @@ public class GameRunningState extends AbstractAppState implements ActionListener
          * Camera
          */
         
+    Vector3f previousCamPos;
+    Vector3f currentCamPos = new Vector3f();
+    float camPosChangeLerpValue = 0.03f;
     public void updateCamera() {
         if(this.playerShip != null && !universeDebug) {
-            camNode.setLocalTranslation(
-                    this.playerShip.shipRoot.getLocalTranslation().x + camXOffset,
-                    this.cameraHeight, 
-                    this.playerShip.shipRoot.getLocalTranslation().z + camZOffset
-                );
-        
+           previousCamPos = currentCamPos;
+            currentCamPos = new Vector3f();
+
+            float min = 0.1f; 
+            float max = 100f;
+            float speedFactor = this.playerShip.velocity.lengthSquared() * 0.1f;
+
+            speedFactor = Math.max(min, speedFactor);
+            speedFactor = Math.min(speedFactor, max);
+            float t = inverseLerp(0f, max+min, speedFactor);
+            float offsetFactor = 1f - t;
+
+           currentCamPos.x = this.playerShip.shipRoot.getLocalTranslation().x + camXOffset * offsetFactor;
+           currentCamPos.z = this.playerShip.shipRoot.getLocalTranslation().z + camZOffset * offsetFactor;
+           float newY = 
+                    lerp(
+                        previousCamPos.y,
+                        this.cameraHeight + speedFactor,
+                        camPosChangeLerpValue
+                    );
+
+            if (!up || newY > previousCamPos.y)
+             currentCamPos.y = newY;
+         else    
+             currentCamPos.y = previousCamPos.y;
+           
+            camNode.setLocalTranslation(currentCamPos);
             camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y); 
          }
+    }
+    
+    float lerp(float v0, float v1, float t) {
+        return (1-t)*v0 + t*v1;
+    }
+   
+    float inverseLerp(float a, float b, float x) {
+        return (x - a) / (b - a);
     }
 }
