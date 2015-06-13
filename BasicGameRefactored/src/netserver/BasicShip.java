@@ -25,6 +25,7 @@ import netserver.universe.Abs_ChunkNode;
 
 import com.jme3.math.Vector3f;
 import netclient.gui.ModuleType;
+import netclient.gui.OrientedModule;
 
 /**
  *
@@ -330,5 +331,19 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public int getShipId() {
         return shipId;
+    }
+    
+    public OrientedModule[][] getOrientedModuleArray() {
+       OrientedModule[][] oModules = new OrientedModule[modules.length][modules[0].length];
+       
+       for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    oModules[i][j] = new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation());
+                }
+            }
+        }
+       
+       return oModules;
     }
 }

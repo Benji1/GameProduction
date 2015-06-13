@@ -41,9 +41,9 @@ public class ClientShip {
                 
                 for (int i=0; i<ship.length; i++) {
                     for (int j=0; j<ship[0].length; j++) {
-                        System.out.print(ship[i][j]);
+                        //System.out.print(ship[i][j]);
                     }
-                    System.out.println("");
+                    //System.out.println("");
                 }               
 	}
         
