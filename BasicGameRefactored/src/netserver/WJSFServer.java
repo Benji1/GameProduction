@@ -23,6 +23,7 @@ import com.jme3.network.Server;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.system.JmeContext;
+import netserver.weapons.Projectile;
 
 
 public class WJSFServer extends SimpleApplication {
@@ -50,7 +51,7 @@ public class WJSFServer extends SimpleApplication {
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
     public ArrayList<Body> bodiesToRemove = new ArrayList<Body>();
-    
+    public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
     
     
     
@@ -131,6 +132,11 @@ public class WJSFServer extends SimpleApplication {
             PhysicsWorld.world.destroyBody(b);
 
         bodiesToRemove.clear();
+        
+        for (Projectile p : projectilesToRemove) {
+            p.delete();
+        }
+        projectilesToRemove.clear();
         
         this.u.update(tpf);
         
