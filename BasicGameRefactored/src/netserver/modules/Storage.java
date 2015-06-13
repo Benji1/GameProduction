@@ -9,8 +9,6 @@ import com.jme3.math.ColorRGBA;
 import java.util.ArrayList;
 import netclient.gui.ModuleType;
 
-import netserver.Item;
-
 /**
  *
  * @author 1337
@@ -24,6 +22,8 @@ public class Storage extends BasicModule {
         super();
         moduleName = "Storage";
         color = ColorRGBA.Magenta;
+        type = ModuleType.STORAGE;
+        orientation = FacingDirection.FORWARD;
     }
     
     public boolean storeItem(ModuleType item) {

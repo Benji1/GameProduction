@@ -7,6 +7,9 @@ import netserver.NetInput.InputTypes;
 
 import com.jme3.math.Vector3f;
 import com.jme3.network.HostedConnection;
+import netclient.gui.ModuleType;
+import netclient.gui.OrientedModule;
+import netserver.modules.FacingDirection;
 
 public class NetPlayer {
 	
@@ -20,24 +23,24 @@ public class NetPlayer {
 	public NetInput input;
 	public BasicShip ship;
 	
-	public int[][] shipArray =
-		{
-			{0, 0, 4, 0, 0},
-			{0, 2, 3, 2, 0},
-			{7, 2, 1, 2, 7},
-			{0, 5, 3, 5, 0},
-			{0, 0, 5, 0, 0}
-		};
+	public OrientedModule[][] shipArray;
 
 	/**********************************
      ********** CONSTRUCTORS  *********
      **********************************/
 	
 	public NetPlayer(WJSFServer app, HostedConnection con) {
-		this.app = app;
-		this.con = con;
-		this.ship = this.app.designs.createTestShip1();
-		this.input = new NetInput(this);
+            this.shipArray = new OrientedModule[][]{
+                {null, null, new OrientedModule(ModuleType.WEAPON, FacingDirection.FORWARD), null, null}, 
+                {null, new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.ENERGY_GENERATOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), null}, 
+                {new OrientedModule(ModuleType.SHIELD, FacingDirection.FORWARD), new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.COCKPIT, FacingDirection.FORWARD), new OrientedModule(ModuleType.ARMOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.SHIELD, FacingDirection.FORWARD)}, 
+                {null, new OrientedModule(ModuleType.THRUSTER, FacingDirection.FORWARD), new OrientedModule(ModuleType.ENERGY_GENERATOR, FacingDirection.FORWARD), new OrientedModule(ModuleType.THRUSTER, FacingDirection.FORWARD), null}, 
+                {null, null, new OrientedModule(ModuleType.THRUSTER, FacingDirection.FORWARD), null, null}};
+            
+            this.app = app;
+            this.con = con;
+            this.ship = this.app.designs.createTestShip1();
+            this.input = new NetInput(this);
 	}
 	
 	

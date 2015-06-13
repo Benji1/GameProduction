@@ -19,6 +19,7 @@ import com.jme3.network.MessageListener;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import netserver.services.ServiceManager;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
 	
@@ -61,6 +62,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 					
 					if(app.gameRunState.playerShip == null && app.client.getId() == ship.id) {	// new ship is this player
 						app.gameRunState.playerShip = ship;
+                                                ServiceManager.getEditorManager().setShip(app.gameRunState.playerShip);
 						app.gameRunState.initKeys();
 		
 				        app.gameRunState.localRootNode.attachChild(ship.shipRoot);

@@ -41,6 +41,7 @@ import netserver.modules.EnergyGenerator;
 import netserver.modules.FacingDirection;
 import netserver.modules.LaserGun;
 import netserver.modules.Shield;
+import netserver.modules.Storage;
 import netserver.modules.Thruster;
 import netserver.services.ServiceManager;
 
@@ -70,30 +71,6 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     ArrayList<String> testFire;
     //*****************************
     
-    private class OrientedModule {
-        public ModuleType moduleType;
-        public FacingDirection facingDirection;
-        public OrientedModule(ModuleType moduleType) {
-            this.moduleType = moduleType;
-            this.facingDirection = FacingDirection.FORWARD;
-        }
-        public void rotateRight() {
-            facingDirection = facingDirection.next();
-        }
-        public void rotateLeft() {
-            facingDirection = facingDirection.previous();
-        }
-        public int getSpriteNumber() {
-            switch (facingDirection) {
-                case FORWARD: return moduleType.getValue() * 4;
-                case RIGHT: return moduleType.getValue() * 4 + 1;
-                case BACKWARD: return moduleType.getValue() * 4 + 2;
-                case LEFT: return moduleType.getValue() * 4 + 3;
-                default: return moduleType.getValue() * 4;
-            }
-        }
-    }
-    
     Nifty nifty;
     Screen screen;
     
@@ -122,6 +99,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         // reload inventory       
         setupPartsPanel("Cockpit");
         setupSlotsPanel();
+        loadShipFromGame();
     }
 
     public void onEndScreen() {
@@ -448,19 +426,49 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         buildEmptySlot(0, 0);
     }
     
-    private void buildEmptySlot(final int x, final int y) {
-        final int gridItemSize = (int) (DEFAULT_SLOT_SIZE * scale);
-        Element slotsPanel = screen.findElementByName("slots-container");
-        ControlBuilder slotPanel = new ControlBuilder("empty-slot") {{
-            parameter("droppableId", "slotX"+x+"Y"+y);
-            parameter("width", gridItemSize+"px");
-            parameter("height", gridItemSize+"px");
-            parameter("x", x*gridItemSize+"px");
-            parameter("y", y*gridItemSize+"px");
-        }};
-        Element element = slotPanel.build(nifty, screen, slotsPanel);
-        DroppableControl dropable = element.getControl(DroppableControl.class);
-        dropable.addFilter(this);
+    private void loadShipFromGame() {
+        OrientedModule[][] modules = ServiceManager.getEditorManager().getShipModules();
+        
+        for (int i=0; i<modules.length; i++) {
+            for (int j=0; j<modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    int slotX = i - (modules.length / 2);
+                    int slotY = j - (modules.length / 2);
+                    
+                    // build slots
+                    Element parent = buildEmptySlot(slotX, slotY).getElements().get(0);
+                    buildNeighborSlots(slotX, slotY);
+                    
+                    // build module element
+                    modules[i][j].buildGuiElement(partIdCounter++, nifty, screen, parent);
+                    
+                    // add background data
+                    shipTiles.put(new Point(slotX, slotY), modules[i][j]);
+                }
+            }
+        }
+    }
+    
+    private Element buildEmptySlot(final int x, final int y) {
+        Element e = screen.findElementByName("slotX" + x + "Y" + y);
+        if (e == null) {
+            final int gridItemSize = (int) (DEFAULT_SLOT_SIZE * scale);
+            Element slotsPanel = screen.findElementByName("slots-container");
+            ControlBuilder slotPanel = new ControlBuilder("empty-slot") {{
+                parameter("droppableId", "slotX"+x+"Y"+y);
+                parameter("width", gridItemSize+"px");
+                parameter("height", gridItemSize+"px");
+                parameter("x", x*gridItemSize+"px");
+                parameter("y", y*gridItemSize+"px");
+            }};
+            Element element = slotPanel.build(nifty, screen, slotsPanel);
+            DroppableControl dropable = element.getControl(DroppableControl.class);
+            dropable.addFilter(this);
+            
+            return element;
+        } else {
+            return e;
+        }
     }
 
     public boolean accept(Droppable dropSource, Draggable draggedItem, Droppable dropTarget) {
@@ -574,19 +582,24 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case WEAPON:
                         //System.out.println("setting weapon at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection.next().next());
+                        modules[x+xOffset][y+yOffset] = new LaserGun(weapon, type.facingDirection);
                         break;
                     case ARMOR_DIAGONAL:
                         //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
                         modules[x+xOffset][y+yOffset] = new Armor();
+                        break;
+                    case SHIELD:
+                        modules[x+xOffset][y+yOffset] = new Shield(shield);
+                        break;
+                    case STORAGE:
+                        modules[x+xOffset][y+yOffset] = new Storage();
                         break;
                     default:
                         break;
                 }
             }
 
-            // TODO: get ID of current ship, atm its 0 because the player ship gets created before all other test ships
-            ServiceManager.getEditorManager().notifyShipChangedListeners(modules, 0);
+            ServiceManager.getEditorManager().notifyOfShipChange(modules);
         }
     }
     

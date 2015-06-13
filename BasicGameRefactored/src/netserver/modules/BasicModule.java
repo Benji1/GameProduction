@@ -9,10 +9,17 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.ElementBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.screen.Screen;
 
 import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import netclient.gui.ModuleType;
+import netclient.gui.dragAndDrop.builder.DraggableBuilder;
 
 import netserver.BasicShip;
 import netserver.WJSFServer;
@@ -47,7 +54,9 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected ColorRGBA color = ColorRGBA.Gray;
     protected Body body;
     protected Spatial spatial;
-    protected Material material;       
+    protected Material material;  
+    protected ModuleType type;
+    protected FacingDirection orientation;
     
     public int group = 0;
 
@@ -207,5 +216,12 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
+    }
+    
+    public ModuleType getType() {
+        return type;
+    }
+    public FacingDirection getOrientation() {
+        return orientation;
     }
 }

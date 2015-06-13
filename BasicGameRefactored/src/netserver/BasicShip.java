@@ -30,7 +30,7 @@ import netclient.gui.ModuleType;
  *
  * @author 1337
  */
-public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChangedListener {
+public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     private static int idCounter = 0;
     private int shipId;
@@ -48,7 +48,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         //app.gameRunState.ships.add(this);
 
         this.shipId = idCounter++;
-        ServiceManager.getEditorManager().registerAsShipChangedListener(this);
     }
 
     @Override
@@ -62,6 +61,10 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
                 }
             }
         }
+    }
+    
+    public BasicModule[][] getModules() {
+        return modules;
     }
 
     public WJSFServer getApp() {

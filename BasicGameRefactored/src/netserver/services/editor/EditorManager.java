@@ -6,49 +6,28 @@ package netserver.services.editor;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import netclient.ClientShip;
+import netclient.gui.OrientedModule;
 
 import netserver.modules.BasicModule;
 import netserver.services.Service;
 
 public class EditorManager extends Service {
     
-    private ArrayList<IShipChangedListener> shipChangedListeners;
-    private Stack<IShipChangedListener> shipChangedListenersToRemove;
-    private Stack<IShipChangedListener> shipChangedListenersToAdd;
+    private ClientShip ship;
     
     public EditorManager() {
-        shipChangedListeners = new ArrayList<IShipChangedListener>();
-        shipChangedListenersToAdd = new Stack<IShipChangedListener>();
-        shipChangedListenersToRemove = new Stack<IShipChangedListener>();
     }
     
-    public void notifyShipChangedListeners(BasicModule[][] modules, int shipId) {
-        addShipChangedListeners();
-        removeShipChangedListeners();
-        
-        for (IShipChangedListener listener : shipChangedListeners) {
-            if (listener.getShipId() == shipId) {
-                listener.onShipChanged(modules);
-            }
-        }
+    public void notifyOfShipChange(BasicModule[][] modules) {
+        // TODO
     }
     
-    public void registerAsShipChangedListener(IShipChangedListener listener) {
-        shipChangedListenersToAdd.add(listener);
-    }
-    public void removeShipChangedListener(IShipChangedListener listener) {
-        shipChangedListenersToRemove.remove(listener);
+    public void setShip(ClientShip ship) {
+        this.ship = ship;
     }
     
-    private void addShipChangedListeners() {
-        while (!shipChangedListenersToAdd.empty()) {
-            shipChangedListeners.add(shipChangedListenersToAdd.pop());
-        }
+    public OrientedModule[][] getShipModules() {
+        return ship.getModules();
     }
-    private void removeShipChangedListeners() {
-        while (!shipChangedListenersToRemove.empty()) {
-            shipChangedListeners.remove(shipChangedListenersToRemove.pop());
-        }
-    }
-    
 }

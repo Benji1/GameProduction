@@ -13,6 +13,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
 
 import java.util.ArrayList;
+import netclient.gui.ModuleType;
 
 import netserver.weapons.ShieldCollider;
 
@@ -34,6 +35,8 @@ public class Shield extends InteractiveModule {
         energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Shield"), "EnergyConsumptionPerSecond", float.class);
         color = ColorRGBA.Blue;
         colorActive = ColorRGBA.Cyan;
+        type = ModuleType.SHIELD;
+        orientation = FacingDirection.FORWARD;
     }
 
     public ShieldCollider getShieldCollider() {
