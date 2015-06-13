@@ -78,7 +78,7 @@ public class LaserProjectile extends Projectile implements ContactListener {
 
         FixtureDef fDef = new FixtureDef();
         fDef.shape = rect;
-        fDef.density = 1.0f;
+        fDef.density = 0.01f;
         fDef.friction = 0.0f;
         fDef.filter.categoryBits = TestShipDesigns.CATEGORY_PROJECTILE;
         fDef.filter.maskBits = TestShipDesigns.MASK_PROJECTILE;
