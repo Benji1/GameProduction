@@ -4,13 +4,11 @@ package netutil;
 
 
 import netserver.NetInput.InputTypes;
-
-import com.jme3.input.KeyInput;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
-import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 
 public class NetMessages {
@@ -72,6 +70,26 @@ public class NetMessages {
     	
     	public Vector3f getPos() {return this.pos;}
     	public int getId() {return this.id;}
+    }
+    
+    @Serializable
+    public static class PosAndRotMsg extends AbstractMessage {
+    	
+    	private Vector3f pos;
+    	private Quaternion dir;
+        private int id;
+    	
+    	public PosAndRotMsg() {}
+    	
+    	public PosAndRotMsg(Vector3f pos, Quaternion dir, int id) {
+    		this.pos = pos;
+    		this.dir = dir;
+                this.id = id;
+    	}
+    	
+    	public Vector3f getPos() {return this.pos;}
+    	public Quaternion getDir() {return this.dir;}
+        public int getId() {return this.id;}
     }
     
     @Serializable

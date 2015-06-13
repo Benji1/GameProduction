@@ -22,8 +22,8 @@ public class ServerConManager implements ConnectionListener {
 	private WJSFServer app;
 	public ConcurrentLinkedQueue<NetPlayer> players;
 	
-	private final float posUpdate = 0.1f;
-	private float curPosUpdate = 0;
+	private final float posAndRotUpdate = 0.1f;
+	private float curPosAndRotUpdate = 0;
 	
 	
 	/**********************************
@@ -92,13 +92,13 @@ public class ServerConManager implements ConnectionListener {
 			pl.update(tpf);
 		
 		// pos update
-		this.curPosUpdate += tpf;
-		if(this.curPosUpdate >= this.posUpdate) {
+		this.curPosAndRotUpdate += tpf;
+		if(this.curPosAndRotUpdate >= this.posAndRotUpdate) {
 			for(NetPlayer pl : this.players) {
-				this.app.getServer().broadcast(new PosMsg(pl.ship.cockpit.getLocalTranslation(), pl.con.getId()));
+				this.app.getServer().broadcast(new PosAndRotMsg(pl.ship.cockpit.getLocalTranslation(), pl.ship.cockpit.getLocalRotation(), pl.con.getId()));
 			}
 			
-			this.curPosUpdate = 0;
+			this.curPosAndRotUpdate = 0;
 		}
 	}
 	

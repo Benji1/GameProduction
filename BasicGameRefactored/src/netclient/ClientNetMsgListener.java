@@ -4,15 +4,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import netserver.WJSFServer;
 import netutil.NetMessages.ClientEnteredMsg;
 import netutil.NetMessages.NetMsg;
-import netutil.NetMessages.PosMsg;
-
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Quaternion;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -20,6 +16,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import netserver.services.ServiceManager;
+import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShipChangedMsg;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
@@ -97,18 +94,20 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 			        return null;
 				}
 			});
-		} else if (m instanceof PosMsg) {
-			final PosMsg msg = (PosMsg)m;
+		} else if (m instanceof PosAndRotMsg) {
+			final PosAndRotMsg msg = (PosAndRotMsg)m;
 			
 			this.app.enqueue(new Callable() {
 				public Object call() throws Exception {
 					if(app.gameRunState.playerShip.id == msg.getId()) {
 						app.gameRunState.playerShip.shipRoot.setLocalTranslation(msg.getPos());
+                                                app.gameRunState.playerShip.shipRoot.setLocalRotation(msg.getDir());
 						Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, msg.getPos().toString());
 					} else {
 						for(ClientShip s : app.gameRunState.clientShips) {
 							if(s.id == msg.getId()) {
 								s.shipRoot.setLocalTranslation(msg.getPos());
+                                                                s.shipRoot.setLocalRotation(msg.getDir());
 								return null;
 							}
 						}
