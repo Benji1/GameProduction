@@ -42,8 +42,7 @@ public class ClientShip {
                 for (int i=0; i<ship.length; i++) {
                     for (int j=0; j<ship[0].length; j++) {
                         if(ship[i][j] != null) {
-                            // j = x, i = y
-                            gmodules[i][j] = createOrientedModuleGraphics(ship[i][j], j, i);
+                            gmodules[i][j] = createOrientedModuleGraphics(ship[i][j], i - ship.length / 2, j - ship[0].length / 2);
                         }
                     }
                 }               
