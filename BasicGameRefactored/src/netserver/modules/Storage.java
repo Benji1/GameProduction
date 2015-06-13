@@ -7,6 +7,7 @@ package netserver.modules;
 import com.jme3.math.ColorRGBA;
 
 import java.util.ArrayList;
+import netclient.gui.ModuleType;
 
 import netserver.Item;
 
@@ -16,7 +17,7 @@ import netserver.Item;
  */
 public class Storage extends BasicModule {
 
-    protected ArrayList<Item> itemsInStorage = new ArrayList<Item>();
+    protected ArrayList<ModuleType> itemsInStorage = new ArrayList<ModuleType>();
     protected int maxStoredItems = cr.getFromMap(cr.getBaseMap("Storage"), "MaxStorage", int.class);
 
     public Storage() {
@@ -25,7 +26,7 @@ public class Storage extends BasicModule {
         color = ColorRGBA.Magenta;
     }
     
-    public boolean storeItem(Item item) {
+    public boolean storeItem(ModuleType item) {
         if (itemsInStorage.size() < maxStoredItems) {
             itemsInStorage.add(item);
             return true;
@@ -33,7 +34,7 @@ public class Storage extends BasicModule {
         return false;
     }
     
-    public Item removeItem(int index) {
+    public ModuleType removeItem(int index) {
         return itemsInStorage.remove(index);
     }
 }

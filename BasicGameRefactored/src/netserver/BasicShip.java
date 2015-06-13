@@ -24,6 +24,7 @@ import netserver.services.updater.IUpdateable;
 import netserver.universe.Abs_ChunkNode;
 
 import com.jme3.math.Vector3f;
+import netclient.gui.ModuleType;
 
 /**
  *
@@ -172,7 +173,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable, IShipChange
         // TODO: player returns to base
     }
 
-    public void collectItem(Item item) {
+    public void collectItem(ModuleType item) {
         // check for available item storage
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
