@@ -63,6 +63,12 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
 	public ClientNetMsgListener msgManager;
     
+    private float cameraHeight = 0f;
+    float camXOffset = -20f; // Camera X
+    float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
+    float camYOffset = 50f;  // Camera height
+    boolean universeDebug = false;
+        
     public GameRunningState() {}
     
 	public GameRunningState(WJSFClient app) {
@@ -120,17 +126,10 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.localRootNode.attachChild(camNode);
         
+       cameraHeight = camYOffset * (this.app.getViewPort().getCamera().getWidth() / 1600f);
         if(this.playerShip != null) {
-        	camNode.setLocalTranslation(new Vector3f(this.playerShip.shipRoot.getLocalTranslation().x, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), this.playerShip.shipRoot.getLocalTranslation().z + 0.1f));
-            camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+            updateCamera();
         }
-    }
-    
-    public void updateCamera() {
-    	if(this.playerShip != null) {
-            camNode.setLocalTranslation(new Vector3f(this.playerShip.shipRoot.getLocalTranslation().x, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), this.playerShip.shipRoot.getLocalTranslation().z + 0.1f));
-            camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
-    	}
     }
     
     public void initKeys() {
@@ -191,8 +190,10 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
-                if (camNode.getLocalTranslation().y == 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f)) {
-                    camNode.setLocalTranslation(new Vector3f(0, 200 * (this.app.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+// if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
+                if (universeDebug) {
+                    universeDebug = false;
+                    //camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
                     this.app.getGuiNode().attachChild(this.textShipPos);
                     this.app.getGuiNode().attachChild(this.textNewChunk);
@@ -201,6 +202,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                     //this.u.toggleUniverseDebug();
                     this.app.getGuiNode().detachChild(this.textShipPos);
                     this.app.getGuiNode().detachChild(this.textNewChunk);
+                    universeDebug = true;
                 }
             }
         } else if (name.equals("ToggleEditor") && !keyPressed) {
@@ -261,4 +263,20 @@ public class GameRunningState extends AbstractAppState implements ActionListener
 		this.app.getStateManager().detach(this.app.gameRunState);
 		this.app.getStateManager().attach(this.app.mainMenuState);
 	}
+        
+        /*
+         * Camera
+         */
+        
+    public void updateCamera() {
+        if(this.playerShip != null && !universeDebug) {
+            camNode.setLocalTranslation(
+                    this.playerShip.shipRoot.getLocalTranslation().x + camXOffset,
+                    this.cameraHeight, 
+                    this.playerShip.shipRoot.getLocalTranslation().z + camZOffset
+                );
+        
+            camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y); 
+         }
+    }
 }
