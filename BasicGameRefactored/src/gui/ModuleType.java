@@ -34,5 +34,11 @@ public enum ModuleType {
             }
         }
     	return null;
-    }    
+    }   
+    
+    public static boolean isInteractiveModule(ModuleType moduleType) {
+         return moduleType.equals(ModuleType.SHIELD) ||
+                moduleType.equals(ModuleType.THRUSTER) ||
+                moduleType.equals(ModuleType.WEAPON);
+    }
 }

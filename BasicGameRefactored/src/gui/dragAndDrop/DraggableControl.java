@@ -14,6 +14,7 @@ import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.tools.SizeValue;
 import de.lessvoid.xml.xpp3.Attributes;
+import gui.EditorScreenController;
 
 public class DraggableControl extends AbstractController implements Draggable {
   private static final String POPUP = "draggablePopup";
@@ -130,6 +131,10 @@ public class DraggableControl extends AbstractController implements Draggable {
       }
     }
     dragged = false;
+  }
+  
+  public void mouseOver() {
+      EditorScreenController.hoverOverDraggable(draggable.getId());
   }
 
   private void moveDraggableToPopup() {
