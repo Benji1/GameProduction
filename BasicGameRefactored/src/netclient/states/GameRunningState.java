@@ -47,39 +47,35 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController {
-	
-	private WJSFClient app;
-	
-	public Node localRootNode;
-	
-	public CameraNode camNode;
-    
+
+    private WJSFClient app;
+    public Node localRootNode;
+    public CameraNode camNode;
     private Background background;
     public BitmapText textShipPos;
     public BitmapText textNewChunk;
-    
-
     public ClientShip playerShip;
     public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
-	public ClientNetMsgListener msgManager;
-    
+    public ClientNetMsgListener msgManager;
     private float cameraHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
     float camYOffset = 20f;  // Camera height
     boolean universeDebug = false;
-        
-    /** for camera working in client*/
-    boolean up;
-    
-    
-    
-    public GameRunningState() {}
-    
+
+    /**
+     * for camera working in client
+     */
+    private boolean up;
+    private boolean useAdjustingCamera = false;
+
+    public GameRunningState() {
+    }
+
     public GameRunningState(WJSFClient app) {
-            this.app = app;
-            this.msgManager = new ClientNetMsgListener(app);
-            this.localRootNode = new Node("GameRunningNode");
+        this.app = app;
+        this.msgManager = new ClientNetMsgListener(app);
+        this.localRootNode = new Node("GameRunningNode");
     }
 
     @Override
@@ -88,8 +84,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
 
         this.initLight();
         this.initHUD();
-        //this.initShip();
-                //this.initKeys();
+        //this.initKeys();
         this.initCamera();
         this.background = new Background(this.app);
         this.background.initBackground();
@@ -104,13 +99,13 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         camNode = new CameraNode("Camera Node", this.app.getViewPort().getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.localRootNode.attachChild(camNode);
-        
-       cameraHeight = camYOffset * (this.app.getViewPort().getCamera().getWidth() / 1600f);
-        if(this.playerShip != null) {
+
+        cameraHeight = camYOffset * (this.app.getViewPort().getCamera().getWidth() / 1600f);
+        if (this.playerShip != null) {
             updateCamera();
         }
     }
-    
+
     public void initKeys() {
         this.app.getInputManager().addMapping(InputTypes.MoveUp.toString(), new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
         this.app.getInputManager().addMapping(InputTypes.MoveLeft.toString(), new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
@@ -139,40 +134,38 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.textNewChunk.setLocalTranslation(this.app.settings.getWidth() - 250, this.app.settings.getHeight(), 0); // position
     }
 
-
-
     private void initLight() {
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White.mult(1f));
         this.localRootNode.addLight(ambient);
     }
-    
+
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
-    	//
-    	// NETWORKING INPUT
-    	//
-    	
-    	try {
-    		KeyPressedMsg msg = new KeyPressedMsg(InputTypes.valueOf(name), keyPressed);
-    		msg.setReliable(true);
+        //
+        // NETWORKING INPUT
+        //
+
+        try {
+            KeyPressedMsg msg = new KeyPressedMsg(InputTypes.valueOf(name), keyPressed);
+            msg.setReliable(true);
             this.app.client.send(msg);
-    	} catch (IllegalArgumentException ex) {
-    		// name is no network input
-    		//Logger.getLogger(GameRunningState.class.getName()).log(Level.WARNING, ex.toString());
-    	}
-        
-    	//
+        } catch (IllegalArgumentException ex) {
+            // name is no network input
+            //Logger.getLogger(GameRunningState.class.getName()).log(Level.WARNING, ex.toString());
+        }
+
+        //
         // OFFLINE INPUT
-    	//
-    	
-        if(name.equals(InputTypes.MoveUp.toString())) {
+        //
+
+        if (name.equals(InputTypes.MoveUp.toString())) {
             up = true;
         } else {
             up = false;
         }
-        
-        
+
+
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
@@ -199,8 +192,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                 this.app.gui.goToEmptyScreen();
                 this.app.getInputManager().setCursorVisible(false);
             }
-        } else if(name.equals("ExitOverlay") && !keyPressed) {
-        	if (!this.app.gui.getCurrentScreenId().equals("exitOverlay")) {
+        } else if (name.equals("ExitOverlay") && !keyPressed) {
+            if (!this.app.gui.getCurrentScreenId().equals("exitOverlay")) {
                 this.app.gui.goToExitOverlayScreen();
                 this.app.getInputManager().setCursorVisible(true);
             } else {
@@ -209,91 +202,96 @@ public class GameRunningState extends AbstractAppState implements ActionListener
             }
         }
     }
-    
-	
-	@Override
-	public void update(float tpf) {
-		this.msgManager.update(tpf);
-        
+
+    @Override
+    public void update(float tpf) {
+        this.msgManager.update(tpf);
+
         //this.background.updateBackground();
-        
+
         this.updateCamera();
-	}	
-	
-	@Override
-	public void cleanup() {
-		super.cleanup();
-		
-		this.app.getInputManager().clearMappings();
-		this.app.getRootNode().detachChild(this.localRootNode);
-	}
-	
+    }
+
+    @Override
+    public void cleanup() {
+        super.cleanup();
+
+        this.app.getInputManager().clearMappings();
+        this.app.getRootNode().detachChild(this.localRootNode);
+    }
 
     /**
      * Nifty Stuff
      */
-    
-	@Override
-	public void bind(Nifty arg0, Screen arg1) {
-	}
+    @Override
+    public void bind(Nifty arg0, Screen arg1) {
+    }
 
-	@Override
-	public void onEndScreen() {
-	}
+    @Override
+    public void onEndScreen() {
+    }
 
-	@Override
-	public void onStartScreen() {
-	}
-	
-	public void pressLogOut() {
-		this.app.getStateManager().detach(this.app.gameRunState);
-		this.app.getStateManager().attach(this.app.mainMenuState);
-	}
-        
-        /*
-         * Camera
-         */
-        
+    @Override
+    public void onStartScreen() {
+    }
+
+    public void pressLogOut() {
+        this.app.getStateManager().detach(this.app.gameRunState);
+        this.app.getStateManager().attach(this.app.mainMenuState);
+    }
+    /*
+     * Camera
+     */
     Vector3f previousCamPos;
     Vector3f currentCamPos = new Vector3f();
     float camPosChangeLerpValue = 0.03f;
+
     public void updateCamera() {
-        if(this.playerShip != null && !universeDebug) {
-           previousCamPos = currentCamPos;
-            currentCamPos = new Vector3f();
+        if (this.playerShip != null) {
+            if (useAdjustingCamera) {
+                previousCamPos = currentCamPos;
+                currentCamPos = new Vector3f();
 
-            float min = 0.1f; 
-            float max = 100f;
-            float speedFactor = this.playerShip.velocity.lengthSquared() * 0.1f;
+                float min = 0.1f;
+                float max = 100f;
+                float speedFactor = this.playerShip.velocity.lengthSquared() * 0.1f;
 
-            speedFactor = Math.max(min, speedFactor);
-            speedFactor = Math.min(speedFactor, max);
-            float t = inverseLerp(0f, max+min, speedFactor);
-            float offsetFactor = 1f - t;
+                speedFactor = Math.max(min, speedFactor);
+                speedFactor = Math.min(speedFactor, max);
+                float t = inverseLerp(0f, max + min, speedFactor);
+                float offsetFactor = 1f - t;
 
-           currentCamPos.x = this.playerShip.shipRoot.getLocalTranslation().x + camXOffset * offsetFactor;
-           currentCamPos.z = this.playerShip.shipRoot.getLocalTranslation().z + camZOffset * offsetFactor;
-           float newY = 
-                    lerp(
+                currentCamPos.x = this.playerShip.shipRoot.getLocalTranslation().x + camXOffset * offsetFactor;
+                currentCamPos.z = this.playerShip.shipRoot.getLocalTranslation().z + camZOffset * offsetFactor;
+
+                float newY =
+                        lerp(
                         previousCamPos.y,
                         this.cameraHeight + speedFactor,
-                        camPosChangeLerpValue
-                    );
+                        camPosChangeLerpValue);
 
-            if (!up || newY > previousCamPos.y)
-             currentCamPos.y = newY;
-         else    
-             currentCamPos.y = previousCamPos.y;
-           
-            camNode.setLocalTranslation(currentCamPos);
-            camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y); 
-         }
+                if (!up || newY > previousCamPos.y) {
+                    currentCamPos.y = newY;
+                } else {
+                    currentCamPos.y = previousCamPos.y;
+                }
+                camNode.setLocalTranslation(currentCamPos);
+                camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+            } else {
+                currentCamPos.x = this.playerShip.shipRoot.getLocalTranslation().x;
+                currentCamPos.z = this.playerShip.shipRoot.getLocalTranslation().z + 0.1f;
+                currentCamPos.y = this.cameraHeight * 5f;
+
+                camNode.setLocalTranslation(currentCamPos);
+                camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+            }
+        }
     }
-    
+
     float lerp(float v0, float v1, float t) {
-        return (1-t)*v0 + t*v1;
+        return (1 - t) * v0 + t * v1;
     }
-   
+
     float inverseLerp(float a, float b, float x) {
         return (x - a) / (b - a);
     }

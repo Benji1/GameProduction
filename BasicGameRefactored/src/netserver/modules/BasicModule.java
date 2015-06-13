@@ -156,6 +156,10 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
     public void onRemove() {
         ship.removeModuleAt(ship.getActualPositionInGrid(this));
+        
+        //if(!ship.hasStillModules()) {
+            //ship.delete();
+        //}
     }
 
     public void otherModulePlaced(BasicModule module, Point p) {
@@ -217,7 +221,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
      public void destroyWithoutSeperation() {
         onRemove();
-        spatial.removeFromParent();
+        this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
