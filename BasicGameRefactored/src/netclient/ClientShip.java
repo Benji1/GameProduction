@@ -33,6 +33,10 @@ public class ClientShip {
 		
 		this.shipRoot = new Node("ShipNode " + name);
 		this.modules = ship;
+                
+                // TODO: get real velocity, atm needed for camera movement
+                this.velocity = new Vector3f(0, 0, 0);
+
 		// TODO: build ship
                 
                 for (int i=0; i<ship.length; i++) {
