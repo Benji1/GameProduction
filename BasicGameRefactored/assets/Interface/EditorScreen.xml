@@ -53,7 +53,7 @@
                     </control>
                 </panel>
             </panel>
-            <panel id="ship-panel" style="custom-panel" height="100%" width="900px" align="right" valign="center" childLayout="center" padding="38,7,29,7">
+            <panel id="ship-panel" style="custom-panel" height="100%" width="1090px" align="right" valign="center" childLayout="center" padding="38,7,29,7">
                 <effect>
                     <onStartScreen name="move" mode="in" direction="right" length="200" startDelay="0" inherit="true"/>
                     <onEndScreen name="move" mode="out" direction="right" length="200" startDelay="0" inherit="true"/>

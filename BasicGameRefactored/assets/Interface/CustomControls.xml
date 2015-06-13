@@ -18,15 +18,15 @@
                 </control>
             </panel>            
             <panel backgroundImage="Interface/Images/PartFrames.png" imageMode="sprite:100,100,1"/>
-            <text text="$label" font="Interface/Fonts/Agency-FB-Bold-24.fnt" align="right" valign="bottom" marginRight="8" marginBottom="2"/>
+            <text id="$counterId" text="$label" font="Interface/Fonts/Agency-FB-Bold-24.fnt" align="right" valign="bottom" marginRight="8" marginBottom="2"/>
         </panel>
     </controlDefinition>
     <controlDefinition name="empty-slot">
-        <control name="custom-droppable" childLayout="center" id="$droppableId">
+        <control name="custom-droppable" childLayout="center" id="$droppableId" width="100" height="100">
             <panel backgroundImage="Interface/Images/PartFrames.png" imageMode="sprite:100,100,0" width="100" height="100"/>
         </control>
     </controlDefinition>
     <controlDefinition name="empty-panel">
-        <panel backgroundImage="Interface/Images/PartFrames.png" imageMode="sprite:100,100,0" width="100" height="100"/>
+        <panel backgroundImage="Interface/Images/PartFrames.png" imageMode="sprite:100,100,0" width="100%" height="100%"/>
     </controlDefinition>
 </nifty-controls>

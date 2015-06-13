@@ -14,12 +14,15 @@ import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseSecondaryClickedEvent;
 import de.lessvoid.nifty.elements.events.NiftyMouseWheelEvent;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import de.lessvoid.nifty.tools.SizeValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import netclient.gui.dragAndDrop.Draggable;
@@ -98,6 +101,11 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     private HashMap<Point , OrientedModule> shipTiles = new HashMap<Point, OrientedModule>();
     private int[][] directions = new int[][] {{1,0},{0,1},{-1,0},{0,-1},{0,0}};
     //private int[][] directions = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{0,0}};
+    
+     private static final float DEFAULT_SLOT_SIZE = 100f;
+    private static final float MAX_SCALE = 3f;
+    private static final float MIN_SCALE = 0.5f;
+    private float scale = 1f;
     
     public void bind(Nifty nifty, Screen screen) {
         //System.out.println("bind " + this.getClass().getSimpleName());
@@ -230,6 +238,10 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 newDraggable.setParent(parent);
 
                 // TODO: counter-- of that module type in gui
+                TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(parentNr)).toString() + "-counter").getRenderer(TextRenderer.class);
+                int count = Integer.parseInt(textRenderer.getOriginalText().substring(1));
+                if (count > 0) --count;
+                textRenderer.setText("x" + (count < 10 ? "0" : "") + count);
             } else {
                 String id2 = dragControl.getOriginalParent().getId();
                 //System.out.println(id2);
@@ -263,12 +275,21 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 }
             }
         }
+        SizeValue sizeValue = new SizeValue(Integer.toString((int) (DEFAULT_SLOT_SIZE * scale)));
+        Element dragged = event.getDraggable().getElement();
+        dragged.setConstraintWidth(sizeValue);
+        dragged.setConstraintHeight(sizeValue);
+        dragged.getElements().get(0).setConstraintWidth(new SizeValue("100%"));
+        dragged.getElements().get(0).setConstraintHeight(new SizeValue("100%"));
     }
     
     @NiftyEventSubscriber(pattern="part-panel-.*") 
     public void onDragCanceled(String id, DraggableDragCanceledEvent event) {  
         event.getDraggable().getElement().markForRemoval();
         // TODO: ++ to counter of that module type in gui
+        /*TextRenderer textRenderer = screen.findElementByName(ModuleType.getType(Integer.parseInt(id.substring(11, id.lastIndexOf("-")))).toString() + "-counter").getRenderer(TextRenderer.class);
+        int count = Integer.parseInt(textRenderer.getOriginalText().substring(1)) + 1;
+        textRenderer.setText("x" + (count < 10 ? "0" : "") + count);*/
     }
     
     @NiftyEventSubscriber(pattern="slot-.*")
@@ -296,8 +317,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     childLayout(ElementBuilder.ChildLayoutType.Center);
                     panel(new PanelBuilder() {{
                         backgroundImage("Interface/Images/Parts.png");
-                        width("80%");
-                        height("80%");
+                        width("100%");
+                        height("100%");
                         imageMode("sprite:100,100," + spriteNumber);
                     }});
                 }}.build(nifty, screen, event.getElement().getParent());
@@ -309,9 +330,26 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     public void onMouseWheelChanged(String id, NiftyMouseWheelEvent event) {
         if (event.getMouseWheel() > 0) {
             // zoomed up
+             scale += 0.1f;
         } else if (event.getMouseWheel() < 0) {
             // zoomed down
-        }        
+            scale -= 0.1f;
+        }
+        scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+        List<Element> elements = event.getElement().getElements().get(0).getElements();
+        int size = (int) (scale * DEFAULT_SLOT_SIZE);
+        SizeValue sizeValue = new SizeValue(Integer.toString(size));
+        for (Element e : elements) {
+            e.setConstraintWidth(sizeValue);
+            e.setConstraintHeight(sizeValue);
+            int x = Integer.parseInt(e.getId().substring(e.getId().indexOf("X") + 1, e.getId().indexOf("Y")));
+            int y = Integer.parseInt(e.getId().substring(e.getId().indexOf("Y") + 1));
+            e.setConstraintX(new SizeValue(Integer.toString(x * size)));
+            e.setConstraintY(new SizeValue(Integer.toString(y * size)));
+        }
+        event.getElement().getElements().get(0).setConstraintWidth(sizeValue);
+        event.getElement().getElements().get(0).setConstraintHeight(sizeValue);
+        event.getElement().layoutElements();
     }
     
     private void clearPartsPanel() {
@@ -396,6 +434,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 partPanel.parameter("x", x+"px");
                 partPanel.parameter("y", y+"px");
                 partPanel.parameter("sprite", "sprite:100,100,"+tileImgIds[i]);
+                partPanel.parameter("counterId", ModuleType.getType(parentIds[i]).toString() + "-counter");
                 partPanel.build(nifty, screen, partsPanel);
             } else {
                 emptyPanel.parameter("x", x+"px");
@@ -410,7 +449,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     }
     
     private void buildEmptySlot(final int x, final int y) {
-        final int gridItemSize = 100;
+        final int gridItemSize = (int) (DEFAULT_SLOT_SIZE * scale);
         Element slotsPanel = screen.findElementByName("slots-container");
         ControlBuilder slotPanel = new ControlBuilder("empty-slot") {{
             parameter("droppableId", "slotX"+x+"Y"+y);
@@ -438,8 +477,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             childLayout(ElementBuilder.ChildLayoutType.Center);
             panel(new PanelBuilder() {{
                 backgroundImage("Interface/Images/Parts.png");
-                width("80%");
-                height("80%");
+                width("100%");
+                height("100%");
                 imageMode("sprite:100,100,"+(Integer.parseInt(parentNr)*4));
             }});
         }}.build(nifty, screen, targetParent);
@@ -539,7 +578,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                         break;
                     case ARMOR_DIAGONAL:
                         //System.out.println("setting armor_dia at " + (x+xOffset)+"/"+(y+yOffset));
-                        modules[x+xOffset][y+yOffset] = new Shield(shield);
+                        modules[x+xOffset][y+yOffset] = new Armor();
                         break;
                     default:
                         break;
