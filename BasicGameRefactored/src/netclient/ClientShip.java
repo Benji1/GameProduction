@@ -5,58 +5,77 @@ import com.jme3.scene.Node;
 import netclient.gui.OrientedModule;
 
 public class ClientShip {
-	
-	/**********************************
-     ********** CLASS FIELDS  *********
-     **********************************/
-	
-	// client stuff
-	public String name;
-	public int id;
-	
-	// ship stuff
-	public Node shipRoot;
-	public Vector3f velocity;
-        public OrientedModule[][] modules;
-        public GraphicalModule[][] gmodules;
-	public WJSFClient app;
-	
-	/**********************************
-     ********** CONSTRUCTORS  *********
-     **********************************/
-	
-	public ClientShip(String name, int id, OrientedModule[][] ship, WJSFClient app) {
-                this.app = app;
-		this.name = name;
-		this.id = id;                
-		
-		this.shipRoot = new Node("ShipNode " + name);
-		this.modules = ship;
-                this.gmodules = new GraphicalModule[ship.length][ship[0].length];
-                
-                // TODO: get real velocity, atm needed for camera movement
-                this.velocity = new Vector3f(0, 0, 0);
 
-		// TODO: build ship
-                
-                for (int i=0; i<ship.length; i++) {
-                    for (int j=0; j<ship[0].length; j++) {
-                        if(ship[i][j] != null) {
-                            gmodules[i][j] = createOrientedModuleGraphics(ship[i][j], i - ship.length / 2, j - ship[0].length / 2);
-                        }
-                    }
-                }               
-	}
+    /**
+     * ********************************
+     ********** CLASS FIELDS ********* ********************************
+     */
+    // client stuff
+    public String name;
+    public int id;
+    // ship stuff
+    public Node shipRoot;
+    public Vector3f velocity;
+    public OrientedModule[][] modules;
+    public GraphicalModule[][] gmodules;
+    public WJSFClient app;
+
+    /**
+     * ********************************
+     ********** CONSTRUCTORS ********* ********************************
+     */
+    public ClientShip(String name, int id, OrientedModule[][] ship, WJSFClient app) {
+        this.app = app;
+        this.name = name;
+        this.id = id;
+
+        this.shipRoot = new Node("ShipNode " + name);
+        this.modules = ship;
+        this.gmodules = new GraphicalModule[ship.length][ship[0].length];
+
+        // TODO: get real velocity, atm needed for camera movement
+        this.velocity = new Vector3f(0, 0, 0);
+
+        // TODO: build ship
+        refreshGraphicsOfShip();
+    }
+
+    public OrientedModule[][] getModules() {
+        return modules;
+    }
+
+    public void setModules(OrientedModule[][] modules) {
+        this.modules = modules;
+    }
+
+    public void refreshGraphicsOfShip() {
+        removeOldGraphics();
+        createNewGraphics();
+    }
+    
+    private void createNewGraphics() {
+        gmodules = new GraphicalModule[modules.length][modules[0].length];
         
-        public OrientedModule[][] getModules() {
-            return modules;
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    gmodules[i][j] = createOrientedModuleGraphics(modules[i][j], i - modules.length / 2, j - modules[0].length / 2);
+                }
+            }
         }
-        
-        public void setModules(OrientedModule[][] modules) {
-            this.modules = modules;
+    }
+
+    private void removeOldGraphics() {
+        for (int i = 0; i < gmodules.length; i++) {
+            for (int j = 0; j < gmodules[0].length; j++) {
+                if (gmodules[i][j] != null) {
+                    gmodules[i][j].removeFromParent();
+                }
+            }
         }
-        
-        public GraphicalModule createOrientedModuleGraphics(OrientedModule om, float x, float y) {
-            return new GraphicalModule(om, shipRoot, x, y, app);
-        }
+    }
+
+    private GraphicalModule createOrientedModuleGraphics(OrientedModule om, float x, float y) {
+        return new GraphicalModule(om, shipRoot, x, y, app);
+    }
 }

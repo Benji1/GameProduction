@@ -123,10 +123,12 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                         public Object call() throws Exception {
                             if (app.gameRunState.playerShip.id == msg.getShipId()) {
                                 app.gameRunState.playerShip.setModules(msg.getModules());
+                                app.gameRunState.playerShip.refreshGraphicsOfShip();
                             } else {
                                 for (ClientShip s : app.gameRunState.clientShips) {
                                     if (s.id == msg.getShipId()) {
                                         s.setModules(msg.getModules());
+                                        s.refreshGraphicsOfShip();
                                     }
                                 }
                             }
