@@ -58,7 +58,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 			
 			this.app.enqueue(new Callable() {
 				public Object call() throws Exception {
-					ClientShip ship = new ClientShip(msg.getName(), msg.getId(), msg.getShip());
+					ClientShip ship = new ClientShip(msg.getName(), msg.getId(), msg.getShip(), app);
 					
 					if(app.gameRunState.playerShip == null && app.client.getId() == ship.id) {	// new ship is this player
 						app.gameRunState.playerShip = ship;
