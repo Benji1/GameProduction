@@ -53,13 +53,13 @@ public class Thruster extends InteractiveModule {
     @Override
     public void activate() {
         super.activate();
-        fire.emitAllParticles();
+        fire.setParticlesPerSec(30f);
     }
 
     @Override
     public void deactivate() {
         super.deactivate();
-        fire.killAllParticles();
+        fire.setParticlesPerSec(0f);
     }
 
 
@@ -79,7 +79,7 @@ public class Thruster extends InteractiveModule {
         spatial.setMaterial(material);
         materialActive.setTexture("DiffuseMap", t);
         
-        fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
+        fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 100);
         Material mat_red = new Material(a, "Common/MatDefs/Misc/Particle.j3md");
         mat_red.setTexture("Texture", a.loadTexture("textures/flame.jpg"));
         fire.setMaterial(mat_red);        
@@ -93,6 +93,8 @@ public class Thruster extends InteractiveModule {
         fire.setLowLife(0.5f);
         fire.setHighLife(3f);
         fire.getParticleInfluencer().setVelocityVariation(0.3f);
+        fire.setParticlesPerSec(0f);
+        
         ship.getApp().getRootNode().attachChild(fire);
     }
 }
