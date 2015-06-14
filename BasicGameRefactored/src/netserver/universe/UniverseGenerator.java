@@ -13,7 +13,7 @@ public class UniverseGenerator {
 		sys.setLocalTranslation(-100, -5, 0);
 		u.systems.add(sys);
                 u.addStation(30, 20);
-                u.addStation(20, 50);
+                u.addStation(20, -40);
 	}
 	
 	public static void generateUniverse(WJSFServer app, Universe u){

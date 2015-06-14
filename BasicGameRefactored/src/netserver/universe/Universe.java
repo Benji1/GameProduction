@@ -127,7 +127,7 @@ public class Universe {
 				"Common/MatDefs/Light/Lighting.j3md");
 		sphereMat.setBoolean("UseMaterialColors", true);
 		
-		ColorRGBA color = ColorRGBA.randomColor();
+		ColorRGBA color = ColorRGBA.DarkGray;
 		sphereMat.setColor("Diffuse", color);
 		sphereMat.setColor("Ambient", color);
 		station.setMaterial(sphereMat);	
