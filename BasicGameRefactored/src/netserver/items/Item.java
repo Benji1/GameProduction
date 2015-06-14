@@ -17,16 +17,12 @@ import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.IUpdateable;
 import netserver.shipdesigns.TestShipDesigns;
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.contacts.Contact;
 
 /**
  *
@@ -108,11 +104,10 @@ public class Item extends JBox2dNode implements IUpdateable {
    
    public void handleShipCollision(BasicModule m) {
         if(!collected) {
-            // TODO ONLY COLLECT IF ENOUGH SPACE IN STORAGE
-           
-            collected = true;
-            m.getShip().collectItem(type);
-            markForDeletion();
+            //if(m.getShip().collectItem(type)) {
+                collected = true;
+                markForDeletion();
+            //}
         }
     }
     

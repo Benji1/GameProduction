@@ -60,10 +60,10 @@ public class Storage extends BasicModule {
     
     @Override
     public void onRemove() {
-        super.onRemove();
         if (ship.getPlayer() != null) {
             ship.getPlayer().getInventory().removeStorage(this);
         }
+        super.onRemove();
     }
     
     public ArrayList<ModuleType> getStoredItems() {
