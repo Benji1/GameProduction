@@ -21,7 +21,6 @@ import org.jbox2d.common.Vec2;
 public class Thruster extends InteractiveModule {
 
     protected float forceMagnitude = cr.getFromMap(cr.getBaseMap("Thruster"), "ForceMagnitude", float.class);
-    protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDamping", float.class);
 
     public Thruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
         super(hotkeys);
@@ -43,9 +42,6 @@ public class Thruster extends InteractiveModule {
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (!active) {
-            this.body.setLinearDamping(linearDampingFactor);
-        }
     }
     
     @Override

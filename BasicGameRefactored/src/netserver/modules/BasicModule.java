@@ -48,6 +48,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected int maxHealth = cr.getFromMap(cr.getBaseMap("Basic"), "MaxHealth", int.class);
     protected int health = maxHealth;
     protected float dropRateInPercent = cr.getFromMap(cr.getBaseMap("Basic"), "DropRateInPercent", float.class);
+    protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDamping", float.class);
     protected BasicShip ship;
     protected String moduleName;
     protected ColorRGBA color = ColorRGBA.Gray;
@@ -186,6 +187,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
+        body.setLinearDamping(linearDampingFactor);
         PhysicsWorld.world.setContactListener(this);
     }
     
