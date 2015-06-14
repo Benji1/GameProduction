@@ -53,7 +53,6 @@ public class Item extends JBox2dNode implements IUpdateable {
 
         for(Spatial s: spatials) {
             app.getRootNode().attachChild(s);
-            //s.setLocalTranslation(new Vector3f(spawnPoint.x, 0, spawnPoint.y));
             s.setLocalScale(0.5f);
         }
         this.updateBoxPosition();
@@ -76,8 +75,6 @@ public class Item extends JBox2dNode implements IUpdateable {
         bDef.position.set(x, y);
         bDef.angle = (float) Math.atan2(0, 0);
         bDef.type = BodyType.DYNAMIC;
-        bDef.bullet = true;
-        bDef.allowSleep = false;
 
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
@@ -111,6 +108,8 @@ public class Item extends JBox2dNode implements IUpdateable {
    
    public void handleShipCollision(BasicModule m) {
         if(!collected) {
+            // TODO ONLY COLLECT IF ENOUGH SPACE IN STORAGE
+           
             collected = true;
             m.getShip().collectItem(type);
             markForDeletion();
