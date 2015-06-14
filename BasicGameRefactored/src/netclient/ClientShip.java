@@ -24,6 +24,7 @@ public class ClientShip {
     public GraphicalModule[][] gmodules;
     public ArrayList<ModuleType> itemsInBase;
     public WJSFClient app;
+    private int activatedThrusterCount;
 
     /**
      * ********************************
@@ -38,6 +39,7 @@ public class ClientShip {
         this.modules = ship;
         this.itemsInBase = new ArrayList<ModuleType>();
         setItemsInBase(modulesInBase);
+        activatedThrusterCount = 0;
         
         this.gmodules = new GraphicalModule[ship.length][ship[0].length];
         // TODO: get real velocity, atm needed for camera movement
@@ -133,5 +135,15 @@ public class ClientShip {
     }
     public void deactivateModule(int x, int y) {
         gmodules[x][y].deactivate();
+    }
+    
+    public void increaseActivatedThrusterCount() {
+        this.activatedThrusterCount++;
+    }
+    public void decreaseActivatedThrusterCount() {
+        this.activatedThrusterCount--;
+    }
+    public boolean hasActivatedThruster() {
+        return activatedThrusterCount > 0;
     }
 }
