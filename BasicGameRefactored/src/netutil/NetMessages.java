@@ -3,7 +3,6 @@ package netutil;
 
 
 
-import netserver.NetInput.InputTypes;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
@@ -142,17 +141,17 @@ public class NetMessages {
     
     @Serializable
     public static class KeyPressedMsg extends AbstractMessage {
-    	private InputTypes input;
+    	private Integer keyCode;
     	private boolean keyPressed;
     	
     	public KeyPressedMsg() {}
     	
-    	public KeyPressedMsg(InputTypes input, boolean keyPressed) {
-    		this.input = input;
+    	public KeyPressedMsg(Integer keyCode, boolean keyPressed) {
+    		this.keyCode = keyCode;
     		this.keyPressed = keyPressed;
     	}
     	
-    	public InputTypes getInput() {return this.input;}
+    	public Integer getKeyCode() {return this.keyCode;}
     	public boolean getKeyPressed() {return this.keyPressed;}
     }
     

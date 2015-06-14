@@ -37,6 +37,9 @@ public class EditorManager extends Service {
     public ClientShip getShip() {
         return ship;
     }
+    public WJSFClient getClient() {
+        return client;
+    }
     
     public OrientedModule[][] getShipModules() {
         return ship.getModules();

@@ -10,6 +10,7 @@ import de.lessvoid.nifty.builder.ElementBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
+import java.util.ArrayList;
 import netclient.gui.dragAndDrop.builder.DraggableBuilder;
 import netserver.modules.FacingDirection;
 
@@ -17,17 +18,21 @@ import netserver.modules.FacingDirection;
 public class OrientedModule {
     public ModuleType moduleType;
     public FacingDirection facingDirection;
+    public ArrayList<Integer> keyCodes;
 
     public OrientedModule() {
         this(ModuleType.ARMOR, FacingDirection.FORWARD);
-    }
-    
+    }    
     public OrientedModule(ModuleType moduleType) {
         this(moduleType, FacingDirection.FORWARD);
     }
     public OrientedModule(ModuleType moduleType, FacingDirection orientation) {
+        this(moduleType, orientation, new ArrayList<Integer>());
+    }
+    public OrientedModule(ModuleType moduleType, FacingDirection orientation, ArrayList<Integer> keyCodes) {
         this.moduleType = moduleType;
         this.facingDirection = orientation;
+        this.keyCodes = keyCodes;
     }
 
     public void rotateRight() {

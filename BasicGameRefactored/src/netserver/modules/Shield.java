@@ -29,8 +29,8 @@ public class Shield extends InteractiveModule {
     protected float delta;
     protected ShieldCollider sc;
 
-    public Shield(ArrayList<String> hotkeys) {
-        super(hotkeys);
+    public Shield(ArrayList<Integer> keyCodes) {
+        super(keyCodes);
         moduleName = "Shield";
         energyConsumptionPerSecond = cr.getFromMap(cr.getBaseMap("Shield"), "EnergyConsumptionPerSecond", float.class);
         color = ColorRGBA.Blue;
@@ -112,5 +112,20 @@ public class Shield extends InteractiveModule {
         Texture t2 = a.loadTexture("3dmodels/armor_ao.png");
         material2.setTexture("DiffuseMap", t2);
         spatial2.setMaterial(material2);
+    }
+    
+    @Override
+    public void handleKeyPressed(Integer keyCode) {
+        if (keyCodes.contains(keyCode)) {
+            if (isActive()) {
+                deactivate();
+            } else {
+                activate();
+            }
+        }
+    }
+    
+    @Override
+    public void handleKeyReleased(Integer keyCode) {        
     }
 }

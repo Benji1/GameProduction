@@ -11,7 +11,6 @@ import netclient.gui.GUI;
 import netclient.universe.Background;
 import netserver.BasicShip;
 import netserver.WJSFServer;
-import netserver.NetInput.InputTypes;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.UpdateableManager;
@@ -27,9 +26,17 @@ import com.jme3.app.FlyCamAppState;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.font.BitmapText;
+import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.RawInputListener;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.event.JoyAxisEvent;
+import com.jme3.input.event.JoyButtonEvent;
+import com.jme3.input.event.KeyInputEvent;
+import com.jme3.input.event.MouseButtonEvent;
+import com.jme3.input.event.MouseMotionEvent;
+import com.jme3.input.event.TouchEvent;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -46,7 +53,7 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
-public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController {
+public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController, RawInputListener {
 
     private WJSFClient app;
     public Node localRootNode;
@@ -76,6 +83,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.app = app;
         this.msgManager = new ClientNetMsgListener(app);
         this.localRootNode = new Node("GameRunningNode");
+        
+        this.app.getInputManager().addRawInputListener(this);
     }
 
     @Override
@@ -107,17 +116,11 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     }
 
     public void initKeys() {
-        this.app.getInputManager().addMapping(InputTypes.MoveUp.toString(), new KeyTrigger(KeyInput.KEY_UP), new KeyTrigger(KeyInput.KEY_W));
-        this.app.getInputManager().addMapping(InputTypes.MoveLeft.toString(), new KeyTrigger(KeyInput.KEY_LEFT), new KeyTrigger(KeyInput.KEY_A));
-        this.app.getInputManager().addMapping(InputTypes.MoveRight.toString(), new KeyTrigger(KeyInput.KEY_RIGHT), new KeyTrigger(KeyInput.KEY_D));
-        this.app.getInputManager().addMapping(InputTypes.MoveDown.toString(), new KeyTrigger(KeyInput.KEY_DOWN), new KeyTrigger(KeyInput.KEY_S));
-        this.app.getInputManager().addMapping(InputTypes.Weapon.toString(), new KeyTrigger(KeyInput.KEY_SPACE));
-        this.app.getInputManager().addMapping(InputTypes.Shield.toString(), new KeyTrigger(KeyInput.KEY_F));
         this.app.getInputManager().addMapping("ToggleUniverseDebug", new KeyTrigger(KeyInput.KEY_U));
         this.app.getInputManager().addMapping("ToggleEditor", new KeyTrigger(KeyInput.KEY_E));
         this.app.getInputManager().addMapping("ExitOverlay", new KeyTrigger(KeyInput.KEY_ESCAPE));
 
-        this.app.getInputManager().addListener(this, InputTypes.MoveUp.toString(), InputTypes.MoveLeft.toString(), InputTypes.MoveRight.toString(), InputTypes.MoveDown.toString(), InputTypes.Weapon.toString(), InputTypes.Shield.toString(), "ToggleUniverseDebug", "ToggleEditor", "ExitOverlay");
+        this.app.getInputManager().addListener(this, "ToggleUniverseDebug", "ToggleEditor", "ExitOverlay");
     }
 
     private void initHUD() {
@@ -143,28 +146,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
         //
-        // NETWORKING INPUT
-        //
-
-        try {
-            KeyPressedMsg msg = new KeyPressedMsg(InputTypes.valueOf(name), keyPressed);
-            msg.setReliable(true);
-            this.app.client.send(msg);
-        } catch (IllegalArgumentException ex) {
-            // name is no network input
-            //Logger.getLogger(GameRunningState.class.getName()).log(Level.WARNING, ex.toString());
-        }
-
-        //
         // OFFLINE INPUT
         //
-
-        if (name.equals(InputTypes.MoveUp.toString())) {
-            up = true;
-        } else {
-            up = false;
-        }
-
 
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
@@ -294,5 +277,38 @@ public class GameRunningState extends AbstractAppState implements ActionListener
 
     float inverseLerp(float a, float b, float x) {
         return (x - a) / (b - a);
+    }
+    
+    public void beginInput() {
+    }
+
+    public void endInput() {
+    }
+
+    public void onJoyAxisEvent(JoyAxisEvent evt) {
+    }
+
+    public void onJoyButtonEvent(JoyButtonEvent evt) {
+    }
+
+    public void onMouseMotionEvent(MouseMotionEvent evt) {
+    }
+
+    public void onMouseButtonEvent(MouseButtonEvent evt) {
+    }
+
+    public void onKeyEvent(KeyInputEvent evt) {
+        //
+        // NETWORKING INPUT
+        //
+        
+        if (!evt.isRepeating()) {
+            KeyPressedMsg msg = new KeyPressedMsg(evt.getKeyCode(), evt.isPressed());
+            msg.setReliable(true);
+            this.app.client.send(msg);
+        }
+    }
+
+    public void onTouchEvent(TouchEvent evt) {
     }
 }

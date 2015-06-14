@@ -31,7 +31,7 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 					// find player and update input status
 					for(NetPlayer pl : app.getConManager().players) {
 						if(pl.con.getId() == client.getId()) {
-							pl.input.updateInputStatus(msg.getInput(), msg.getKeyPressed());
+							pl.handleKeyEvent(msg.getKeyCode(), msg.getKeyPressed());
 							return null;
 						}
 					}
@@ -48,7 +48,7 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
                                 if (pl.con.getId() == client.getId()) {
                                     // update ship on server
                                     pl.ship.onShipChanged(msg.getModules());
-                                    pl.ship.updateBaseInventory(msg.getModulesInBase());
+                                    pl.updateBaseInventory(msg.getModulesInBase());
                                 }                                
                             }
                             // send update to all clients

@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class WeakThruster extends Thruster {
 
-    public WeakThruster(ArrayList<String> hotkeys, FacingDirection orientationDirection) {
-        super(hotkeys, orientationDirection);
+    public WeakThruster(ArrayList<Integer> keyCodes, FacingDirection orientationDirection) {
+        super(keyCodes, orientationDirection);
         moduleName = "WeakThruster";
     }
 }

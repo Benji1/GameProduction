@@ -33,8 +33,6 @@ import netserver.modules.Thruster;
  */
 public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
-    private static int idCounter = 0;
-    private int shipId;
     public int shipHeight = 22;
     public int shipWidth = 22;
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
@@ -42,15 +40,23 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public Cockpit cockpit;
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
-    private Inventory inventory;
+    private NetPlayer player;
 
     public BasicShip(WJSFServer app, String name) {
+        this(app, name, null);
+    }
+    public BasicShip(WJSFServer app, String name, NetPlayer player) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
         app.getRootNode().attachChild(this);
         //app.gameRunState.ships.add(this);
-
-        this.shipId = idCounter++;
-        this.inventory = new Inventory(this);
+        this.player = player;
+    }
+    
+    public void setPlayer(NetPlayer player) {
+        this.player = player;
+    }
+    public NetPlayer getPlayer() {
+        return player;
     }
 
     @Override
@@ -200,11 +206,11 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         return interactiveModules;
     }
 
-    public ArrayList<InteractiveModule> getInteractiveModulesWithHotkey(String hotkey) {
+    public ArrayList<InteractiveModule> getInteractiveModulesWithKeyCode(Integer keyCode) {
         ArrayList<InteractiveModule> ims = new ArrayList<InteractiveModule>();
         for (InteractiveModule im : getInteractiveModules()) {
-            for (String s : im.getHotkeys()) {
-                if (s.equals(hotkey)) {
+            for (Integer i : im.getKeyCodes()) {
+                if (i.equals(keyCode)) {
                     ims.add(im);
                 }
             }
@@ -212,15 +218,26 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         return ims;
     }
 
-    public void activateModules(String hotkey) {
-        for (InteractiveModule im : getInteractiveModulesWithHotkey(hotkey)) {
+    public void activateModules(Integer keyCode) {
+        for (InteractiveModule im : getInteractiveModulesWithKeyCode(keyCode)) {
             im.activate();
         }
     }
 
-    public void deactivateModules(String hotkey) {
-        for (InteractiveModule im : getInteractiveModulesWithHotkey(hotkey)) {
+    public void deactivateModules(Integer keyCode) {
+        for (InteractiveModule im : getInteractiveModulesWithKeyCode(keyCode)) {
             im.deactivate();
+        }
+    }
+    
+    public void handleKeyPressed(Integer keyCode) {
+        for (InteractiveModule im : interactiveModules) {
+            im.handleKeyPressed(keyCode);
+        }
+    }
+    public void handleKeyReleased(Integer keyCode) {
+        for (InteractiveModule im : interactiveModules) {
+            im.handleKeyReleased(keyCode);
         }
     }
 
@@ -249,7 +266,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         if (shipNumber > 2) { // more than one ship (cause it starts with one and gets a ++ at the end of the loop)
             for (int k = 3; k <= shipNumber; k++) {
                 // XXX
-                BasicShip newShip = new BasicShip(app, name + "" + idCounter);
+                BasicShip newShip = new BasicShip(app, name);
                 newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
@@ -322,7 +339,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
                             newModules[i][j] = new Cockpit();
                             break;
                         case THRUSTER:
-                            newModules[i][j] = new Thruster(null, modulesNewShip[i][j].facingDirection);
+                            newModules[i][j] = new Thruster(modulesNewShip[i][j].keyCodes, modulesNewShip[i][j].facingDirection);
                             break;
                         case ENERGY_GENERATOR:
                             newModules[i][j] = new EnergyGenerator();
@@ -331,13 +348,13 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
                             newModules[i][j] = new Armor();
                             break;
                         case WEAPON:
-                            newModules[i][j] = new LaserGun(null, modulesNewShip[i][j].facingDirection);
+                            newModules[i][j] = new LaserGun(modulesNewShip[i][j].keyCodes, modulesNewShip[i][j].facingDirection);
                             break;
                         case ARMOR_DIAGONAL:
                             newModules[i][j] = new Armor();
                             break;
                         case SHIELD:
-                            newModules[i][j] = new Shield(null);
+                            newModules[i][j] = new Shield(modulesNewShip[i][j].keyCodes);
                             break;
                         case STORAGE:
                             newModules[i][j] = new Storage();
@@ -368,18 +385,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         }
     }
     
-    public void updateBaseInventory(ModuleType[] itemsInBase) {
-        inventory.setItemsInBase(itemsInBase);
-    }
-
-    public int getShipId() {
-        return shipId;
-    }
-    
-    public Inventory getInventory() {
-        return inventory;
-    }
-    
     public boolean hasStillModules() {
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
@@ -401,7 +406,11 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
        for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null) {
-                    oModules[i][j] = new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation());
+                    if (modules[i][j] instanceof InteractiveModule) {
+                        oModules[i][j] = new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation(), ((InteractiveModule)modules[i][j]).getKeyCodes());
+                    } else {
+                        oModules[i][j] = new OrientedModule(modules[i][j].getType(), modules[i][j].getOrientation());
+                    }                    
                 }
             }
         }

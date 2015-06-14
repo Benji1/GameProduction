@@ -102,7 +102,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 					if(app.gameRunState.playerShip.id == msg.getId()) {
 						app.gameRunState.playerShip.shipRoot.setLocalTranslation(msg.getPos());
                                                 app.gameRunState.playerShip.shipRoot.setLocalRotation(msg.getDir());
-						Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, msg.getPos().toString());
+						//Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, msg.getPos().toString());
 					} else {
 						for(ClientShip s : app.gameRunState.clientShips) {
 							if(s.id == msg.getId()) {
@@ -141,7 +141,8 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 	public void update(float tpf) {
 		// handle string msgs
 		String msg = this.msgQueue.poll();
-		if(msg != null)
-			Logger.getLogger(ClientNetMsgListener.class.getName()).log(Level.INFO, msg);
+		if(msg != null) {
+			//Logger.getLogger(ClientNetMsgListener.class.getName()).log(Level.INFO, msg);
+                }
 	}
 }
