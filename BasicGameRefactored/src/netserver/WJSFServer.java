@@ -25,6 +25,7 @@ import com.jme3.scene.control.CameraControl;
 import com.jme3.system.JmeContext;
 import netserver.items.EncapsulatingItem;
 import netserver.items.Item;
+import netserver.physics.GameContactListener;
 import netserver.weapons.Projectile;
 
 
@@ -49,6 +50,7 @@ public class WJSFServer extends SimpleApplication {
     protected int rotDir = 0;
     protected float maxSpeed = 5f;
     private Universe u;
+    private GameContactListener gameCollisionListener;
 	
     UpdateableManager updateableManager = ServiceManager.getUpdateableManager();
     
@@ -90,6 +92,7 @@ public class WJSFServer extends SimpleApplication {
         this.msgListener = new ServerNetMsgListener(this);
         this.server.addMessageListener(this.msgListener);
         this.designs = new TestShipDesigns(this);
+        this.gameCollisionListener = new GameContactListener();
         
         // init game
         this.initWorld();

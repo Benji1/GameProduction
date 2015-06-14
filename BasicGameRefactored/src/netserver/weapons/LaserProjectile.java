@@ -11,31 +11,22 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-
-import netclient.WJSFClient;
 import netserver.WJSFServer;
 import netserver.modules.BasicModule;
-import netserver.modules.Shield;
 import netserver.physics.PhysicsWorld;
 import netserver.shipdesigns.TestShipDesigns;
-
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.contacts.Contact;
 
-public class LaserProjectile extends Projectile implements ContactListener {
+public class LaserProjectile extends Projectile {
 
     protected Body body;
     protected Spatial spatial;
     protected Material material;
-    protected boolean alreadyCollidedWithAnything;
 
     public LaserProjectile(Vec2 spawnPoint, Vec2 fireDirection, WJSFServer app) {
         super(spawnPoint, fireDirection, app);
@@ -93,7 +84,6 @@ public class LaserProjectile extends Projectile implements ContactListener {
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
-        PhysicsWorld.world.setContactListener(this);
         body.applyForce(direction.mul(startForce), body.getPosition());
     }
 
@@ -125,52 +115,13 @@ public class LaserProjectile extends Projectile implements ContactListener {
         this.removeFromParent();
     }
 
-    public void beginContact(Contact cntct) {
-        if(!alreadyCollidedWithAnything) {
-            alreadyCollidedWithAnything = true;
-            if (cntct.getFixtureA().getBody().getUserData() instanceof ShieldCollider) {
-                handleShieldColliderCollision((ShieldCollider) cntct.getFixtureA().getBody().getUserData());
-            }
-            if (cntct.getFixtureB().getBody().getUserData() instanceof ShieldCollider) {
-                handleShieldColliderCollision((ShieldCollider) cntct.getFixtureB().getBody().getUserData());
-            }
-            if (cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
-                handleBasicModuleCollision((BasicModule) cntct.getFixtureA().getBody().getUserData());
-            }
-            if (cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
-                handleBasicModuleCollision((BasicModule) cntct.getFixtureB().getBody().getUserData());
-            }
-        }
-    }
-
-    public void handleBasicModuleCollision(BasicModule b) {
-        if (b instanceof Shield) {
-            Shield s = (Shield) b;
-            if(s.getShieldCollider() != null) {
-                // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
-            //  thus destroying the shield module, although it should not
-            }else {
-                s.takeDamage(100);
-            }
-            // crappy workaround, because of shield collider and shield both getting the events, because they are welded?
-            //  thus destroying the shield module, although it should not
-        } else {
-            b.takeDamage(100);
-        }
+    public void handleBasicModuleCollision(BasicModule m) {
+        m.takeDamage(100);
         markForDeletion();
     }
 
     public void handleShieldColliderCollision(ShieldCollider s) {
         s.putDamgeToShieldModule(100f);
         markForDeletion();
-    }
-
-    public void endContact(Contact cntct) {
-    }
-
-    public void preSolve(Contact cntct, Manifold mnfld) {
-    }
-
-    public void postSolve(Contact cntct, ContactImpulse ci) {
     }
 }

@@ -32,7 +32,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  *
  * @author 1337
  */
-public class Item extends JBox2dNode implements IUpdateable, ContactListener {
+public class Item extends JBox2dNode implements IUpdateable {
     
     protected ModuleType type;
     protected Body body;
@@ -82,7 +82,6 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
         body.setUserData(this);
-        PhysicsWorld.world.setContactListener(this);
     }
     
     
@@ -109,9 +108,6 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
         super.update(tpf);
         updateBoxPosition();
     }
-
-    public void beginContact(Contact cntct) {
-    }
    
    public void handleShipCollision(BasicModule m) {
         if(!collected) {
@@ -134,13 +130,4 @@ public class Item extends JBox2dNode implements IUpdateable, ContactListener {
     protected void markForDeletion() {
         app.itemsToRemove.add(this);
      }
-
-    public void endContact(Contact cntct) {
-    }
-
-    public void preSolve(Contact cntct, Manifold mnfld) {
-    }
-
-    public void postSolve(Contact cntct, ContactImpulse ci) {
-    }
 }
