@@ -84,7 +84,7 @@ public class LaserGun extends Weapon {
         if (keyCodes.contains(keyCode)) {
             keyPressedCounter++;
             
-            if (keyPressedCounter > 0) {
+            if (keyPressedCounter > 0 && !isActive()) {
                 activate();
             }
         }        
