@@ -7,6 +7,8 @@ package netserver.modules;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class Thruster extends InteractiveModule {
     }
 
     protected void onActive() {
-        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude).mul(-1);
+        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude);
         body.applyForce(forceDirection, body.getPosition());
     }
    
@@ -52,6 +54,11 @@ public class Thruster extends InteractiveModule {
         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
         Texture t = a.loadTexture("3dmodels/thruster_ao.png");
         material.setTexture("DiffuseMap", t);
+        
+        Quaternion q = new Quaternion();
+        q.fromAngleAxis(-(float) Math.atan2(FacingDirection.getDirectionVector(orientation).x, -FacingDirection.getDirectionVector(orientation).y), new Vector3f(0, 1, 0));
+        spatial.setLocalRotation(q);
+        
         spatial.setMaterial(material);
         
         materialActive.setTexture("DiffuseMap", t);
