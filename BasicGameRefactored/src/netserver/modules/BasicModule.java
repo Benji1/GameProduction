@@ -181,7 +181,13 @@ public abstract class BasicModule extends JBox2dNode  {
     }
     
     public void destroy() {
-        onRemove();        
+        onRemove();
+        
+        Explosion exp = new Explosion(
+                ship.getApp().getAssetManager(), 
+                new Vector3f (this.body.getPosition().x, 0, this.body.getPosition().y), 
+                ship.getApp().getRootNode()
+                );
         
         if (shouldSpawnItem()) {
             spawnItem();
