@@ -45,7 +45,7 @@ public class GraphicalModule extends Node{
                 createGraphicFromPath("3dmodels/armor.obj", "3dmodels/armor_ao.png", x, y);
                 break;
             case ARMOR_DIAGONAL:
-                createGraphicFromPath("3dmodels/armor.obj", "3dmodels/armor_ao.png", x, y);
+                createGraphicFromPath("3dmodels/armor_half.obj", "3dmodels/armor_half_ao.png", x, y);
                 break;
             case COCKPIT:
                 createGraphicFromPath("3dmodels/cockpit.obj", "3dmodels/cockpit_ao.png", x, y);
