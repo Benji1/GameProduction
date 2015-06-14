@@ -29,6 +29,7 @@ public class GraphicalModule extends Node{
     protected ColorRGBA colorActive = ColorRGBA.Red;
     protected WJSFClient app;
     protected Node shipRoot;
+    protected boolean active;
 
     public GraphicalModule(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
         this.app = app;
@@ -90,5 +91,19 @@ public class GraphicalModule extends Node{
         // TODO: Set Rotation
         
         this.attachChild(spatial);
+    }
+    
+    public void activate() {
+        active = true;
+        spatial.setMaterial(materialActive);
+    }
+    
+    public void deactivate() {
+        active = false;
+        spatial.setMaterial(material);
+    }
+    
+    public boolean isActive() {
+        return active;
     }
 }
