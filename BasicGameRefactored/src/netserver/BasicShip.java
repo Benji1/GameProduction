@@ -380,6 +380,21 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         return inventory;
     }
     
+    public boolean hasStillModules() {
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public void delete() {
+        // TODO
+    }
+    
     public OrientedModule[][] getOrientedModuleArray() {
        OrientedModule[][] oModules = new OrientedModule[modules.length][modules[0].length];
        
