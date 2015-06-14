@@ -16,10 +16,10 @@ public class GMArmorDiagonal  extends GraphicalModule {
     
     public GMArmorDiagonal(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
         super(orientedModule, shipRoot, x, y, app);
-    }
-    
-    @Override
-    protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath("3dmodels/armor_half.obj", "3dmodels/armor_half_ao.png", x, y);
+        
+        modelPath = "3dmodels/armor_half.obj";
+        texturePath = "3dmodels/armor_half_ao.png";
+        
+        createMyGraphic(x, y);
     }
 }

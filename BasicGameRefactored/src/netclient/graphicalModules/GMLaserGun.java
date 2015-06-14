@@ -4,6 +4,7 @@
  */
 package netclient.graphicalModules;
 
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import netclient.WJSFClient;
 import netclient.gui.OrientedModule;
@@ -16,10 +17,11 @@ public class GMLaserGun extends GraphicalModule {
     
     public GMLaserGun(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
         super(orientedModule, shipRoot, x, y, app);
-    }
-    
-    @Override
-    protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath("3dmodels/gun.obj", "3dmodels/gun_ao.png", x, y);
+        
+        colorActive = ColorRGBA.Red;
+        modelPath = "3dmodels/gun.obj";
+        texturePath = "3dmodels/gun_ao.png";
+        
+        createMyGraphic(x, y);
     }
 }

@@ -28,18 +28,18 @@ public class GraphicalModule extends Node{
     protected WJSFClient app;
     protected Node shipRoot;
     protected boolean active;
+    protected String modelPath = "3dmodels/armor.obj";
+    protected String texturePath = "3dmodels/armor_ao.png";
 
     public GraphicalModule(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
         this.app = app;
         this.shipRoot = shipRoot;
         this.orientedModule = orientedModule;
         shipRoot.attachChild(this);
-        
-        createMyGraphic(x, y);
     }
 
     protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath("3dmodels/armor.obj", "3dmodels/armor_ao.png", x, y);
+        createGraphicFromPath(modelPath, texturePath, x, y);
     }
 
     protected final void createGraphicFromPath(String modelPath, String texturePath, float x, float y) {
@@ -54,6 +54,7 @@ public class GraphicalModule extends Node{
         materialActive.setBoolean("UseMaterialColors", true);
         materialActive.setColor("Ambient", colorActive);
         materialActive.setColor("Diffuse", colorActive);
+        materialActive.setTexture("DiffuseMap", t);
         
         // * 2 because otherwise modules intersect eachother
         this.setLocalTranslation(x * 2, 0, y * 2);

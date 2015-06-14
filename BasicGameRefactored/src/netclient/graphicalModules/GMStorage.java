@@ -16,10 +16,10 @@ public class GMStorage extends GraphicalModule {
     
     public GMStorage(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
         super(orientedModule, shipRoot, x, y, app);
-    }
-    
-    @Override
-    protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath("3dmodels/storage.obj", "3dmodels/storage_ao.png", x, y);
+        
+        modelPath = "3dmodels/storage.obj";
+        texturePath = "3dmodels/storage_ao.png";
+        
+        createMyGraphic(x, y);
     }
 }

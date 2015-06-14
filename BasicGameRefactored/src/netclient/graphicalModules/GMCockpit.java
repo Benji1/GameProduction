@@ -16,10 +16,10 @@ public class GMCockpit extends GraphicalModule {
     
     public GMCockpit(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
         super(orientedModule, shipRoot, x, y, app);
-    }
-    
-    @Override
-    protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath("3dmodels/cockpit.obj", "3dmodels/cockpit_ao.png", x, y);
+        
+        modelPath = "3dmodels/cockpit.obj";
+        texturePath = "3dmodels/cockpit_ao.png";
+        
+        createMyGraphic(x, y);
     }
 }
