@@ -118,8 +118,8 @@ public class TestShipDesigns {
         
         Cockpit cp = new Cockpit();
         s.addModuleAtFromOffset(cp, new Point(0,0));
-        s.addModuleAtFromOffset(new Armor(), new Point(-1, 0));
-        s.addModuleAtFromOffset(new Armor(), new Point(1, 0));
+        s.addModuleAtFromOffset(new Storage(), new Point(-1, 0));
+        s.addModuleAtFromOffset(new Storage(), new Point(1, 0));
         s.addModuleAtFromOffset(new LaserGun(weapon, FacingDirection.FORWARD), new Point(0, -2)); // Backwards is strange
         s.addModuleAtFromOffset(new Thruster(fwd, FacingDirection.FORWARD), new Point(0, 2));
         s.addModuleAtFromOffset(new Thruster(left, FacingDirection.LEFT), new Point(1, 1));

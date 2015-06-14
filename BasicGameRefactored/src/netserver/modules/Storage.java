@@ -8,6 +8,7 @@ import com.jme3.math.ColorRGBA;
 
 import java.util.ArrayList;
 import netclient.gui.ModuleType;
+import netserver.BasicShip;
 
 /**
  *
@@ -36,5 +37,32 @@ public class Storage extends BasicModule {
     
     public ModuleType removeItem(int index) {
         return itemsInStorage.remove(index);
+    }
+    
+    public boolean removeItemOfType(ModuleType type) {
+        for (int i=0; i<itemsInStorage.size(); i++) {
+            if (itemsInStorage.get(i).equals(type)) {
+                itemsInStorage.remove(i);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public void onPlaced(BasicShip ship) {
+        super.onPlaced(ship);
+        ship.getInventory().addStorage(this);
+    }
+    
+    @Override
+    public void onRemove() {
+        super.onRemove();
+        ship.getInventory().removeStorage(this);
+    }
+    
+    public ArrayList<ModuleType> getStoredItems() {
+        return itemsInStorage;
     }
 }

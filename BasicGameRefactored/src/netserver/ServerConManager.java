@@ -56,13 +56,13 @@ public class ServerConManager implements ConnectionListener {
 				// TODO: load player stuff
 				
 				// send player ship data
-		    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
+		    	ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.shipArray, newPl.ship.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
 		    	msg.setReliable(true);
 				app.getServer().broadcast(msg);
 				
 				// send all other ships to the new player
 				for(NetPlayer pl : players) {
-					ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
+					ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.shipArray, pl.ship.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
 					syncPl.setReliable(true);
 					app.getServer().broadcast(Filters.in(arg1), syncPl);
 				}

@@ -42,6 +42,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public Cockpit cockpit;
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
+    private Inventory inventory;
 
     public BasicShip(WJSFServer app, String name) {
         super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
@@ -49,6 +50,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         //app.gameRunState.ships.add(this);
 
         this.shipId = idCounter++;
+        this.inventory = new Inventory(this);
     }
 
     @Override
@@ -365,9 +367,17 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
             }
         }
     }
+    
+    public void updateBaseInventory(ModuleType[] itemsInBase) {
+        inventory.setItemsInBase(itemsInBase);
+    }
 
     public int getShipId() {
         return shipId;
+    }
+    
+    public Inventory getInventory() {
+        return inventory;
     }
     
     public OrientedModule[][] getOrientedModuleArray() {

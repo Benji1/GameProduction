@@ -48,6 +48,7 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
                                 if (pl.con.getId() == client.getId()) {
                                     // update ship on server
                                     pl.ship.onShipChanged(msg.getModules());
+                                    pl.ship.updateBaseInventory(msg.getModulesInBase());
                                 }                                
                             }
                             // send update to all clients

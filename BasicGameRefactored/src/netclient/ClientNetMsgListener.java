@@ -56,14 +56,14 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 			
 			this.app.enqueue(new Callable() {
 				public Object call() throws Exception {
-					ClientShip ship = new ClientShip(msg.getName(), msg.getId(), msg.getShip(), app);
+					ClientShip ship = new ClientShip(msg.getName(), msg.getId(), msg.getShip(), msg.getModulesInBase(), app);
 					
 					if(app.gameRunState.playerShip == null && app.client.getId() == ship.id) {	// new ship is this player
 						app.gameRunState.playerShip = ship;
                                                 ServiceManager.getEditorManager().setShip(app.gameRunState.playerShip);
 						app.gameRunState.initKeys();
 		
-				        app.gameRunState.localRootNode.attachChild(ship.shipRoot);
+                                                app.gameRunState.localRootNode.attachChild(ship.shipRoot);
 					} else {
 						// dont add if already added
 						for(ClientShip s : app.gameRunState.clientShips)
@@ -122,12 +122,12 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                         public Object call() throws Exception {
                             if (app.gameRunState.playerShip.id == msg.getShipId()) {
                                 app.gameRunState.playerShip.setModules(msg.getModules());
-                                app.gameRunState.playerShip.refreshGraphicsOfShip();
+                                app.gameRunState.playerShip.setItemsInBase(msg.getModulesInBase());
                             } else {
                                 for (ClientShip s : app.gameRunState.clientShips) {
                                     if (s.id == msg.getShipId()) {
                                         s.setModules(msg.getModules());
-                                        s.refreshGraphicsOfShip();
+                                        s.setItemsInBase(msg.getModulesInBase());
                                     }
                                 }
                             }

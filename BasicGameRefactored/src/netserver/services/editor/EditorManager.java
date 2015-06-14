@@ -6,6 +6,7 @@ package netserver.services.editor;
 
 import netclient.ClientShip;
 import netclient.WJSFClient;
+import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 
 import netserver.services.Service;
@@ -20,9 +21,10 @@ public class EditorManager extends Service {
     }
     
     public void notifyOfShipChange(OrientedModule[][] modules) {
-        ShipChangedMsg msg = new ShipChangedMsg(ship.id, modules);
+        // send change of ship + change of inventory
+        ShipChangedMsg msg = new ShipChangedMsg(ship.id, modules, ship.itemsInBase.toArray(new ModuleType[ship.itemsInBase.size()]));
         msg.setReliable(true);
-        client.client.send(msg);
+        client.client.send(msg);        
     }
     
     public void setShip(ClientShip ship) {
@@ -30,6 +32,10 @@ public class EditorManager extends Service {
     }
     public void setClient(WJSFClient client) {
         this.client = client;
+    }
+    
+    public ClientShip getShip() {
+        return ship;
     }
     
     public OrientedModule[][] getShipModules() {

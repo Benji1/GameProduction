@@ -9,6 +9,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
+import java.util.ArrayList;
+import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 
 public class NetMessages {
@@ -32,6 +34,7 @@ public class NetMessages {
         Serializer.registerClass(NetMsg.class);
         Serializer.registerClass(PosMsg.class);
         Serializer.registerClass(PosAndDirMsg.class);
+        Serializer.registerClass(PosAndRotMsg.class);
         Serializer.registerClass(ClientEnteredMsg.class);
         Serializer.registerClass(KeyPressedMsg.class);
         Serializer.registerClass(OrientedModule.class);
@@ -114,15 +117,17 @@ public class NetMessages {
         private String name;
         private int id;
         private OrientedModule[][] ship;
+        private ModuleType[] modulesInBase;
         private Vector3f pos;
         private Vector3f dir;
 
         public ClientEnteredMsg() {}
         
-        public ClientEnteredMsg(String name, int id, OrientedModule[][] ship, Vector3f pos, Vector3f dir) {
+        public ClientEnteredMsg(String name, int id, OrientedModule[][] ship, ModuleType[] modulesInBase, Vector3f pos, Vector3f dir) {
             this.name = name;
             this.id = id;
             this.ship = ship;
+            this.modulesInBase = modulesInBase;
             this.pos = pos;
             this.dir = dir;
         }
@@ -130,6 +135,7 @@ public class NetMessages {
         public String getName() {return this.name;}
         public int getId() {return this.id;}
         public OrientedModule[][] getShip() {return this.ship;}
+        public ModuleType[] getModulesInBase() {return this.modulesInBase;}
         public Vector3f getPos() {return this.pos;}
         public Vector3f getDir() {return this.dir;}
     }
@@ -154,16 +160,19 @@ public class NetMessages {
     public static class ShipChangedMsg extends AbstractMessage {
         private int shipId;
         private OrientedModule[][] modules;
+        private ModuleType[] modulesInBase;
         
         public ShipChangedMsg() {}
         
-        public ShipChangedMsg(int shipId, OrientedModule[][] modules) {
+        public ShipChangedMsg(int shipId, OrientedModule[][] modules, ModuleType[] modulesInBase) {
             this.shipId = shipId;
             this.modules = modules;
+            this.modulesInBase = modulesInBase;
         }
         
         public int getShipId() {return this.shipId;}
         public OrientedModule[][] getModules() {return this.modules;}
+        public ModuleType[] getModulesInBase() {return this.modulesInBase;}
     }
     
     /**********************************
