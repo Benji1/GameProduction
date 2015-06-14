@@ -1,9 +1,26 @@
 package netclient;
 
+import netclient.graphicalModules.GraphicalModule;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.util.ArrayList;
+import netclient.graphicalModules.GMArmor;
+import netclient.graphicalModules.GMArmorDiagonal;
+import netclient.graphicalModules.GMCockpit;
+import netclient.graphicalModules.GMEnergyGenerator;
+import netclient.graphicalModules.GMLaserGun;
+import netclient.graphicalModules.GMShieldGenerator;
+import netclient.graphicalModules.GMStorage;
+import netclient.graphicalModules.GMThruster;
 import netclient.gui.ModuleType;
+import static netclient.gui.ModuleType.ARMOR;
+import static netclient.gui.ModuleType.ARMOR_DIAGONAL;
+import static netclient.gui.ModuleType.COCKPIT;
+import static netclient.gui.ModuleType.ENERGY_GENERATOR;
+import static netclient.gui.ModuleType.SHIELD;
+import static netclient.gui.ModuleType.STORAGE;
+import static netclient.gui.ModuleType.THRUSTER;
+import static netclient.gui.ModuleType.WEAPON;
 import netclient.gui.OrientedModule;
 import netclient.gui.inventory.InventoryCategory;
 
@@ -92,7 +109,26 @@ public class ClientShip {
     }
 
     private GraphicalModule createOrientedModuleGraphics(OrientedModule om, float x, float y) {
-        return new GraphicalModule(om, shipRoot, x, y, app);
+        switch (om.moduleType) {
+            case ARMOR:
+                return new GMArmor(om, shipRoot, x, y, app);
+            case ARMOR_DIAGONAL:
+                return new GMArmorDiagonal(om, shipRoot, x, y, app);
+            case COCKPIT:
+                return new GMCockpit(om, shipRoot, x, y, app);
+            case ENERGY_GENERATOR:
+                return new GMEnergyGenerator(om, shipRoot, x, y, app);
+            case SHIELD:
+                return new GMShieldGenerator(om, shipRoot, x, y, app);
+            case STORAGE:
+                return new GMStorage(om, shipRoot, x, y, app);
+            case THRUSTER:
+                return new GMThruster(om, shipRoot, x, y, app);
+            case WEAPON:
+                return new GMLaserGun(om, shipRoot, x, y, app);
+            default:
+                return new GMArmor(om, shipRoot, x, y, app);
+        }
     }
     
     public int getModuleCountInBase(ModuleType type) {
