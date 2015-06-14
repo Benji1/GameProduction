@@ -221,7 +221,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     
      public void destroyWithoutSeperation() {
         onRemove();
-        this.detachAllChildren();
+        spatial.removeFromParent();
         ship.getApp().bodiesToRemove.add(body);
         // SPAWN WITH DROPABILITY OR JUST DESTROY
     }

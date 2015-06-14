@@ -5,10 +5,7 @@
 package netserver.modules;
 
 import com.jme3.math.ColorRGBA;
-
 import java.util.ArrayList;
-
-import org.jbox2d.common.Vec2;
 
 /**
  *

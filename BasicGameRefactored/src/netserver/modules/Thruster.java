@@ -36,7 +36,7 @@ public class Thruster extends InteractiveModule {
     }
 
     protected void onActive() {
-        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude);
+        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude).mul(-1);
         body.applyForce(forceDirection, body.getPosition());
     }
    
