@@ -53,7 +53,7 @@ public class Thruster extends InteractiveModule {
     @Override
     public void activate() {
         super.activate();
-        fire.setParticlesPerSec(30f);
+        fire.setParticlesPerSec(60f);
     }
 
     @Override
@@ -83,18 +83,27 @@ public class Thruster extends InteractiveModule {
         Material mat_red = new Material(a, "Common/MatDefs/Misc/Particle.j3md");
         mat_red.setTexture("Texture", a.loadTexture("textures/flame.jpg"));
         fire.setMaterial(mat_red);        
-        fire.setImagesX(2); fire.setImagesY(2); // 2x2 texture animation
-        fire.setEndColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
-        fire.setStartColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
-        fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0,2,0));
+        //fire.setImagesX(2); fire.setImagesY(2); // 2x2 texture animation
+        fire.setStartColor(  new ColorRGBA(0.6f, 0.9f, 1f, 0.9f));
+        fire.setEndColor(new ColorRGBA(0.1f, 0f, 0f, 0f));
+        fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(8f));
+        fire.setStartSize(1f + (float)Math.random());
         fire.setStartSize(1.5f);
         fire.setEndSize(0.1f);
         fire.setGravity(0,0,0);
         fire.setLowLife(0.5f);
         fire.setHighLife(3f);
-        fire.getParticleInfluencer().setVelocityVariation(0.3f);
+        fire.setRandomAngle(true);
+        fire.getParticleInfluencer().setVelocityVariation(0.1f);
         fire.setParticlesPerSec(0f);
         
         ship.getApp().getRootNode().attachChild(fire);
+    }
+    
+    public final Vector3f getParticleSpawnDirection(float initialVelocity)
+    {   
+        Vector3f forward = new Vector3f(0,0,initialVelocity);
+        this.localToWorld(forward,forward);
+        return forward;
     }
 }
