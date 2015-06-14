@@ -111,7 +111,7 @@ public class WJSFServer extends SimpleApplication {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
         
-    	camNode.setLocalTranslation(new Vector3f(0, 700 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+    	camNode.setLocalTranslation(new Vector3f(0, 450 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
         camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
     
@@ -163,7 +163,7 @@ public class WJSFServer extends SimpleApplication {
         //
         // UPDATE NET
         //
-        
+        this.gameCollisionListener = new GameContactListener();
         this.conManager.update(tpf);
     }
     
