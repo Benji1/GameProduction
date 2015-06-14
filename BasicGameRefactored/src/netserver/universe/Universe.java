@@ -17,6 +17,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -135,6 +136,16 @@ public class Universe {
 		this.stations.add(station);
 		station.setLocalTranslation(x, -5, z);
                 station.setLocalScale(2f);
+                
+        BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
+        BitmapText info = new BitmapText(f, true);
+        info.setColor(ColorRGBA.Green);
+        info.rotate((float) -Math.PI/2f,0,0);
+        info.scale(0.2f);
+        info.setQueueBucket(Bucket.Transparent);
+        info.setText("Press 'E' to enter");
+        info.setLocalTranslation(x-13, 3, z);
+        app.getRootNode().attachChild(info);
     }
     
     public boolean nearStation(Vector3f shippos){
