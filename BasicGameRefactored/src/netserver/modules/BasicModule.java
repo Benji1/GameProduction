@@ -11,38 +11,28 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import netclient.gui.ModuleType;
-
 import netserver.BasicShip;
-import netserver.WJSFServer;
 import netserver.items.EncapsulatingItem;
 import netserver.physics.JBox2dNode;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.config.ConfigReader;
-
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.dynamics.joints.WeldJointDef;
 
 /**
  *
  * @author 1337
  */
-public abstract class BasicModule extends JBox2dNode implements ContactListener {
+public abstract class BasicModule extends JBox2dNode  {
 
     ConfigReader cr = ServiceManager.getConfigReader();
     protected int maxHealth = cr.getFromMap(cr.getBaseMap("Basic"), "MaxHealth", int.class);
@@ -158,9 +148,9 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     public void onRemove() {
         ship.removeModuleAt(ship.getActualPositionInGrid(this));
         
-        //if(!ship.hasStillModules()) {
-            //ship.delete();
-        //}
+        if(!ship.hasStillModules()) {
+            ship.delete();
+        }
     }
 
     public void otherModulePlaced(BasicModule module, Point p) {
@@ -188,7 +178,6 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         body.createFixture(fDef);
         body.setUserData(this);
         body.setLinearDamping(linearDampingFactor);
-        PhysicsWorld.world.setContactListener(this);
     }
     
     public void destroy() {
@@ -225,7 +214,6 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         onRemove();
         spatial.removeFromParent();
         ship.getApp().bodiesToRemove.add(body);
-        // SPAWN WITH DROPABILITY OR JUST DESTROY
     }
 
     // HELPER METHOD MAYBE SOMEWHERE ELSE WOULD BE A BETTER PLACE
@@ -235,18 +223,6 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         } else {
             return actualValue + increase;
         }
-    }
-
-    public void beginContact(Contact cntct) {
-    }
-
-    public void endContact(Contact cntct) {
-    }
-
-    public void preSolve(Contact cntct, Manifold mnfld) {
-    }
-
-    public void postSolve(Contact cntct, ContactImpulse ci) {
     }
     
     public ModuleType getType() {
