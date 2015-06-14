@@ -39,6 +39,7 @@ public class NetMessages {
         Serializer.registerClass(OrientedModule.class);
         Serializer.registerClass(ShipChangedMsg.class);
         Serializer.registerClass(NearStationMsg.class);
+        Serializer.registerClass(ModuleActivatedMsg.class);
     }
 
     @Serializable
@@ -190,6 +191,28 @@ public class NetMessages {
 
         public boolean getNearby() {return this.nearby;}
         public int getId() {return this.id;}
+    }
+    
+    @Serializable
+    public static class ModuleActivatedMsg extends AbstractMessage {        
+        private int shipId;
+        private int xPos;
+        private int yPos;
+        private boolean avctive;
+        
+        public ModuleActivatedMsg() {}
+        
+        public ModuleActivatedMsg(int shipId, int xPos, int yPos, boolean active) {
+            this.shipId = shipId;
+            this.xPos = xPos;
+            this.yPos = yPos;
+            this.avctive = active;
+        }
+        
+        public int getShipId() {return this.shipId;}
+        public int getXPos() {return this.xPos;}
+        public int getYPos() {return this.yPos;}
+        public boolean isActive() {return this.avctive;}                
     }
     
     /**********************************

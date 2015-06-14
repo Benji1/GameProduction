@@ -17,6 +17,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import netserver.services.ServiceManager;
 import netutil.NetMessages;
+import netutil.NetMessages.ModuleActivatedMsg;
 import netutil.NetMessages.NearStationMsg;
 import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShipChangedMsg;
@@ -141,6 +142,32 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                                     if (s.id == msg.getShipId()) {
                                         s.setModules(msg.getModules());
                                         s.setItemsInBase(msg.getModulesInBase());
+                                    }
+                                }
+                            }
+                            
+                            return null;
+                        }
+                    });
+                } else if (m instanceof ModuleActivatedMsg) {
+                    final ModuleActivatedMsg msg = (ModuleActivatedMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            if (app.gameRunState.playerShip.id == msg.getShipId()) {
+                                if (msg.isActive()) {
+                                    app.gameRunState.playerShip.activateModule(msg.getXPos(), msg.getYPos());
+                                } else {
+                                    app.gameRunState.playerShip.deactivateModule(msg.getXPos(), msg.getYPos());
+                                }
+                            } else {
+                                for (ClientShip s : app.gameRunState.clientShips) {
+                                    if (s.id == msg.getShipId()) {
+                                        if (msg.isActive()) {
+                                            s.activateModule(msg.getXPos(), msg.getYPos());
+                                        } else {
+                                            s.deactivateModule(msg.getXPos(), msg.getYPos());
+                                        }
                                     }
                                 }
                             }

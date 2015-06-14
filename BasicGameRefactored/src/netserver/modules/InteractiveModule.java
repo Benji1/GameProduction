@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import netserver.BasicShip;
+import netutil.NetMessages;
 
 /**
  *
@@ -101,12 +102,20 @@ public abstract class InteractiveModule extends BasicModule {
         if (!disabled) {
             active = true;
             spatial.setMaterial(materialActive);
+            Point pos = ship.getActualPositionInGrid(this);
+            NetMessages.ModuleActivatedMsg msg = new NetMessages.ModuleActivatedMsg(ship.getPlayer().con.getId(), pos.x, pos.y, true);
+            msg.setReliable(true);
+            this.ship.getApp().getServer().broadcast(msg);
         }
     }
 
     public void deactivate() {
         active = false;
         spatial.setMaterial(material);
+        Point pos = ship.getActualPositionInGrid(this);
+        NetMessages.ModuleActivatedMsg msg = new NetMessages.ModuleActivatedMsg(ship.getPlayer().con.getId(), pos.x, pos.y, false);
+        msg.setReliable(true);
+        this.ship.getApp().getServer().broadcast(msg);
     }
 
     public boolean isActive() {

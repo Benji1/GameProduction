@@ -127,4 +127,11 @@ public class ClientShip {
         
         return numOfEachItem;
     }
+    
+    public void activateModule(int x, int y) {
+        gmodules[x][y].activate();
+    }
+    public void deactivateModule(int x, int y) {
+        gmodules[x][y].deactivate();
+    }
 }

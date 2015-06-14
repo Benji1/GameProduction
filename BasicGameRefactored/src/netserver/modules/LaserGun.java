@@ -10,12 +10,14 @@ import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
+import java.awt.Point;
 
 import java.util.ArrayList;
 import netclient.gui.ModuleType;
 
 import netserver.BasicShip;
 import netserver.weapons.LaserProjectile;
+import netutil.NetMessages.ModuleActivatedMsg;
 
 import org.jbox2d.common.Vec2;
 
