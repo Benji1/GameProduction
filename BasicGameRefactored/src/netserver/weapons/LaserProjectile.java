@@ -121,7 +121,7 @@ public class LaserProjectile extends Projectile {
     }
 
     public void handleShieldColliderCollision(ShieldCollider s) {
-        s.putDamgeToShieldModule(100f);
+        s.putDamgeToShieldModule(100f, new Vector3f(body.getPosition().x, 0f, body.getPosition().y));
         markForDeletion();
     }
 }
