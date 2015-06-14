@@ -16,6 +16,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import netserver.services.ServiceManager;
+import netutil.NetMessages;
+import netutil.NetMessages.NearStationMsg;
 import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShipChangedMsg;
 
@@ -115,7 +117,18 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 					return null;
 				}
 			});
-		} else if (m instanceof ShipChangedMsg) {
+		} else if(m instanceof NearStationMsg) {
+                        final NearStationMsg msg = (NearStationMsg)m;
+                    
+                        this.app.enqueue(new Callable() {
+                                    public Object call() throws Exception {
+                                            if(app.gameRunState.playerShip.id == msg.getId()) {
+                                                    app.gameRunState.nearStation = msg.getNearby();
+                                            }
+                                            return null;
+                                    }
+                            });
+                } else if (m instanceof ShipChangedMsg) {
                     final ShipChangedMsg msg = (ShipChangedMsg)m;
                     
                     this.app.enqueue(new Callable() {

@@ -69,6 +69,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
     float camYOffset = 20f;  // Camera height
     boolean universeDebug = false;
+    
+    public boolean nearStation = false;
 
     /**
      * for camera working in client
@@ -167,7 +169,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                     universeDebug = true;
                 }
             }
-        } else if (name.equals("ToggleEditor") && !keyPressed) {
+        } else if (name.equals("ToggleEditor") && !keyPressed && nearStation) {
             if (!this.app.gui.getCurrentScreenId().equals("editor")) {
                 this.app.gui.goToEditorScreen();
                 this.app.getInputManager().setCursorVisible(true);
@@ -191,7 +193,6 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.msgManager.update(tpf);
 
         //this.background.updateBackground();
-
         this.updateCamera();
     }
 

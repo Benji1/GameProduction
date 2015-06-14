@@ -38,6 +38,7 @@ public class NetMessages {
         Serializer.registerClass(KeyPressedMsg.class);
         Serializer.registerClass(OrientedModule.class);
         Serializer.registerClass(ShipChangedMsg.class);
+        Serializer.registerClass(NearStationMsg.class);
     }
 
     @Serializable
@@ -172,6 +173,23 @@ public class NetMessages {
         public int getShipId() {return this.shipId;}
         public OrientedModule[][] getModules() {return this.modules;}
         public ModuleType[] getModulesInBase() {return this.modulesInBase;}
+    }
+    
+    @Serializable
+    public static class NearStationMsg extends AbstractMessage {
+
+        private boolean nearby;
+        private int id;
+
+        public NearStationMsg() {}
+
+        public NearStationMsg(boolean nearby, int id) {
+            this.nearby = nearby;
+            this.id = id;
+        }
+
+        public boolean getNearby() {return this.nearby;}
+        public int getId() {return this.id;}
     }
     
     /**********************************

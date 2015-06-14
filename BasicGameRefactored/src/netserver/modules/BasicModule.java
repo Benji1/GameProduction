@@ -47,6 +47,7 @@ public abstract class BasicModule extends JBox2dNode  {
     protected Material material;  
     protected ModuleType type;
     protected FacingDirection orientation;
+    private float oldDamping = 10000f;
     
     public int group = 0;
 
@@ -236,5 +237,11 @@ public abstract class BasicModule extends JBox2dNode  {
     }
     public FacingDirection getOrientation() {
         return orientation;
+    }
+    
+    public void toggleDamping(){
+    	float temp = oldDamping;
+    	oldDamping = body.getLinearDamping();
+    	body.setLinearDamping(temp);
     }
 }

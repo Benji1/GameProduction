@@ -1,9 +1,6 @@
 package netserver.universe;
 
-import netclient.WJSFClient;
 import netserver.WJSFServer;
-import netserver.universe.SolarSystem;
-import netserver.universe.Universe;
 
 public class UniverseGenerator {
 	private static int[] size = {3,3};
@@ -15,6 +12,8 @@ public class UniverseGenerator {
 		app.getRootNode().attachChild(sys);
 		sys.setLocalTranslation(-100, -5, 0);
 		u.systems.add(sys);
+                u.addStation(30, 20);
+                u.addStation(20, 50);
 	}
 	
 	public static void generateUniverse(WJSFServer app, Universe u){

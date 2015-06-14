@@ -96,6 +96,10 @@ public class ServerConManager implements ConnectionListener {
 		if(this.curPosAndRotUpdate >= this.posAndRotUpdate) {
 			for(NetPlayer pl : this.players) {
 				this.app.getServer().broadcast(new PosAndRotMsg(pl.ship.cockpit.getLocalTranslation(), pl.ship.cockpit.getLocalRotation(), pl.con.getId()));
+                                
+                                // Send also with position??
+                                boolean nearby = this.app.getUniverse().nearStation(pl.getShip().cockpit.getWorldTranslation());
+                                this.app.getServer().broadcast(new NearStationMsg(nearby, pl.con.getId()));
 			}
 			
 			this.curPosAndRotUpdate = 0;

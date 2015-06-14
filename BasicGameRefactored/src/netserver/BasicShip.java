@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import netclient.WJSFClient;
 import netserver.modules.BasicModule;
-import netserver.modules.Cockpit;
 import netserver.modules.InteractiveModule;
 import netserver.modules.Storage;
 import netserver.services.ServiceManager;
@@ -22,6 +21,7 @@ import java.util.Map;
 import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 import netserver.modules.Armor;
+import netserver.modules.Cockpit;
 import netserver.modules.EnergyGenerator;
 import netserver.modules.LaserGun;
 import netserver.modules.Shield;
@@ -378,6 +378,14 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[i].length; j++) {
+            	if(modulesNewShip[i][j] != null && modulesNewShip[i][j].moduleType.equals(ModuleType.COCKPIT)) {
+            		this.cockpitPos = new Vector3f(cockpitPos.x - 2*i, 0, cockpitPos.z - 2*j);
+            	}
+            }
+        }
+        
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[i].length; j++) {
                 if(newModules[i][j] != null) {
                     addModuleAt(newModules[i][j], new Point(i, j));
                 }
@@ -416,5 +424,15 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         }
        
        return oModules;
+    }
+    
+    public void ToggleDamping(){
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] != null) {
+                    modules[i][j].toggleDamping();
+                }
+            }
+        }
     }
 }
