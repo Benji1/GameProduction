@@ -58,8 +58,8 @@ public class Storage extends BasicModule {
     
     @Override
     public void onRemove() {
-        super.onRemove();
         ship.getInventory().removeStorage(this);
+        super.onRemove();
     }
     
     public ArrayList<ModuleType> getStoredItems() {
