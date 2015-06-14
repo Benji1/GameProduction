@@ -123,7 +123,7 @@ public class Universe {
     
      public void addStation(float x, float z){
     	Box shape = new Box(7, 2, 5);
-    	Geometry station = new Geometry("random station", shape);	
+    	Spatial station = app.getAssetManager().loadModel("3dmodels/station.obj");
 		Material sphereMat = new Material(app.getAssetManager(), 
 				"Common/MatDefs/Light/Lighting.j3md");
 		sphereMat.setBoolean("UseMaterialColors", true);
