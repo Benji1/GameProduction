@@ -13,6 +13,11 @@ import de.lessvoid.nifty.screen.Screen;
 
 public class GUI {
     
+    public static final String EDITOR_SCREEN = "editor";
+    public static final String START_SCREEN = "start";
+    public static final String EMPTY_SCREEN = "empty";
+    public static final String EXIT_OVERLAY_SCREEN = "exitOverlay";
+    
     private Nifty nifty;
     private WJSFClient app;
     
@@ -43,10 +48,10 @@ public class GUI {
         nifty.addXml("Interface/EditorScreen.xml");
         nifty.addXml("Interface/EmptyScreen.xml");        
         
-        editorScreen = nifty.getScreen("editor");
-        emptyScreen = nifty.getScreen("empty");
-        startScreen = nifty.getScreen("start");
-        exitOverlayScreen = nifty.getScreen("exitOverlay");
+        editorScreen = nifty.getScreen(EDITOR_SCREEN);
+        emptyScreen = nifty.getScreen(EMPTY_SCREEN);
+        startScreen = nifty.getScreen(START_SCREEN);
+        exitOverlayScreen = nifty.getScreen(EXIT_OVERLAY_SCREEN);
     }
     
     public String getCurrentScreenId() {

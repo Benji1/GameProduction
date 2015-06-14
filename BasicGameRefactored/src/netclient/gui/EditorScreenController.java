@@ -292,11 +292,16 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         inputManager.addRawInputListener(keyBindingInputHandler);
     }
     
-    public void keyBindCallback(KeyInputEvent evt, Point modulePos) {
-        inputManager.removeRawInputListener(keyBindingInputHandler);
-        keyBindingInputHandler = null;
-        
-        doKeyBinding(modulePos, evt.getKeyCode());
+    public void keyBindCallback(KeyInputEvent evt, Point modulePos) {        
+        // check if valid key
+        if (KeyBindingInputHandler.isAllowedKey(evt.getKeyCode())) {
+            inputManager.removeRawInputListener(keyBindingInputHandler);
+            keyBindingInputHandler = null;
+
+            doKeyBinding(modulePos, evt.getKeyCode());
+        } else {
+            System.out.println("invalid key pressed");
+        }
     }
     
     private void doKeyBinding(Point modulePos, int keyCode) {

@@ -84,9 +84,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public GameRunningState(WJSFClient app) {
         this.app = app;
         this.msgManager = new ClientNetMsgListener(app);
-        this.localRootNode = new Node("GameRunningNode");
-        
-        this.app.getInputManager().addRawInputListener(this);
+        this.localRootNode = new Node("GameRunningNode");       
     }
 
     @Override
@@ -104,6 +102,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
 
         this.app.gui.goToEmptyScreen();
         this.app.getInputManager().setCursorVisible(false);
+        this.app.getInputManager().addRawInputListener(this);
     }
 
     public void initCamera() {
@@ -170,15 +169,17 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                 }
             }
         } else if (name.equals("ToggleEditor") && !keyPressed && nearStation) {
-            if (!this.app.gui.getCurrentScreenId().equals("editor")) {
+            if (!this.app.gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
                 this.app.gui.goToEditorScreen();
                 this.app.getInputManager().setCursorVisible(true);
+                this.app.getInputManager().removeRawInputListener(this);
             } else {
                 this.app.gui.goToEmptyScreen();
                 this.app.getInputManager().setCursorVisible(false);
+                this.app.getInputManager().addRawInputListener(this);
             }
         } else if (name.equals("ExitOverlay") && !keyPressed) {
-            if (!this.app.gui.getCurrentScreenId().equals("exitOverlay")) {
+            if (!this.app.gui.getCurrentScreenId().equals(GUI.EXIT_OVERLAY_SCREEN)) {
                 this.app.gui.goToExitOverlayScreen();
                 this.app.getInputManager().setCursorVisible(true);
             } else {
