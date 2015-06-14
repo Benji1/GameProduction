@@ -4,7 +4,10 @@
  */
 package netserver.modules;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.texture.Texture;
 
 import java.util.ArrayList;
 import netclient.gui.ModuleType;
@@ -68,5 +71,16 @@ public class Storage extends BasicModule {
     
     public ArrayList<ModuleType> getStoredItems() {
         return itemsInStorage;
+    }
+    
+    @Override
+    protected void create3DBody() {
+         AssetManager a = ship.getApp().getAssetManager();
+         spatial = a.loadModel("3dmodels/storage.obj");
+         ship.attachChild(spatial);
+         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+         Texture t = a.loadTexture("3dmodels/storage_ao.png");
+         material.setTexture("DiffuseMap", t);
+         spatial.setMaterial(material);
     }
 }
