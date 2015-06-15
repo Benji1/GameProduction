@@ -4,7 +4,10 @@
  */
 package netclient.graphicalModules;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import netclient.ClientShip;
@@ -34,8 +37,9 @@ public class GMThruster extends GraphicalModule {
     protected void createMyGraphic(float x, float y) {
         super.createMyGraphic(x, y);
         
-        /*
+        
         AssetManager a = app.getAssetManager();
+        
         fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 60);
         Material mat_red = new Material(a, "Common/MatDefs/Misc/Particle.j3md");
         mat_red.setTexture("Texture", a.loadTexture("textures/flame.jpg"));
@@ -53,8 +57,7 @@ public class GMThruster extends GraphicalModule {
         fire.getParticleInfluencer().setVelocityVariation(0.1f);
         fire.setParticlesPerSec(0f);
         
-        app.getRootNode().attachChild(fire);
-        * */
+        this.attachChild(fire);
     }
     
     
