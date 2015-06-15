@@ -13,7 +13,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.ExplicitGroup;
 import mygame.Main;
 import mygame.PhysicsWorld;
 import org.jbox2d.collision.shapes.PolygonShape;
