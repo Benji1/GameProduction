@@ -202,6 +202,14 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     @Override
     public void update(float tpf) {
         this.msgManager.update(tpf);
+        
+        // f.ex. for adjusting thruster particles to current velocity
+        if (this.playerShip != null) {
+            this.playerShip.update();
+        }
+        for (ClientShip clientShip : clientShips) {
+            clientShip.update();
+        }
 
         //this.background.updateBackground();
         if (this.playerShip != null && !universeDebug) {

@@ -80,4 +80,7 @@ public class GraphicalModule extends Node{
     public boolean isActive() {
         return active;
     }
+    
+    public void update() {        
+    }
 }

@@ -9,6 +9,7 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import netclient.ClientShip;
 import netclient.WJSFClient;
@@ -35,8 +36,7 @@ public class GMThruster extends GraphicalModule {
     
     @Override
     protected void createMyGraphic(float x, float y) {
-        super.createMyGraphic(x, y);
-        
+        super.createMyGraphic(x, y);        
         
         AssetManager a = app.getAssetManager();
         
@@ -75,25 +75,20 @@ public class GMThruster extends GraphicalModule {
         ship.decreaseActivatedThrusterCount();
         fire.setParticlesPerSec(0f);
     }
-    /*
-    public void update() {
-        fire.setLocalTranslation(this.body.getPosition().x, 0, this.body.getPosition().y);
+
+    @Override
+    public void update() {   
+        super.update();
         fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(5f));
     }
     
-    
-    
-    public final Vector3f getParticleSpawnDirection(float initialVelocity)
-    {   
-        if (getBody() == null)
-            return new Vector3f(0f, 0f, 0f);
-        
-        float angle = this.getBody().getAngle();
+    public final Vector3f getParticleSpawnDirection(float initialVelocity) {           
+        float angle = ship.shipRoot.getLocalRotation().toAngleAxis(new Vector3f(0, 1, 0));
         float x = (float)Math.cos(angle + 90f);        
         float y = (float)Math.sin(angle + 90f);
 
         Vector3f forward = new Vector3f(initialVelocity * x, 0 ,initialVelocity * y);
         return forward;
-    }*/
+    }
     
 }

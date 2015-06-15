@@ -63,7 +63,6 @@ public class ClientShip {
         activatedThrusterCount = 0;
         
         this.gmodules = new GraphicalModule[ship.length][ship[0].length];
-        // TODO: get real velocity, atm needed for camera movement
         this.velocity = new Vec2();
 
         // build ship
@@ -198,5 +197,15 @@ public class ClientShip {
     }
     public float getAngVelocity() {
         return angVelocity;
+    }
+    
+    public void update() {
+        for (int i=0; i<gmodules.length; i++) {
+            for (int j=0; j<gmodules[i].length; j++) {
+                if (gmodules[i][j] != null) {
+                    gmodules[i][j].update();
+                }
+            }
+        }
     }
 }
