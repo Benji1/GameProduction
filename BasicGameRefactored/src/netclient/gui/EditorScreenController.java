@@ -5,6 +5,7 @@
 package netclient.gui;
 
 import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
 import com.jme3.input.event.KeyInputEvent;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
@@ -20,6 +21,7 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.tools.SizeValue;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +46,12 @@ import netserver.services.ServiceManager;
  */
 public class EditorScreenController implements ScreenController, DroppableDropFilter {
     
-    Nifty nifty;
-    Screen screen;
+    private static Nifty nifty;
+    private static Screen screen;
+    private static String lastHoverId;
     
     private int partIdCounter = 0;
-    private HashMap<Point , OrientedModule> shipTiles = new HashMap<Point, OrientedModule>();
+    private static HashMap<Point , OrientedModule> shipTiles = new HashMap<Point, OrientedModule>();
     private ClientShip ship;
     private int[][] directions = new int[][] {{1,0},{0,1},{-1,0},{0,-1},{0,0}};
     //private int[][] directions = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{0,0}};
@@ -272,10 +275,9 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             int x = Integer.parseInt(parentId.substring(parentId.indexOf("X") + 1, parentId.indexOf("Y")));
             int y = Integer.parseInt(parentId.substring(parentId.indexOf("Y") + 1, parentId.indexOf("#")));
         
-            // TODO: maybe better check
             // check if module can have key binding --> is interactive module
             OrientedModule module = shipTiles.get(new Point(x, y));
-            if (module.moduleType.equals(ModuleType.SHIELD) || module.moduleType.equals(ModuleType.THRUSTER) || module.moduleType.equals(ModuleType.WEAPON)) {
+            if (ModuleType.isInteractiveModule(module.moduleType)) {
                 setKeyBinding(new Point(x, y));
             }
         }
@@ -300,6 +302,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
             keyBindingInputHandler = null;
 
             doKeyBinding(modulePos, evt.getKeyCode());
+            showKeyBindings(lastHoverId);
         } else {
             System.out.println("invalid key pressed");
         }
@@ -357,24 +360,96 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         }
     }
     
-    public void clearDescriptionPanel() {
+    public static void clearDescriptionPanel() {
         Element descriptionPanel = screen.findElementByName("description-panel");
         for (Element key : descriptionPanel.getElements()) {
             key.markForRemoval();
         }
     }
     
-    public void showKeyBindings() {
-        clearDescriptionPanel();
-        String keys = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-        Element descriptionPanel = screen.findElementByName("description-panel");
-        ControlBuilder keyBuilder = new ControlBuilder("key");
-        for (int i = 0; i < 1 + (int) (Math.random() * 12); ++i) {
-            keyBuilder.parameter("text", Character.toString(keys.charAt((int) (Math.random() * keys.length()))));
-            keyBuilder.parameter("x", Integer.toString(74 * (i % 6)));
-            keyBuilder.parameter("y", Integer.toString(74 * (i / 6)));
-            keyBuilder.build(nifty, screen, descriptionPanel);
+    public static void hoverOverDraggable(String id) {
+        if (lastHoverId != id) {
+            showKeyBindings(id);
         }
+        lastHoverId = id;
+    }
+        
+    public static void showKeyBindings(String id) {        
+        String parentId = screen.findElementByName(id).getParent().getId();
+        if (parentId.startsWith("slot")) {
+            int x = Integer.parseInt(parentId.substring(parentId.indexOf("X") + 1, parentId.indexOf("Y")));
+            int y = Integer.parseInt(parentId.substring(parentId.indexOf("Y") + 1, parentId.indexOf("#")));
+            OrientedModule module = shipTiles.get(new Point(x, y));
+            if (ModuleType.isInteractiveModule(module.moduleType)) {
+                clearDescriptionPanel();
+                Element descriptionPanel = screen.findElementByName("description-panel");
+                ControlBuilder keyBuilder = new ControlBuilder("key");
+                ArrayList<String> keys = keyCodesToString(module.keyCodes);
+                for (int i = 0; i < keys.size(); ++i) {
+                    keyBuilder.parameter("text", keys.get(i));
+                    keyBuilder.parameter("x", Integer.toString(74 * (i % 6)));
+                    keyBuilder.parameter("y", Integer.toString(74 * (i / 6)));
+                    keyBuilder.build(nifty, screen, descriptionPanel);
+                }
+            }
+        }
+    }
+    
+    private static ArrayList<String> keyCodesToString(ArrayList<Integer> keyCodes) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (int i : keyCodes) {
+            switch (i)
+            {
+                case KeyInput.KEY_0: result.add("0"); break;
+                case KeyInput.KEY_1: result.add("1"); break;
+                case KeyInput.KEY_2: result.add("2"); break; 
+                case KeyInput.KEY_3: result.add("3"); break;
+                case KeyInput.KEY_4: result.add("4"); break;
+                case KeyInput.KEY_5: result.add("5"); break;
+                case KeyInput.KEY_6: result.add("6"); break; 
+                case KeyInput.KEY_7: result.add("7"); break;
+                case KeyInput.KEY_8: result.add("8"); break;
+                case KeyInput.KEY_9: result.add("9"); break;
+                case KeyInput.KEY_A: result.add("A"); break;
+                case KeyInput.KEY_B: result.add("B"); break;
+                case KeyInput.KEY_C: result.add("C"); break;
+                case KeyInput.KEY_D: result.add("D"); break;
+                case KeyInput.KEY_E: result.add("E"); break;
+                case KeyInput.KEY_F: result.add("F"); break;
+                case KeyInput.KEY_G: result.add("G"); break;
+                case KeyInput.KEY_H: result.add("H"); break;
+                case KeyInput.KEY_I: result.add("I"); break;
+                case KeyInput.KEY_J: result.add("J"); break;
+                case KeyInput.KEY_K: result.add("K"); break;
+                case KeyInput.KEY_L: result.add("L"); break;
+                case KeyInput.KEY_M: result.add("M"); break;
+                case KeyInput.KEY_N: result.add("N"); break;
+                case KeyInput.KEY_O: result.add("O"); break;
+                case KeyInput.KEY_P: result.add("P"); break;
+                case KeyInput.KEY_Q: result.add("Q"); break;
+                case KeyInput.KEY_R: result.add("R"); break;
+                case KeyInput.KEY_S: result.add("S"); break;
+                case KeyInput.KEY_T: result.add("T"); break;
+                case KeyInput.KEY_U: result.add("U"); break;
+                case KeyInput.KEY_V: result.add("V"); break;
+                case KeyInput.KEY_W: result.add("W"); break;
+                case KeyInput.KEY_X: result.add("X"); break;
+                case KeyInput.KEY_Y: result.add("Y"); break;
+                case KeyInput.KEY_Z: result.add("Z"); break;
+                case KeyInput.KEY_SPACE: result.add("_"); break;
+                case KeyInput.KEY_LSHIFT: result.add("RS"); break;
+                case KeyInput.KEY_RSHIFT: result.add("LS"); break;
+                case KeyInput.KEY_LCONTROL: result.add("RC"); break;
+                case KeyInput.KEY_RCONTROL: result.add("LC"); break;
+                case KeyInput.KEY_TAB: result.add("<>"); break;
+                case KeyInput.KEY_LEFT: result.add("<"); break;
+                case KeyInput.KEY_RIGHT: result.add(">"); break;
+                case KeyInput.KEY_UP: result.add("^"); break;
+                case KeyInput.KEY_DOWN: result.add("v"); break;
+                default: result.add("/");
+            }
+        }
+        return result;        
     }
     
     private void setupPartsPanel(InventoryCategory cat) {

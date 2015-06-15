@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty-controls>
     <controlDefinition name="custom-draggable" childRootId="#draggableContent" controller="netclient.gui.dragAndDrop.DraggableControl">
-        <interact onClick="dragStart()" onClickMouseMove="drag()" onRelease="dragStop()"/>
+        <interact onClick="dragStart()" onClickMouseMove="drag()" onRelease="dragStop()" onMouseOver="mouseOver()"/>
         <panel id="#draggableContent">
             <effect>
                 <onStartHover name="nop" onStartEffect="showKeyBindings()"/>
