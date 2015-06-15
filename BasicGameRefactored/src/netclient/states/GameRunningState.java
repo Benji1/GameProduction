@@ -76,7 +76,6 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     /**
      * for camera working in client
      */
-    private boolean up;
     private boolean useAdjustingCamera = false;
 
     public GameRunningState() {
@@ -261,7 +260,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                         this.cameraHeight + speedFactor,
                         camPosChangeLerpValue);
 
-                if (!up || newY > previousCamPos.y) {
+                if (!playerShip.hasActivatedThruster() || newY > previousCamPos.y) {
                     currentCamPos.y = newY;
                 } else {
                     currentCamPos.y = previousCamPos.y;

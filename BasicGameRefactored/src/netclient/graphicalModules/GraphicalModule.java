@@ -10,6 +10,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
+import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.OrientedModule;
 
@@ -26,14 +27,16 @@ public class GraphicalModule extends Node{
     protected ColorRGBA color = ColorRGBA.Gray;
     protected ColorRGBA colorActive = ColorRGBA.Red;
     protected WJSFClient app;
+    protected ClientShip ship;
     protected Node shipRoot;
     protected boolean active;
     protected String modelPath = "3dmodels/armor.obj";
     protected String texturePath = "3dmodels/armor_ao.png";
 
-    public GraphicalModule(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
+    public GraphicalModule(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
         this.app = app;
         this.shipRoot = shipRoot;
+        this.ship = ship;
         this.orientedModule = orientedModule;
         shipRoot.attachChild(this);
     }

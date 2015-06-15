@@ -111,23 +111,23 @@ public class ClientShip {
     private GraphicalModule createOrientedModuleGraphics(OrientedModule om, float x, float y) {
         switch (om.moduleType) {
             case ARMOR:
-                return new GMArmor(om, shipRoot, x, y, app);
+                return new GMArmor(om, shipRoot, this, x, y, app);
             case ARMOR_DIAGONAL:
-                return new GMArmorDiagonal(om, shipRoot, x, y, app);
+                return new GMArmorDiagonal(om, shipRoot, this, x, y, app);
             case COCKPIT:
-                return new GMCockpit(om, shipRoot, x, y, app);
+                return new GMCockpit(om, shipRoot, this, x, y, app);
             case ENERGY_GENERATOR:
-                return new GMEnergyGenerator(om, shipRoot, x, y, app);
+                return new GMEnergyGenerator(om, shipRoot, this, x, y, app);
             case SHIELD:
-                return new GMShieldGenerator(om, shipRoot, x, y, app);
+                return new GMShieldGenerator(om, shipRoot, this, x, y, app);
             case STORAGE:
-                return new GMStorage(om, shipRoot, x, y, app);
+                return new GMStorage(om, shipRoot, this, x, y, app);
             case THRUSTER:
-                return new GMThruster(om, shipRoot, x, y, app);
+                return new GMThruster(om, shipRoot, this, x, y, app);
             case WEAPON:
-                return new GMLaserGun(om, shipRoot, x, y, app);
+                return new GMLaserGun(om, shipRoot, this, x, y, app);
             default:
-                return new GMArmor(om, shipRoot, x, y, app);
+                return new GMArmor(om, shipRoot, this, x, y, app);
         }
     }
     

@@ -6,6 +6,7 @@ package netclient.graphicalModules;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
+import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.OrientedModule;
 
@@ -15,8 +16,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMLaserGun extends GraphicalModule {
     
-    public GMLaserGun(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, x, y, app);
+    public GMLaserGun(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
+        super(orientedModule, shipRoot, ship, x, y, app);
         
         colorActive = ColorRGBA.Red;
         modelPath = "3dmodels/gun.obj";

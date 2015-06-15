@@ -5,6 +5,7 @@
 package netclient.graphicalModules;
 
 import com.jme3.scene.Node;
+import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.OrientedModule;
 
@@ -14,8 +15,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMArmorDiagonal  extends GraphicalModule {
     
-    public GMArmorDiagonal(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, x, y, app);
+    public GMArmorDiagonal(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
+        super(orientedModule, shipRoot, ship, x, y, app);
         
         modelPath = "3dmodels/armor_half.obj";
         texturePath = "3dmodels/armor_half_ao.png";

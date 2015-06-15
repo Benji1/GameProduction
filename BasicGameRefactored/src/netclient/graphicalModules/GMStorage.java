@@ -5,6 +5,7 @@
 package netclient.graphicalModules;
 
 import com.jme3.scene.Node;
+import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.OrientedModule;
 
@@ -14,8 +15,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMStorage extends GraphicalModule {
     
-    public GMStorage(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, x, y, app);
+    public GMStorage(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
+        super(orientedModule, shipRoot, ship, x, y, app);
         
         modelPath = "3dmodels/storage.obj";
         texturePath = "3dmodels/storage_ao.png";

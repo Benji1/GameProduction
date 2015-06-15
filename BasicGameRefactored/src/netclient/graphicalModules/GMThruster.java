@@ -7,6 +7,7 @@ package netclient.graphicalModules;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
+import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.OrientedModule;
 
@@ -19,8 +20,8 @@ public class GMThruster extends GraphicalModule {
     ParticleEmitter fire;
     
     
-    public GMThruster(OrientedModule orientedModule, Node shipRoot, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, x, y, app);
+    public GMThruster(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
+        super(orientedModule, shipRoot, ship, x, y, app);
         
         colorActive = ColorRGBA.Orange;
         modelPath = "3dmodels/thruster.obj";
@@ -60,14 +61,15 @@ public class GMThruster extends GraphicalModule {
     
     @Override
     public void activate() {
-        super.activate();
-        
+        super.activate();   
+        ship.increaseActivatedThrusterCount();        
         fire.setParticlesPerSec(60f);
     }
     
     @Override
     public void deactivate() {
         super.deactivate();
+        ship.decreaseActivatedThrusterCount();
         fire.setParticlesPerSec(0f);
     }
     /*
