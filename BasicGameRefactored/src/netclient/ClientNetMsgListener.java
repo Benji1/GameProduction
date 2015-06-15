@@ -21,6 +21,7 @@ import netutil.NetMessages.ModuleActivatedMsg;
 import netutil.NetMessages.NearStationMsg;
 import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShipChangedMsg;
+import netutil.NetMessages.ToggleEditorMsg;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
 	
@@ -168,6 +169,25 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                                         } else {
                                             s.deactivateModule(msg.getXPos(), msg.getYPos());
                                         }
+                                    }
+                                }
+                            }
+                            
+                            return null;
+                        }
+                    });
+                } else if (m instanceof ToggleEditorMsg) {
+                    final ToggleEditorMsg msg = (ToggleEditorMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            if (app.gameRunState.playerShip.id == msg.getShipId()) {
+                                //app.gameRunState.playerShip.setItemsInBase(msg.getModulesInBase());
+                                app.gameRunState.toggleEditor(msg.getModulesInBase());
+                            } else {
+                                for (ClientShip s : app.gameRunState.clientShips) {
+                                    if (s.id == msg.getShipId()) {
+                                        s.setItemsInBase(msg.getModulesInBase());
                                     }
                                 }
                             }

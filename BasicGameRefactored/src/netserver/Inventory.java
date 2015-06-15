@@ -24,12 +24,12 @@ public class Inventory {
     }
     
     private void fillWithStartItems() {
-        addMultipleItems(ModuleType.ARMOR, 99);//12
-        addMultipleItems(ModuleType.ARMOR_DIAGONAL, 99);//7
-        addMultipleItems(ModuleType.WEAPON, 99);//3
-        addMultipleItems(ModuleType.THRUSTER, 99);//4
-        addMultipleItems(ModuleType.COCKPIT, 99);//1
-        addMultipleItems(ModuleType.ENERGY_GENERATOR, 99);//3
+        addMultipleItems(ModuleType.ARMOR, 50);//12
+        addMultipleItems(ModuleType.ARMOR_DIAGONAL, 50);//7
+        addMultipleItems(ModuleType.WEAPON, 50);//3
+        addMultipleItems(ModuleType.THRUSTER, 50);//4
+        addMultipleItems(ModuleType.COCKPIT, 50);//1
+        addMultipleItems(ModuleType.ENERGY_GENERATOR, 50);//3
     }
     
     private void addMultipleItems(ModuleType moduleType, int count) {
@@ -86,7 +86,7 @@ public class Inventory {
         return numOfEachItem;
     }
     
-    public boolean removeItemOfType(ModuleType type) {
+    public boolean removeItemFromBase(ModuleType type) {
         for (int i=0; i<itemsInBase.size(); i++) {
             if (itemsInBase.get(i).equals(type)) {
                 itemsInBase.remove(i);
@@ -96,8 +96,20 @@ public class Inventory {
         
         return false;
     }
-    public void addItemOfType(ModuleType type) {
+    public void addItemToBase(ModuleType type) {
         itemsInBase.add(type);
+    }
+    
+    public void moveItemsFromShipToBaseStorage() {
+        for (Storage storage : storages) {
+            ArrayList<ModuleType> items = storage.getStoredItems();
+            
+            for (ModuleType item : items) {
+                addItemToBase(item);
+            }
+            
+            storage.clearItems();
+        }
     }
     
     public void setItemsInBase(ModuleType[] itemsInBase) {

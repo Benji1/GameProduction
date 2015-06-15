@@ -69,6 +69,10 @@ public class Storage extends BasicModule {
         super.onRemove();
     }
     
+    public void clearItems() {
+        itemsInStorage.clear();
+    }
+    
     public ArrayList<ModuleType> getStoredItems() {
         return itemsInStorage;
     }

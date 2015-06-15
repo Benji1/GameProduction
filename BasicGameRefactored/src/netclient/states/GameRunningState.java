@@ -52,6 +52,7 @@ import com.jme3.scene.shape.Box;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import netclient.gui.ModuleType;
 
 public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController, RawInputListener {
 
@@ -168,16 +169,6 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                     universeDebug = true;
                 }
             }
-        } else if (name.equals("ToggleEditor") && !keyPressed && nearStation) {
-            if (!this.app.gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
-                this.app.gui.goToEditorScreen();
-                this.app.getInputManager().setCursorVisible(true);
-                this.app.getInputManager().removeRawInputListener(this);
-            } else {
-                this.app.gui.goToEmptyScreen();
-                this.app.getInputManager().setCursorVisible(false);
-                this.app.getInputManager().addRawInputListener(this);
-            }
         } else if (name.equals("ExitOverlay") && !keyPressed) {
             if (!this.app.gui.getCurrentScreenId().equals(GUI.EXIT_OVERLAY_SCREEN)) {
                 this.app.gui.goToExitOverlayScreen();
@@ -185,6 +176,21 @@ public class GameRunningState extends AbstractAppState implements ActionListener
             } else {
                 this.app.gui.goToEmptyScreen();
                 this.app.getInputManager().setCursorVisible(false);
+            }
+        }
+    }
+    
+    public void toggleEditor(ModuleType[] newItemsInBase) {       
+        if (nearStation) {
+            if (!this.app.gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
+                playerShip.setItemsInBase(newItemsInBase);
+                this.app.gui.goToEditorScreen();
+                this.app.getInputManager().setCursorVisible(true);
+                //this.app.getInputManager().removeRawInputListener(this);
+            } else {
+                this.app.gui.goToEmptyScreen();
+                this.app.getInputManager().setCursorVisible(false);
+                //this.app.getInputManager().addRawInputListener(this);
             }
         }
     }

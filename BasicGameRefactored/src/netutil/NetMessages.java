@@ -40,6 +40,7 @@ public class NetMessages {
         Serializer.registerClass(ShipChangedMsg.class);
         Serializer.registerClass(NearStationMsg.class);
         Serializer.registerClass(ModuleActivatedMsg.class);
+        Serializer.registerClass(ToggleEditorMsg.class);
     }
 
     @Serializable
@@ -213,6 +214,22 @@ public class NetMessages {
         public int getXPos() {return this.xPos;}
         public int getYPos() {return this.yPos;}
         public boolean isActive() {return this.avctive;}                
+    }
+    
+    @Serializable
+    public static class ToggleEditorMsg extends AbstractMessage {        
+        private int shipId;
+        private ModuleType[] modulesInBase;
+        
+        public ToggleEditorMsg() {}
+        
+        public ToggleEditorMsg(int shipId, ModuleType[] modulesInBase) {
+            this.shipId = shipId;
+            this.modulesInBase = modulesInBase;
+        }
+        
+        public int getShipId() {return this.shipId;}
+        public ModuleType[] getModulesInBase() {return this.modulesInBase;}              
     }
     
     /**********************************

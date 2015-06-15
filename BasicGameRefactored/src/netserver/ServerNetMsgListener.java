@@ -1,5 +1,6 @@
 package netserver;
 
+import com.jme3.input.KeyInput;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import netutil.NetMessages.ShipChangedMsg;
+import netutil.NetMessages.ToggleEditorMsg;
 
 public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 	
@@ -31,8 +33,17 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 					// find player and update input status
 					for(NetPlayer pl : app.getConManager().players) {
 						if(pl.con.getId() == client.getId()) {
-							pl.handleKeyEvent(msg.getKeyCode(), msg.getKeyPressed());
-							return null;
+                                                        if (msg.getKeyCode().equals(KeyInput.KEY_E) && !msg.getKeyPressed()) {
+                                                                // toggle editor
+                                                                pl.getInventory().moveItemsFromShipToBaseStorage();
+                                                                ToggleEditorMsg msg = new ToggleEditorMsg(pl.con.getId(), pl.getInventory().getModulesInBase());
+                                                                msg.setReliable(true);
+                                                                app.getServer().broadcast(msg);
+                                                        } else {
+                                                                pl.handleKeyEvent(msg.getKeyCode(), msg.getKeyPressed());
+                                                        }
+                                                        
+                                                        return null;
 						}
 					}
 					
