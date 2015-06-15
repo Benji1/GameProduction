@@ -184,18 +184,18 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         }
     }
     
-    public void toggleEditor(ModuleType[] newItemsInBase) {       
-        if (nearStation) {
-            if (!this.app.gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
+    public void toggleEditor(ModuleType[] newItemsInBase) {
+        if (!this.app.gui.getCurrentScreenId().equals(GUI.EDITOR_SCREEN)) {
+            if (nearStation) {
                 playerShip.setItemsInBase(newItemsInBase);
                 this.app.gui.goToEditorScreen();
                 this.app.getInputManager().setCursorVisible(true);
                 //this.app.getInputManager().removeRawInputListener(this);
-            } else {
-                this.app.gui.goToEmptyScreen();
-                this.app.getInputManager().setCursorVisible(false);
-                //this.app.getInputManager().addRawInputListener(this);
             }
+        } else {
+            this.app.gui.goToEmptyScreen();
+            this.app.getInputManager().setCursorVisible(false);
+            //this.app.getInputManager().addRawInputListener(this);
         }
     }
 
