@@ -23,6 +23,7 @@ import static netclient.gui.ModuleType.THRUSTER;
 import static netclient.gui.ModuleType.WEAPON;
 import netclient.gui.OrientedModule;
 import netclient.gui.inventory.InventoryCategory;
+import org.jbox2d.common.Vec2;
 
 public class ClientShip {
 
@@ -36,7 +37,10 @@ public class ClientShip {
     
     // ship stuff
     public Node shipRoot;
-    public Vector3f velocity;
+    
+    private Vec2 velocity;
+    private float angVelocity;
+    
     public OrientedModule[][] modules;
     public GraphicalModule[][] gmodules;
     public ArrayList<ModuleType> itemsInBase;
@@ -60,7 +64,7 @@ public class ClientShip {
         
         this.gmodules = new GraphicalModule[ship.length][ship[0].length];
         // TODO: get real velocity, atm needed for camera movement
-        this.velocity = new Vector3f(0, 0, 0);
+        this.velocity = new Vec2();
 
         // build ship
         refreshGraphicsOfShip();
@@ -181,5 +185,18 @@ public class ClientShip {
     }
     public boolean hasActivatedThruster() {
         return activatedThrusterCount > 0;
+    }
+    
+    public void setVelocity(Vec2 vel) {
+        this.velocity = vel;
+    }
+    public void setAngVelocity(float angVel) {
+        this.angVelocity = angVel;
+    }
+    public Vec2 getVelocity() {
+        return velocity;
+    }
+    public float getAngVelocity() {
+        return angVelocity;
     }
 }

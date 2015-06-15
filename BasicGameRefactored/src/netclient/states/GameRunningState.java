@@ -65,18 +65,17 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public ClientShip playerShip;
     public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
     public ClientNetMsgListener msgManager;
-    private float cameraHeight = 0f;
+
+    private int cameraType = 2; // 0, 1 or 2
+    private float cameraMinHeight = 0f;
+    private float cameraMaxHeight = 0f;
     float camXOffset = -20f; // Camera X
     float camZOffset = 20f;  // Camera Y, should at least be 0.1f so that the camera isn't inside the ship
     float camYOffset = 20f;  // Camera height
+    
     boolean universeDebug = false;
     
     public boolean nearStation = false;
-
-    /**
-     * for camera working in client
-     */
-    private boolean useAdjustingCamera = false;
 
     public GameRunningState() {
     }
@@ -105,14 +104,20 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.app.getInputManager().addRawInputListener(this);
     }
 
-    public void initCamera() {
+    public void initCamera() {        
         camNode = new CameraNode("Camera Node", this.app.getViewPort().getCamera());
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.localRootNode.attachChild(camNode);
 
-        cameraHeight = camYOffset * (this.app.getViewPort().getCamera().getWidth() / 1600f);
+        cameraMinHeight = camYOffset * (app.getViewPort().getCamera().getWidth() / 1600f);
+        cameraMaxHeight = cameraMinHeight * 5f;
+
+        Vector3f tmpPos = camNode.getLocalTranslation();
+        tmpPos.y = cameraMinHeight - 2f;
+        currentCamPos = tmpPos;
+        
         if (this.playerShip != null) {
-            updateCamera();
+            updateCamPos(0f);
         }
     }
 
@@ -199,7 +204,9 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.msgManager.update(tpf);
 
         //this.background.updateBackground();
-        this.updateCamera();
+        if (this.playerShip != null && !universeDebug) {
+            updateCamPos(tpf);
+        }
     }
 
     @Override
@@ -235,46 +242,87 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     Vector3f previousCamPos;
     Vector3f currentCamPos = new Vector3f();
     float camPosChangeLerpValue = 0.03f;
+    
+    final float cooldown = 2f;
+    float cameraMoveBackCooldown = 0f;
+    float camYspeed = 10f;
+    float crap = 0f;
 
-    public void updateCamera() {
-        if (this.playerShip != null) {
-            if (useAdjustingCamera) {
-                previousCamPos = currentCamPos;
-                currentCamPos = new Vector3f();
+    public void updateCamPos(float delta) {
+        if (cameraType == 0) {
+            currentCamPos.x = playerShip.shipRoot.getLocalTranslation().x;
+            currentCamPos.z = playerShip.shipRoot.getLocalTranslation().z + 0.1f;
+            currentCamPos.y = this.cameraMinHeight * 5f;
 
-                float min = 0.1f;
-                float max = 100f;
-                float speedFactor = this.playerShip.velocity.lengthSquared() * 0.1f;
+            camNode.setLocalTranslation(currentCamPos);
+            camNode.lookAt(playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+        } else if (cameraType == 1){
+            previousCamPos = currentCamPos;
+            currentCamPos = new Vector3f();
 
-                speedFactor = Math.max(min, speedFactor);
-                speedFactor = Math.min(speedFactor, max);
-                float t = inverseLerp(0f, max + min, speedFactor);
-                float offsetFactor = 1f - t;
+            float min = 0.1f;
+            float max = 100f;
+            float speedFactor = playerShip.getVelocity().lengthSquared() * 0.1f;
 
-                currentCamPos.x = this.playerShip.shipRoot.getLocalTranslation().x + camXOffset * offsetFactor;
-                currentCamPos.z = this.playerShip.shipRoot.getLocalTranslation().z + camZOffset * offsetFactor;
+            speedFactor = Math.max(min, speedFactor);
+            speedFactor = Math.min(speedFactor, max);
+            float t = inverseLerp(0f, max + min, speedFactor);
+            float offsetFactor = 1f - t;
 
-                float newY =
-                        lerp(
-                        previousCamPos.y,
-                        this.cameraHeight + speedFactor,
-                        camPosChangeLerpValue);
+            currentCamPos.x = playerShip.shipRoot.getLocalTranslation().x + camXOffset * offsetFactor;
+            currentCamPos.z = playerShip.shipRoot.getLocalTranslation().z + camZOffset * offsetFactor;
 
-                if (!playerShip.hasActivatedThruster() || newY > previousCamPos.y) {
-                    currentCamPos.y = newY;
-                } else {
-                    currentCamPos.y = previousCamPos.y;
-                }
-                camNode.setLocalTranslation(currentCamPos);
-                camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+            float newY =
+                    lerp(
+                    previousCamPos.y,
+                    this.cameraMinHeight + speedFactor,
+                    camPosChangeLerpValue);
+
+            if (!playerShip.hasActivatedThruster() || newY > previousCamPos.y) {
+                currentCamPos.y = newY;
             } else {
-                currentCamPos.x = this.playerShip.shipRoot.getLocalTranslation().x;
-                currentCamPos.z = this.playerShip.shipRoot.getLocalTranslation().z + 0.1f;
-                currentCamPos.y = this.cameraHeight * 5f;
-
-                camNode.setLocalTranslation(currentCamPos);
-                camNode.lookAt(this.playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+                currentCamPos.y = previousCamPos.y;
             }
+
+            camNode.setLocalTranslation(currentCamPos);
+            camNode.lookAt(playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
+        } else if (cameraType == 2) {
+            previousCamPos = currentCamPos;
+            currentCamPos = new Vector3f();
+                        
+            float newY =
+                    lerp(
+                    previousCamPos.y,
+                    this.cameraMinHeight + crap,
+                    camPosChangeLerpValue);
+
+            
+            if (playerShip.hasActivatedThruster()) 
+                cameraMoveBackCooldown = cooldown;
+            
+            
+            if(cameraMoveBackCooldown < 0f || 
+                    (playerShip.hasActivatedThruster() && 
+                    newY > previousCamPos.y)) 
+                currentCamPos.y = newY;
+            else
+                currentCamPos.y = previousCamPos.y;
+            
+            
+            if (cameraMoveBackCooldown > 1.9f)
+                crap += delta * camYspeed;
+            else
+                crap -= delta * camYspeed;
+            
+            crap = Math.max(crap, cameraMinHeight);
+            crap = Math.min(crap, cameraMaxHeight);
+            
+            currentCamPos.x = playerShip.shipRoot.getLocalTranslation().x + camXOffset;
+            currentCamPos.z = playerShip.shipRoot.getLocalTranslation().z + camZOffset;
+            
+            cameraMoveBackCooldown -= delta;
+            camNode.setLocalTranslation(currentCamPos);
+            camNode.lookAt(playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
         }
     }
 

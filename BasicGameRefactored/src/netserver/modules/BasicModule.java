@@ -22,6 +22,7 @@ import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.config.ConfigReader;
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
@@ -91,6 +92,13 @@ public abstract class BasicModule extends JBox2dNode  {
     
     public Material getMaterial() {
         return this.material;
+    }
+    
+    public Vec2 getVelocity() {
+        return body.getLinearVelocity();
+    }
+    public float getAngVelocity() {
+        return body.getAngularVelocity();
     }
 
     @Override

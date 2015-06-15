@@ -11,6 +11,7 @@ import com.jme3.network.serializing.Serializer;
 import java.util.ArrayList;
 import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
+import org.jbox2d.common.Vec2;
 
 public class NetMessages {
 
@@ -82,18 +83,26 @@ public class NetMessages {
     	
     	private Vector3f pos;
     	private Quaternion dir;
+        private float velX;
+        private float velY;
+        private float angVel;
         private int id;
     	
     	public PosAndRotMsg() {}
     	
-    	public PosAndRotMsg(Vector3f pos, Quaternion dir, int id) {
+    	public PosAndRotMsg(Vector3f pos, Quaternion dir, Vec2 vel, float angVel, int id) {
     		this.pos = pos;
     		this.dir = dir;
                 this.id = id;
+                this.velX = vel.x;
+                this.velY = vel.y;
+                this.angVel = angVel;
     	}
     	
     	public Vector3f getPos() {return this.pos;}
     	public Quaternion getDir() {return this.dir;}
+        public Vec2 getVelocity() {return new Vec2(velX, velY);}
+        public float getAngVel() {return this.angVel;}
         public int getId() {return this.id;}
     }
     
