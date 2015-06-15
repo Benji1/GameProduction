@@ -361,6 +361,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     }
     
     public static void clearDescriptionPanel() {
+        lastHoverId = "";
         Element descriptionPanel = screen.findElementByName("description-panel");
         for (Element key : descriptionPanel.getElements()) {
             key.markForRemoval();
@@ -391,7 +392,8 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                     keyBuilder.parameter("y", Integer.toString(74 * (i / 6)));
                     keyBuilder.build(nifty, screen, descriptionPanel);
                 }
-            }
+            } else
+                clearDescriptionPanel();
         }
     }
     
