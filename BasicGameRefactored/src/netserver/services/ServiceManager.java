@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import netserver.services.config.ConfigReader;
 import netserver.services.editor.EditorManager;
+import netserver.services.idProvider.IdProvider;
 import netserver.services.updater.UpdateableManager;
 
 public class ServiceManager {
@@ -20,6 +21,7 @@ public class ServiceManager {
             put(UpdateableManager.class, new UpdateableManager());
             put(ConfigReader.class, new ConfigReader());
             put(EditorManager.class, new EditorManager());
+            put(IdProvider.class, new IdProvider());
         }};
         
         initServices();
@@ -44,6 +46,9 @@ public class ServiceManager {
     }
     public static EditorManager getEditorManager() {
         return getService(EditorManager.class);
+    }
+    public static IdProvider getIdProvider() {
+        return getService(IdProvider.class);
     }
     
 }
