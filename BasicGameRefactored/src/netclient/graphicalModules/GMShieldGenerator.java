@@ -16,8 +16,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMShieldGenerator extends GraphicalModule {
     
-    public GMShieldGenerator(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, ship, x, y, app);
+    public GMShieldGenerator(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+        super(orientedModule, nodeToAttach, x, y, app);
         
         colorActive = ColorRGBA.Cyan;
         modelPath = "3dmodels/shield_generator.obj";

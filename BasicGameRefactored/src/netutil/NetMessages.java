@@ -45,6 +45,7 @@ public class NetMessages {
         Serializer.registerClass(SpawnLaserProjectileMsg.class);
         Serializer.registerClass(GraphicObjPosAndRotMsg.class);
         Serializer.registerClass(DeleteGraphicObjectMsg.class);
+        Serializer.registerClass(ModuleDestroyedMsg.class);
     }
 
     @Serializable
@@ -305,6 +306,22 @@ public class NetMessages {
         }
         
         public int getId() {return this.id;}
+    }
+
+    @Serializable
+    public static class ModuleDestroyedMsg extends AbstractMessage {
+        private int shipId;
+        private OrientedModule[][] modules;
+        
+        public ModuleDestroyedMsg() {}
+        
+        public ModuleDestroyedMsg(int shipId, OrientedModule[][] modules) {
+            this.shipId = shipId;
+            this.modules = modules;
+        }
+        
+        public int getShipId() {return this.shipId;}
+        public OrientedModule[][] getModules() {return this.modules;}
     }
     
     /**********************************

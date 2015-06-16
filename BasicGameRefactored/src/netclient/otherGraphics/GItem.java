@@ -11,7 +11,26 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 import netclient.WJSFClient;
+import netclient.graphicalModules.GMArmor;
+import netclient.graphicalModules.GMArmorDiagonal;
+import netclient.graphicalModules.GMCockpit;
+import netclient.graphicalModules.ModuleCreator;
+import netclient.graphicalModules.GMEnergyGenerator;
+import netclient.graphicalModules.GMLaserGun;
+import netclient.graphicalModules.GMShieldGenerator;
+import netclient.graphicalModules.GMStorage;
+import netclient.graphicalModules.GMThruster;
+import netclient.graphicalModules.GraphicalModule;
 import netclient.gui.ModuleType;
+import static netclient.gui.ModuleType.ARMOR;
+import static netclient.gui.ModuleType.ARMOR_DIAGONAL;
+import static netclient.gui.ModuleType.COCKPIT;
+import static netclient.gui.ModuleType.ENERGY_GENERATOR;
+import static netclient.gui.ModuleType.SHIELD;
+import static netclient.gui.ModuleType.STORAGE;
+import static netclient.gui.ModuleType.THRUSTER;
+import static netclient.gui.ModuleType.WEAPON;
+import netclient.gui.OrientedModule;
 import netserver.modules.BasicModule;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
@@ -30,55 +49,27 @@ import org.jbox2d.dynamics.FixtureDef;
 
 public class GItem extends Node {
     
-    protected ModuleType type;
+    protected int id;
+    protected Node shipRoot;
     protected Body body;
-    protected ArrayList<Spatial> spatials;
     protected Material material;
     protected WJSFClient app;
     protected boolean collected;
+    GraphicalModule gm;
     
-    public GItem (ModuleType type, ArrayList<Spatial> spatials, Vec2 spawnPoint, Quaternion rotation, WJSFClient app) {
-        super();
+    public GItem (int id, OrientedModule orientedModule, Vec2 spawnPoint, Quaternion rotation, WJSFClient app) {
+        this.id = id;
+        this.shipRoot = new Node("Item " + orientedModule.moduleType.toString() + " " + id);
         this.app = app;
-        this.type = type;
-        this.spatials = spatials;
-
-        for(Spatial s: spatials) {
-            app.getRootNode().attachChild(s);
-            s.setLocalScale(0.5f);
-        }
-        this.updateBoxPosition();
+      
+        this.gm = ModuleCreator.createOrientedGraphicalModule(orientedModule, shipRoot, spawnPoint.x, spawnPoint.y, app);
         app.getRootNode().attachChild(this);
     }
     
-    protected final void updateBoxPosition() {
-        Vector3f bodyPos = new Vector3f(
-                (float) body.getWorldPoint(body.getLocalCenter()).x,
-                0.0f,
-                (float) body.getWorldPoint(body.getLocalCenter()).y);
-
-        float angleRad = body.getAngle();
-        Quaternion q = new Quaternion();
-        q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
-
-        if(spatials != null) {
-            for(Spatial s: spatials) {
-                s.setLocalTranslation(bodyPos);
-                s.setLocalRotation(q);
-            }
-        }
-    }
-    
     public void update(float tpf) {
-        updateBoxPosition();
     }
     
-    public void delete() {
-        PhysicsWorld.world.destroyBody(body);
-        
-        for(Spatial s: spatials) {
-                s.removeFromParent();
-            }
+    public void remove() {
         this.removeFromParent();
     }
 }

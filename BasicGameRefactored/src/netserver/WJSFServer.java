@@ -92,7 +92,7 @@ public class WJSFServer extends SimpleApplication {
         this.msgListener = new ServerNetMsgListener(this);
         this.server.addMessageListener(this.msgListener);
         this.designs = new TestShipDesigns(this);
-        this.gameCollisionListener = new GameContactListener();
+        this.gameCollisionListener = new GameContactListener(this);
         
         // init game
         this.initWorld();
@@ -163,7 +163,7 @@ public class WJSFServer extends SimpleApplication {
         //
         // UPDATE NET
         //
-        this.gameCollisionListener = new GameContactListener();
+        this.gameCollisionListener = new GameContactListener(this);
         this.conManager.update(tpf);
     }
     

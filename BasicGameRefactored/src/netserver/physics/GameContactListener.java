@@ -4,10 +4,15 @@
  */
 package netserver.physics;
 
+import netclient.gui.ModuleType;
+import netserver.BasicShip;
+import netserver.NetPlayer;
+import netserver.WJSFServer;
 import netserver.items.Item;
 import netserver.modules.BasicModule;
 import netserver.weapons.LaserProjectile;
 import netserver.weapons.ShieldCollider;
+import netutil.NetMessages;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
@@ -19,7 +24,10 @@ import org.jbox2d.dynamics.contacts.Contact;
  */
 public class GameContactListener implements ContactListener {
 
-    public GameContactListener() {
+    private WJSFServer app;
+    
+    public GameContactListener(WJSFServer app) {
+        this.app = app;
         PhysicsWorld.world.setContactListener(this);
     }
 
@@ -43,6 +51,7 @@ public class GameContactListener implements ContactListener {
         
         if(p != null && m != null) {
             p.handleBasicModuleCollision(m);
+            sendRefreshGraphicOfShipMsg(m.getShip());
         }
     }
 
@@ -87,5 +96,11 @@ public class GameContactListener implements ContactListener {
     }
 
     public void postSolve(Contact cntct, ContactImpulse ci) {
+    }
+    
+    public void sendRefreshGraphicOfShipMsg(BasicShip ship) {
+        NetMessages.ModuleDestroyedMsg msg = new NetMessages.ModuleDestroyedMsg(ship.getPlayer().con.getId(), ship.getOrientedModuleArray());
+        msg.setReliable(true);
+        app.getServer().broadcast(msg);
     }
 }

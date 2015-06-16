@@ -16,8 +16,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMEnergyGenerator extends GraphicalModule {
     
-    public GMEnergyGenerator(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, ship, x, y, app);
+    public GMEnergyGenerator(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+        super(orientedModule, nodeToAttach, x, y, app);
         
         colorActive = ColorRGBA.Yellow;
         modelPath = "3dmodels/generator.obj";

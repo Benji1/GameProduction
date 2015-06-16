@@ -15,8 +15,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMStorage extends GraphicalModule {
     
-    public GMStorage(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, ship, x, y, app);
+    public GMStorage(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+        super(orientedModule, nodeToAttach, x, y, app);
         
         modelPath = "3dmodels/storage.obj";
         texturePath = "3dmodels/storage_ao.png";
