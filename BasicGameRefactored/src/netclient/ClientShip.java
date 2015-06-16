@@ -105,7 +105,7 @@ public class ClientShip {
         for (int i = 0; i < gmodules.length; i++) {
             for (int j = 0; j < gmodules[0].length; j++) {
                 if (gmodules[i][j] != null) {
-                    gmodules[i][j].removeFromParent();
+                    gmodules[i][j].remove();
                 }
             }
         }

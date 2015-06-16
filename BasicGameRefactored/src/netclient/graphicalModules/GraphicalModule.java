@@ -46,6 +46,10 @@ public class GraphicalModule extends Node{
     }
 
     protected final void createGraphicFromPath(String modelPath, String texturePath, float x, float y) {
+        createGraphicFromPath(modelPath, texturePath, x, y, this);
+    }
+    
+    public final void createGraphicFromPath(String modelPath, String texturePath, float x, float y, Node toAttach) {
         AssetManager a = app.getAssetManager();
         spatial = a.loadModel(modelPath);
         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
@@ -60,11 +64,11 @@ public class GraphicalModule extends Node{
         materialActive.setTexture("DiffuseMap", t);
         
         // * 2 because otherwise modules intersect eachother
-        this.setLocalTranslation(x * 2, 0, y * 2);
+        toAttach.setLocalTranslation(x * 2, 0, y * 2);
         
         // TODO: Set Rotation
         
-        this.attachChild(spatial);
+        toAttach.attachChild(spatial);
     }
     
     public void activate() {
@@ -82,5 +86,9 @@ public class GraphicalModule extends Node{
     }
     
     public void update() {        
+    }
+    
+    public void remove() {
+        this.removeFromParent();
     }
 }
