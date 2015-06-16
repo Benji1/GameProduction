@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import netclient.graphicalModules.GMArmor;
 import netclient.graphicalModules.GMArmorDiagonal;
 import netclient.graphicalModules.GMCockpit;
+import netclient.graphicalModules.ModuleCreator;
 import netclient.graphicalModules.GMEnergyGenerator;
 import netclient.graphicalModules.GMLaserGun;
 import netclient.graphicalModules.GMShieldGenerator;
 import netclient.graphicalModules.GMStorage;
 import netclient.graphicalModules.GMThruster;
+import netclient.graphicalModules.ShipModule;
 import netclient.gui.ModuleType;
 import static netclient.gui.ModuleType.ARMOR;
 import static netclient.gui.ModuleType.ARMOR_DIAGONAL;
@@ -42,7 +44,7 @@ public class ClientShip {
     private float angVelocity;
     
     public OrientedModule[][] modules;
-    public GraphicalModule[][] gmodules;
+    public ShipModule[][] gmodules;
     public ArrayList<ModuleType> itemsInBase;
     public WJSFClient app;
     private int activatedThrusterCount;
@@ -62,7 +64,7 @@ public class ClientShip {
         setItemsInBase(modulesInBase);
         activatedThrusterCount = 0;
         
-        this.gmodules = new GraphicalModule[ship.length][ship[0].length];
+        this.gmodules = new ShipModule[ship.length][ship[0].length];
         this.velocity = new Vec2();
 
         // build ship
@@ -90,12 +92,12 @@ public class ClientShip {
     }
     
     private void createNewGraphics() {
-        gmodules = new GraphicalModule[modules.length][modules[0].length];
+        gmodules = new ShipModule[modules.length][modules[0].length];
         
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {
                 if (modules[i][j] != null) {
-                    gmodules[i][j] = createOrientedModuleGraphics(modules[i][j], i - modules.length / 2, j - modules[0].length / 2);
+                    gmodules[i][j] = ModuleCreator.createOrientedShipModule(modules[i][j], shipRoot, this, i - modules.length / 2, j - modules[0].length / 2, app);
                 }
             }
         }
@@ -106,31 +108,9 @@ public class ClientShip {
             for (int j = 0; j < gmodules[0].length; j++) {
                 if (gmodules[i][j] != null) {
                     gmodules[i][j].remove();
+                    gmodules[i][j] = null;
                 }
             }
-        }
-    }
-
-    private GraphicalModule createOrientedModuleGraphics(OrientedModule om, float x, float y) {
-        switch (om.moduleType) {
-            case ARMOR:
-                return new GMArmor(om, shipRoot, this, x, y, app);
-            case ARMOR_DIAGONAL:
-                return new GMArmorDiagonal(om, shipRoot, this, x, y, app);
-            case COCKPIT:
-                return new GMCockpit(om, shipRoot, this, x, y, app);
-            case ENERGY_GENERATOR:
-                return new GMEnergyGenerator(om, shipRoot, this, x, y, app);
-            case SHIELD:
-                return new GMShieldGenerator(om, shipRoot, this, x, y, app);
-            case STORAGE:
-                return new GMStorage(om, shipRoot, this, x, y, app);
-            case THRUSTER:
-                return new GMThruster(om, shipRoot, this, x, y, app);
-            case WEAPON:
-                return new GMLaserGun(om, shipRoot, this, x, y, app);
-            default:
-                return new GMArmor(om, shipRoot, this, x, y, app);
         }
     }
     

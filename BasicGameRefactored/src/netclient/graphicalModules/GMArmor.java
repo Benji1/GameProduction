@@ -16,8 +16,8 @@ import netclient.gui.OrientedModule;
  */
 public class GMArmor extends GraphicalModule {
     
-    public GMArmor(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
-        super(orientedModule, shipRoot, ship, x, y, app);
+    public GMArmor(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+        super(orientedModule, nodeToAttach, x, y, app);
         
         modelPath = "3dmodels/armor.obj";
         texturePath = "3dmodels/armor_ao.png";

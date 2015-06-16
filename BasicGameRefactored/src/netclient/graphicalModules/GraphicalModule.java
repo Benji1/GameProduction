@@ -12,6 +12,14 @@ import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
 import netclient.ClientShip;
 import netclient.WJSFClient;
+import static netclient.gui.ModuleType.ARMOR;
+import static netclient.gui.ModuleType.ARMOR_DIAGONAL;
+import static netclient.gui.ModuleType.COCKPIT;
+import static netclient.gui.ModuleType.ENERGY_GENERATOR;
+import static netclient.gui.ModuleType.SHIELD;
+import static netclient.gui.ModuleType.STORAGE;
+import static netclient.gui.ModuleType.THRUSTER;
+import static netclient.gui.ModuleType.WEAPON;
 import netclient.gui.OrientedModule;
 
 /**
@@ -28,17 +36,17 @@ public class GraphicalModule extends Node{
     protected ColorRGBA colorActive = ColorRGBA.Red;
     protected WJSFClient app;
     protected ClientShip ship;
-    protected Node shipRoot;
+    protected Node nodeToAttach;
     protected boolean active;
     protected String modelPath = "3dmodels/armor.obj";
     protected String texturePath = "3dmodels/armor_ao.png";
 
-    public GraphicalModule(OrientedModule orientedModule, Node shipRoot, ClientShip ship, float x, float y, WJSFClient app) {
+    public GraphicalModule(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
         this.app = app;
-        this.shipRoot = shipRoot;
-        this.ship = ship;
+        this.nodeToAttach = nodeToAttach;
         this.orientedModule = orientedModule;
-        shipRoot.attachChild(this);
+        
+        nodeToAttach.attachChild(this);
     }
 
     protected void createMyGraphic(float x, float y) {
@@ -90,5 +98,28 @@ public class GraphicalModule extends Node{
     
     public void remove() {
         this.removeFromParent();
+    }
+    
+    public GraphicalModule createOrientedModuleGraphics(OrientedModule om, Node nodeToAttach, float x, float y) {
+        switch (om.moduleType) {
+            case ARMOR:
+                return new GMArmor(om, nodeToAttach, x, y, app);
+            case ARMOR_DIAGONAL:
+                return new GMArmorDiagonal(om, nodeToAttach, x, y, app);
+            case COCKPIT:
+                return new GMCockpit(om, nodeToAttach, x, y, app);
+            case ENERGY_GENERATOR:
+                return new GMEnergyGenerator(om, nodeToAttach, x, y, app);
+            case SHIELD:
+                return new GMShieldGenerator(om, nodeToAttach, x, y, app);
+            case STORAGE:
+                return new GMStorage(om, nodeToAttach, x, y, app);
+            case THRUSTER:
+                return new GMThruster(om, nodeToAttach, x, y, app);
+            case WEAPON:
+                return new GMLaserGun(om, nodeToAttach, x, y, app);
+            default:
+                return new GMArmor(om, nodeToAttach, x, y, app);
+        }
     }
 }
