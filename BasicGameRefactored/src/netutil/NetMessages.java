@@ -42,6 +42,9 @@ public class NetMessages {
         Serializer.registerClass(NearStationMsg.class);
         Serializer.registerClass(ModuleActivatedMsg.class);
         Serializer.registerClass(ToggleEditorMsg.class);
+        Serializer.registerClass(SpawnLaserProjectileMsg.class);
+        Serializer.registerClass(GraphicObjPosAndRotMsg.class);
+        Serializer.registerClass(DeleteGraphicObjectMsg.class);
     }
 
     @Serializable
@@ -239,6 +242,69 @@ public class NetMessages {
         
         public int getShipId() {return this.shipId;}
         public ModuleType[] getModulesInBase() {return this.modulesInBase;}              
+    }
+    
+    @Serializable
+    public static class SpawnLaserProjectileMsg extends AbstractMessage {
+        private int id;
+        private float spawnX;
+        private float spawnY;
+        private float dirX;
+        private float dirY;
+        
+        public SpawnLaserProjectileMsg() {}
+        
+        public SpawnLaserProjectileMsg(int id, Vec2 spawnPoint, Vec2 dir) {
+            this.id = id;
+            this.spawnX = spawnPoint.x;
+            this.spawnY = spawnPoint.y;
+            this.dirX = dir.x;
+            this.dirY = dir.y;
+        }
+        
+        public int getId() {return this.id;}
+        public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
+        public Vec2 getDir() {return new Vec2(dirX, dirY);}
+    }
+    
+    @Serializable
+    public static class GraphicObjPosAndRotMsg extends AbstractMessage {    	
+    	private Vector3f pos;
+    	private Quaternion dir;
+        private float velX;
+        private float velY;
+        private float angVel;
+        private int id;
+    	
+    	public GraphicObjPosAndRotMsg() {}
+    	
+    	public GraphicObjPosAndRotMsg(Vector3f pos, Quaternion dir, Vec2 vel, float angVel, int id) {
+    		this.pos = pos;
+    		this.dir = dir;
+                this.id = id;
+                this.velX = vel.x;
+                this.velY = vel.y;
+                this.angVel = angVel;
+    	}
+    	
+    	public Vector3f getPos() {return this.pos;}
+    	public Quaternion getRot() {return this.dir;}
+        public Vec2 getVelocity() {return new Vec2(velX, velY);}
+        public float getAngVel() {return this.angVel;}
+        public int getId() {return this.id;}
+    }
+    
+    @Serializable
+    public static class DeleteGraphicObjectMsg extends AbstractMessage {
+        private int id;
+        
+        public DeleteGraphicObjectMsg() {}
+        
+        public DeleteGraphicObjectMsg(int id) {
+            this.id = id;
+        }
+        
+        public int getId() {return this.id;}
     }
     
     /**********************************

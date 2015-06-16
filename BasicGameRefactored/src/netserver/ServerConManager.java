@@ -10,6 +10,8 @@ import com.jme3.network.ConnectionListener;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;
+import netserver.services.ServiceManager;
+import netserver.services.updater.INetworkPosAndRotUpdateable;
 
 import netutil.NetMessages.*;
 
@@ -101,10 +103,22 @@ public class ServerConManager implements ConnectionListener {
                                 boolean nearby = this.app.getUniverse().nearStation(pl.getShip().cockpit.getWorldTranslation());
                                 this.app.getServer().broadcast(new NearStationMsg(nearby, pl.con.getId()));
 			}
+                        
+                        for (INetworkPosAndRotUpdateable u : ServiceManager.getUpdateableManager().getNetorkUpdateables()) {
+                            GraphicObjPosAndRotMsg msg = new GraphicObjPosAndRotMsg(u.getTranslation(), u.getRotation(), u.getVelocity(), u.getAngVelocity(), u.getId());
+                            msg.setReliable(true);
+                            app.getServer().broadcast(msg);
+                        }
 			
 			this.curPosAndRotUpdate = 0;
 		}
 	}
+
+    private class physicsCenter {
+
+        public physicsCenter() {
+        }
+    }
 	
 	/**********************************
      ******** GETTER & SETTER  ********

@@ -52,7 +52,11 @@ import com.jme3.scene.shape.Box;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import java.util.HashMap;
 import netclient.gui.ModuleType;
+import netclient.otherGraphics.GLaserProjectile;
+import netclient.otherGraphics.GraphicObject;
+import netserver.weapons.Projectile;
 
 public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController, RawInputListener {
 
@@ -76,6 +80,9 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     boolean universeDebug = false;
     
     public boolean nearStation = false;
+    
+    // projectiles, floating items, ... (everything that needs its pos updated)
+    public HashMap<Integer , GraphicObject> graphicObjects = new HashMap<Integer, GraphicObject>();
 
     public GameRunningState() {
     }

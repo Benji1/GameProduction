@@ -14,6 +14,7 @@ import com.jme3.scene.shape.Box;
 import netserver.WJSFServer;
 import netserver.modules.BasicModule;
 import netserver.physics.PhysicsWorld;
+import netserver.services.ServiceManager;
 import netserver.shipdesigns.TestShipDesigns;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -33,7 +34,7 @@ public class LaserProjectile extends Projectile {
         this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
         this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);
 
-        createBox(spawnPoint, fireDirection);
+        createBox(spawnPoint, fireDirection);        
     }
 
     private void createBox(Vec2 spawnPoint, Vec2 fireDirection) {
@@ -109,7 +110,7 @@ public class LaserProjectile extends Projectile {
 
     @Override
     public void delete() {
-        super.delete();
+        super.delete();        
         PhysicsWorld.world.destroyBody(body);
         spatial.removeFromParent();
         this.removeFromParent();
@@ -123,5 +124,25 @@ public class LaserProjectile extends Projectile {
     public void handleShieldColliderCollision(ShieldCollider s) {
         s.putDamgeToShieldModule(100f, new Vector3f(body.getPosition().x, 0f, body.getPosition().y));
         markForDeletion();
+    }
+
+    public Vector3f getTranslation() {
+        return this.getLocalTranslation();
+    }
+
+    public Quaternion getRotation() {
+        return this.getLocalRotation();
+    }
+
+    public Vec2 getVelocity() {
+        return this.physicsCenter.getLinearVelocity();
+    }
+
+    public float getAngVelocity() {
+        return this.physicsCenter.getAngularVelocity();
+    }
+
+    public int getId() {
+        return id;
     }
 }
