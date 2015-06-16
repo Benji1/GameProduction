@@ -42,6 +42,8 @@ public class NetMessages {
         Serializer.registerClass(NearStationMsg.class);
         Serializer.registerClass(ModuleActivatedMsg.class);
         Serializer.registerClass(ToggleEditorMsg.class);
+        Serializer.registerClass(ModuleDestroyedMsg.class);
+        
     }
 
     @Serializable
@@ -239,6 +241,22 @@ public class NetMessages {
         
         public int getShipId() {return this.shipId;}
         public ModuleType[] getModulesInBase() {return this.modulesInBase;}              
+    }
+    
+    @Serializable
+    public static class ModuleDestroyedMsg extends AbstractMessage {
+        private int shipId;
+        private OrientedModule[][] modules;
+        
+        public ModuleDestroyedMsg() {}
+        
+        public ModuleDestroyedMsg(int shipId, OrientedModule[][] modules) {
+            this.shipId = shipId;
+            this.modules = modules;
+        }
+        
+        public int getShipId() {return this.shipId;}
+        public OrientedModule[][] getModules() {return this.modules;}
     }
     
     /**********************************

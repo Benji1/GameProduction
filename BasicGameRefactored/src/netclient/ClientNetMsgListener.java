@@ -18,6 +18,7 @@ import com.jme3.scene.shape.Box;
 import netserver.services.ServiceManager;
 import netutil.NetMessages;
 import netutil.NetMessages.ModuleActivatedMsg;
+import netutil.NetMessages.ModuleDestroyedMsg;
 import netutil.NetMessages.NearStationMsg;
 import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShipChangedMsg;
@@ -199,8 +200,25 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                             return null;
                         }
                     });
+                } else if(m instanceof ModuleDestroyedMsg) {
+                    final ModuleDestroyedMsg msg = (ModuleDestroyedMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            if (app.gameRunState.playerShip.id == msg.getShipId()) {
+                                app.gameRunState.playerShip.setModules(msg.getModules());
+                            } else {
+                                for (ClientShip s : app.gameRunState.clientShips) {
+                                    if (s.id == msg.getShipId()) {
+                                        s.setModules(msg.getModules());
+                                    }
+                                }
+                           }
+                           return null;
+                        }
+                    });
                 }
-	}
+        }
 	
 	public void update(float tpf) {
 		// handle string msgs
