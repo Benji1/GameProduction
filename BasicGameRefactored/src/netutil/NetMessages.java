@@ -1,14 +1,10 @@
 package netutil;
 
-
-
-
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
-import java.util.ArrayList;
 import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 import org.jbox2d.common.Vec2;
@@ -46,6 +42,7 @@ public class NetMessages {
         Serializer.registerClass(GraphicObjPosAndRotMsg.class);
         Serializer.registerClass(DeleteGraphicObjectMsg.class);
         Serializer.registerClass(ModuleDestroyedMsg.class);
+        Serializer.registerClass(SpawnItemMsg.class);
     }
 
     @Serializable
@@ -322,6 +319,30 @@ public class NetMessages {
         
         public int getShipId() {return this.shipId;}
         public OrientedModule[][] getModules() {return this.modules;}
+    }
+    
+    @Serializable
+    public static class SpawnItemMsg extends AbstractMessage {
+        private int id;
+        private float spawnX;
+        private float spawnY;
+        private Quaternion rot;
+        private OrientedModule om;
+        
+        public SpawnItemMsg() {}
+        
+        public SpawnItemMsg(int id, Vec2 spawnPoint, Quaternion rot, OrientedModule om) {
+            this.id = id;
+            this.spawnX = spawnPoint.x;
+            this.spawnY = spawnPoint.y;
+            this.rot = rot;
+            this.om = om;
+        }
+        
+        public int getId() {return this.id;}
+        public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
+        public Quaternion getRot() {return rot;}
+        public OrientedModule getOrientedModule() {return om;}
     }
     
     /**********************************

@@ -15,6 +15,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 import netclient.gui.ModuleType;
+import netclient.gui.OrientedModule;
 import netserver.BasicShip;
 import netserver.items.EncapsulatingItem;
 import netserver.physics.JBox2dNode;
@@ -222,7 +223,8 @@ public abstract class BasicModule extends JBox2dNode  {
             saveSpatials.add(s.clone());
         }
         
-        ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, body.getPosition(), q, ship.getApp()));
+        OrientedModule om = new OrientedModule(type, orientation);
+        ship.getApp().itemsToCreate.add(new EncapsulatingItem(om, saveSpatials, body.getPosition(), q, ship.getApp()));
     }
     
      public void destroyWithoutSeperation() {
