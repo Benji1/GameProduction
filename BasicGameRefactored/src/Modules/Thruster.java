@@ -46,7 +46,8 @@ public class Thruster extends InteractiveModule {
     @Override
     public void update(float delta) {
         super.update(delta);
-        fire.setLocalTranslation(this.body.getPosition().x, 0, this.body.getPosition().y);
+        //fire.setLocalTranslation(this.body.getPosition().x, 0, this.body.getPosition().y);
+        fire.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
         fire.getParticleInfluencer().setInitialVelocity(getParticleSpawnDirection(5f));
     }
     
@@ -66,9 +67,10 @@ public class Thruster extends InteractiveModule {
     
     @Override
     protected void create3DBody() {
-        super.create3DBody();
+        super.create3DBody();        
         AssetManager a = ship.getApp().getAssetManager();
         spatial = a.loadModel("3dmodels/thruster.obj");
+        spatial.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
         Texture t = a.loadTexture("3dmodels/thruster_ao.png");
         material.setTexture("DiffuseMap", t);
@@ -95,7 +97,7 @@ public class Thruster extends InteractiveModule {
         fire.setRandomAngle(true);
         fire.getParticleInfluencer().setVelocityVariation(0.1f);
         fire.setParticlesPerSec(0f);
-
+        fire.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
 
         ship.getApp().getRootNode().attachChild(fire);
         //System.out.println(this.);

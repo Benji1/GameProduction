@@ -63,6 +63,7 @@ public class EnergyGenerator extends BasicModule {
     protected void create3DBody() {
          AssetManager a = ship.getApp().getAssetManager();
          spatial = a.loadModel("3dmodels/generator.obj");
+         spatial.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
          material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
          Texture t = a.loadTexture("3dmodels/generator_ao.png");
          material.setBoolean("UseMaterialColors", true);
@@ -70,6 +71,7 @@ public class EnergyGenerator extends BasicModule {
          spatial.setMaterial(material);
 
          Spatial spatial2 = a.loadModel("3dmodels/armor.obj");
+         spatial2.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
          this.attachChild(spatial2);
          Material material2 = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
          Texture t2 = a.loadTexture("3dmodels/armor_ao.png");

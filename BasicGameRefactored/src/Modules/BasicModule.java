@@ -139,7 +139,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
             x += ship.cockpitPos.x;
             y += ship.cockpitPos.z;
         }
-
+        
         generatePhysicsFixture(x, y, ship.colliderType, ship.collidingWith);
         setPhysicsCenter(body);
 
@@ -173,6 +173,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected void create3DBody() {
         Box box = new Box(1, 0.4f, 1);
         spatial = new Geometry("Box", box);
+        spatial.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
         material = new Material(ship.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 
         material.setBoolean("UseMaterialColors", true);
@@ -201,7 +202,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     private void generatePhysicsFixture(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();        
-        square.setAsBox(1, 1, new Vec2(x, y), 0);        
+        square.setAsBox(1, 1, new Vec2(x/2, y/2), 0);
         
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
@@ -217,7 +218,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
                 
         body.createFixture(fDef);
         body.setUserData(this);
-        body.setLinearDamping(linearDampingFactor);
+        body.setLinearDamping(linearDampingFactor*10000);
         PhysicsWorld.world.setContactListener(this);
     }
 

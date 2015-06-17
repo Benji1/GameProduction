@@ -36,7 +36,8 @@ public class Cockpit extends BasicModule {
     protected void create3DBody() {
          AssetManager a = ship.getApp().getAssetManager();
          spatial = a.loadModel("3dmodels/cockpit.obj");
-         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+         spatial.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
+         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");         
          Texture t = a.loadTexture("3dmodels/cockpit_ao.png");
          material.setTexture("DiffuseMap", t);
          spatial.setMaterial(material);

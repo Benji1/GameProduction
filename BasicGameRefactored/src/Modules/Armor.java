@@ -31,6 +31,7 @@ public class Armor extends BasicModule {
     protected void create3DBody() {
          AssetManager a = ship.getApp().getAssetManager();
          spatial = a.loadModel("3dmodels/armor.obj");
+         spatial.setLocalTranslation(ship.getActualPositionInGrid(this).x*2, 0, ship.getActualPositionInGrid(this).y*2);
          ship.attachChild(spatial);
          material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
          Texture t = a.loadTexture("3dmodels/armor_ao.png");

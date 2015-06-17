@@ -29,11 +29,11 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public int shipWidth = 22;
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
-    public Cockpit cockpit;
+    public Cockpit cockpit;    
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
     private Player player;
-    private int activatedThrusterCount;
+    private int activatedThrusterCount;    
 
     public BasicShip(Main app, String name) {
         this(app, name, null);
