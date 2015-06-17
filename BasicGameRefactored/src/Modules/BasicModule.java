@@ -58,6 +58,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected Material material;
     protected ModuleType type;
     protected FacingDirection orientation;
+    protected BodyDef bDef = new BodyDef();
     private float oldDamping = 10000f;
     public int group = 0;
 
@@ -133,6 +134,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         create3DBody();
         int x = ship.getActualPositionInGrid(this).x * 2;
         int y = ship.getActualPositionInGrid(this).y * 2;
+        
         if (ship.cockpitPos != null) {
             x += ship.cockpitPos.x;
             y += ship.cockpitPos.z;
@@ -144,7 +146,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         this.attachChild(spatial);
         ship.attachChild(this);
 
-        lockToShip();
+        //lockToShip();
     }
 
     public void onPlacedBody(BasicShip ship) {
@@ -153,6 +155,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         create3DBody();
         int x = ship.getActualPositionInGrid(this).x * 2;
         int y = ship.getActualPositionInGrid(this).y * 2;
+        
         if (ship.cockpitPos != null) {
             x += ship.cockpitPos.x;
             y += ship.cockpitPos.z;
@@ -164,7 +167,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         this.attachChild(spatial);
         ship.attachChild(this);
 
-        lockToShip();
+        //lockToShip();
     }
 
     protected void create3DBody() {
@@ -197,9 +200,9 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     }
 
     private void generatePhysicsFixture(int x, int y, int colliderType, int collidingWith) {
-        PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1, new Vec2(x, y), 0);
-
+        PolygonShape square = new PolygonShape();        
+        square.setAsBox(1, 1, new Vec2(x, y), 0);        
+        
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
         fDef.density = 1.0f;
@@ -220,7 +223,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1, new Vec2(x, y), 0);
+        square.setAsBox(1, 1);//, new Vec2(x, y), 0);
 
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
@@ -229,7 +232,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         fDef.filter.categoryBits = colliderType;
         fDef.filter.maskBits = collidingWith;
 
-        BodyDef bDef = new BodyDef();
+//        BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
 
