@@ -6,18 +6,12 @@ package netserver;
 
 import java.awt.Point;
 import java.util.ArrayList;
-
-import netclient.WJSFClient;
 import netserver.modules.BasicModule;
 import netserver.modules.InteractiveModule;
 import netserver.modules.Storage;
-import netserver.services.ServiceManager;
-import netserver.services.editor.IShipChangedListener;
 import netserver.services.updater.IUpdateable;
 import netserver.universe.Abs_ChunkNode;
-
 import com.jme3.math.Vector3f;
-import java.util.Map;
 import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 import netserver.modules.Armor;
@@ -39,7 +33,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
     public Cockpit cockpit;
     public Vector3f cockpitPos;
-    public int colliderType, collidingWith;
     private NetPlayer player;
 
     public BasicShip(WJSFServer app, String name) {
@@ -78,11 +71,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public WJSFServer getApp() {
         return this.app;
-    }
-
-    public void setColliderTypeAndWith(int type, int with) {
-        colliderType = type;
-        collidingWith = with;
     }
 
     public void addModuleAt(BasicModule module, Point p) {
@@ -257,7 +245,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         }
     }
 
-    public void sperateInNewShips() {
+    public void seperateInNewShips() {
         int[][] alreadyAddedModules = new int[shipHeight][shipWidth];
         BasicModule[][] ms = new BasicModule[shipHeight][shipWidth];
 
@@ -283,7 +271,6 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
             for (int k = 3; k <= shipNumber; k++) {
                 // XXX
                 BasicShip newShip = new BasicShip(app, name);
-                newShip.setColliderTypeAndWith(colliderType, collidingWith);
                 for (int i = 0; i < modules.length; i++) {
                     for (int j = 0; j < modules[i].length; j++) {
                         if (alreadyAddedModules[i][j] == k - 1) {

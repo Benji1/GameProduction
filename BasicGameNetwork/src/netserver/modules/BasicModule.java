@@ -22,6 +22,7 @@ import netserver.physics.JBox2dNode;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.config.ConfigReader;
+import netserver.shipdesigns.TestShipDesigns;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -129,7 +130,7 @@ public abstract class BasicModule extends JBox2dNode  {
         		x += ship.cockpitPos.x;
         		y += ship.cockpitPos.z;
         }
-        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
+        generatePhysicsBody(x, y);
         setPhysicsCenter(body);
 
         this.attachChild(spatial);
@@ -169,16 +170,16 @@ public abstract class BasicModule extends JBox2dNode  {
     public void otherModuleRemoved(BasicModule module, Point p) {
     }
 
-    private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
+    private void generatePhysicsBody(int x, int y) {
         PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1);
+        square.setAsBox(0.95f, 0.95f);
 
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
         fDef.density = 1.0f;
         fDef.friction = 0.6f;
-        fDef.filter.categoryBits = colliderType;
-        fDef.filter.maskBits = collidingWith;
+        fDef.filter.categoryBits = TestShipDesigns.CATEGORY_SHIP;
+        fDef.filter.maskBits = TestShipDesigns.MASK_SHIP;
                              
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
@@ -205,7 +206,7 @@ public abstract class BasicModule extends JBox2dNode  {
         
         this.detachAllChildren();
         ship.getApp().bodiesToRemove.add(body);
-        ship.sperateInNewShips();
+        ship.seperateInNewShips();
     }
     
     public boolean shouldSpawnItem() {
