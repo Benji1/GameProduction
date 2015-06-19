@@ -17,6 +17,7 @@ import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.shipdesigns.TestShipDesigns;
 import netutil.NetMessages;
+import netutil.NetMessages.SpawnLaserProjectileMsg;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -38,7 +39,7 @@ public class LaserProjectile extends Projectile {
         createBox(spawnPoint, fireDirection);
         
         // network spawn msg
-        NetMessages.SpawnLaserProjectileMsg msg = new NetMessages.SpawnLaserProjectileMsg(id, spawnPoint, fireDirection);
+        SpawnLaserProjectileMsg msg = new SpawnLaserProjectileMsg(id, spawnPoint, fireDirection);
         msg.setReliable(true);
         app.getServer().broadcast(msg);
         

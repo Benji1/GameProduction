@@ -48,7 +48,7 @@ public class Universe {
     private UniverseChunk[][] universeChunks;
     public List<SolarSystem> systems;
     private int universeCenter = UNIVERSE_SIZE / 2;
-    public List<Spatial> stations;
+    public List<SpaceStation> stations;
     
     // Debug Stuff
     private Node debugBoxes;
@@ -72,7 +72,7 @@ public class Universe {
         
         this.initDebug();
         this.systems = new ArrayList<SolarSystem>();
-        this.stations = new ArrayList<Spatial>();
+        this.stations = new ArrayList<SpaceStation>();
     }
     
     
@@ -121,37 +121,15 @@ public class Universe {
         }
     }
     
-     public void addStation(float x, float z){
-    	Box shape = new Box(7, 2, 5);
-    	Spatial station = app.getAssetManager().loadModel("3dmodels/station.obj");
-		Material sphereMat = new Material(app.getAssetManager(), 
-				"Common/MatDefs/Light/Lighting.j3md");
-		sphereMat.setBoolean("UseMaterialColors", true);
-		
-		ColorRGBA color = ColorRGBA.DarkGray;
-		sphereMat.setColor("Diffuse", color);
-		sphereMat.setColor("Ambient", color);
-		station.setMaterial(sphereMat);	
-		app.getRootNode().attachChild(station);
-		this.stations.add(station);
-		station.setLocalTranslation(x, -5, z);
-                station.setLocalScale(2f);
-                
-        BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
-        BitmapText info = new BitmapText(f, true);
-        info.setColor(ColorRGBA.Green);
-        info.rotate((float) -Math.PI/2f,0,0);
-        info.scale(0.2f);
-        info.setQueueBucket(Bucket.Transparent);
-        info.setText("Press 'E' to enter");
-        info.setLocalTranslation(x-13, 3, z);
-        app.getRootNode().attachChild(info);
+    public void addStation(float x, float z){
+        SpaceStation station = new SpaceStation(x, z, app);
+        this.stations.add(station);
     }
     
     public boolean nearStation(Vector3f shippos){
     	float mindis = Float.MAX_VALUE;
-    	for (Spatial s: stations){
-    		float dis = (s.getLocalTranslation().subtract(shippos)).length();
+    	for (SpaceStation s: stations){
+    		float dis = (s.getPosition().subtract(shippos)).length();
     		if (dis < mindis)
     			mindis = dis;
     	}

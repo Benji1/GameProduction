@@ -12,8 +12,10 @@ import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;
 import netserver.services.ServiceManager;
 import netserver.services.updater.INetworkPosAndRotUpdateable;
+import netserver.universe.SpaceStation;
 
 import netutil.NetMessages.*;
+import org.jbox2d.common.Vec2;
 
 public class ServerConManager implements ConnectionListener {
 	
@@ -68,6 +70,13 @@ public class ServerConManager implements ConnectionListener {
 					syncPl.setReliable(true);
 					app.getServer().broadcast(Filters.in(arg1), syncPl);
 				}
+                                
+                                // send all space stations to the new player
+                                for (SpaceStation station : app.getUniverse().stations) {
+                                    SpawnSpaceStationMsg syncStation = new SpawnSpaceStationMsg(station.getId(), station.getSpawnPoint());
+                                    syncStation.setReliable(true);
+                                    app.getServer().broadcast(syncStation);                               
+                                }
 				
 				// add new player to list
 				players.add(newPl);

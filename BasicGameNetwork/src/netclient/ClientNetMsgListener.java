@@ -18,6 +18,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import netclient.otherGraphics.GItem;
 import netclient.otherGraphics.GLaserProjectile;
+import netclient.otherGraphics.GSpaceStation;
 import netserver.services.ServiceManager;
 import netutil.NetMessages;
 import netutil.NetMessages.DeleteGraphicObjectMsg;
@@ -29,6 +30,7 @@ import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShipChangedMsg;
 import netutil.NetMessages.SpawnItemMsg;
 import netutil.NetMessages.SpawnLaserProjectileMsg;
+import netutil.NetMessages.SpawnSpaceStationMsg;
 import netutil.NetMessages.ToggleEditorMsg;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
@@ -259,6 +261,16 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                         public Object call() throws Exception {
                             GItem item = new GItem(msg.getOrientedModule(), msg.getSpawnPoint(), msg.getRot(), app);
                             app.gameRunState.graphicObjects.put(msg.getId(), item); 
+                            return null;
+                        }
+                    });
+                } else if (m instanceof SpawnSpaceStationMsg) {
+                    final SpawnSpaceStationMsg msg = (SpawnSpaceStationMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            GSpaceStation station = new GSpaceStation(msg.getSpawnPoint(), app);
+                            app.gameRunState.graphicObjects.put(msg.getId(), station);
                             return null;
                         }
                     });
