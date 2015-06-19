@@ -199,6 +199,20 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         
         return false;
     }
+    
+    public boolean canCollectItem() {
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = 0; j < modules[0].length; j++) {
+                if (modules[i][j] instanceof Storage) {
+                    if (!((Storage) modules[i][j]).isFull()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
 
     private Point offsetToActual(Point offset) {
         return new Point(modules.length / 2 - offset.x, modules.length / 2 + offset.y);
