@@ -23,26 +23,26 @@ import netclient.gui.OrientedModule;
  */
 public class ModuleCreator {
     
-    public static GraphicalModule createOrientedGraphicalModule(OrientedModule om, Node nodeToAttach, float x, float y, WJSFClient app) {
+    public static GraphicalModule createOrientedGraphicalModule(OrientedModule om, Node nodeToAttach, float x, float y, WJSFClient app, float scale) {
         switch (om.moduleType) {
             case ARMOR:
-                return new GMArmor(om, nodeToAttach, x, y, app);
+                return new GMArmor(om, nodeToAttach, x, y, app, scale);
             case ARMOR_DIAGONAL:
-                return new GMArmorDiagonal(om, nodeToAttach, x, y, app);
+                return new GMArmorDiagonal(om, nodeToAttach, x, y, app, scale);
             case COCKPIT:
-                return new GMCockpit(om, nodeToAttach, x, y, app);
+                return new GMCockpit(om, nodeToAttach, x, y, app, scale);
             case ENERGY_GENERATOR:
-                return new GMEnergyGenerator(om, nodeToAttach, x, y, app);
+                return new GMEnergyGenerator(om, nodeToAttach, x, y, app, scale);
             case SHIELD:
-                return new GMShieldGenerator(om, nodeToAttach, x, y, app);
+                return new GMShieldGenerator(om, nodeToAttach, x, y, app, scale);
             case STORAGE:
-                return new GMStorage(om, nodeToAttach, x, y, app);
+                return new GMStorage(om, nodeToAttach, x, y, app, scale);
             case THRUSTER:
-                return new GMThruster(om, nodeToAttach, x, y, app);
+                return new GMThruster(om, nodeToAttach, x, y, app, scale);
             case WEAPON:
-                return new GMLaserGun(om, nodeToAttach, x, y, app);
+                return new GMLaserGun(om, nodeToAttach, x, y, app, scale);
             default:
-                return new GMArmor(om, nodeToAttach, x, y, app);
+                return new GMArmor(om, nodeToAttach, x, y, app, scale);
         }
     }
     

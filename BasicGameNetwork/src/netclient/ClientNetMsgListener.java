@@ -258,7 +258,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                     this.app.enqueue(new Callable() {
                         public Object call() throws Exception {
                             GItem item = new GItem(msg.getOrientedModule(), msg.getSpawnPoint(), msg.getRot(), app);
-                            app.gameRunState.graphicObjects.put(msg.getId(), item);
+                            app.gameRunState.graphicObjects.put(msg.getId(), item); 
                             return null;
                         }
                     });

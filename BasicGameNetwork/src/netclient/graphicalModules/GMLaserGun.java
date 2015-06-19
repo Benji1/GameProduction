@@ -16,13 +16,13 @@ import netclient.gui.OrientedModule;
  */
 public class GMLaserGun extends GraphicalModule {
     
-    public GMLaserGun(OrientedModule orientedModule, Node nodeToAttach,float x, float y, WJSFClient app) {
+    public GMLaserGun(OrientedModule orientedModule, Node nodeToAttach,float x, float y, WJSFClient app, float scale) {
         super(orientedModule, nodeToAttach, x, y, app);
         
         colorActive = ColorRGBA.Red;
         modelPath = "3dmodels/gun.obj";
         texturePath = "3dmodels/gun_ao.png";
         
-        createMyGraphic(x, y);
+        createMyGraphic(x, y, scale);
     }
 }

@@ -49,21 +49,22 @@ public class GraphicalModule extends Node{
         nodeToAttach.attachChild(this);
     }
 
-    protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath(modelPath, texturePath, x, y);
+    protected void createMyGraphic(float x, float y, float scale) {
+        createGraphicFromPath(modelPath, texturePath, x, y, scale);
     }
 
-    protected final void createGraphicFromPath(String modelPath, String texturePath, float x, float y) {
-        createGraphicFromPath(modelPath, texturePath, x, y, this);
+    protected final void createGraphicFromPath(String modelPath, String texturePath, float x, float y, float scale) {
+        createGraphicFromPath(modelPath, texturePath, x, y, this, scale);
     }
     
-    public final void createGraphicFromPath(String modelPath, String texturePath, float x, float y, Node toAttach) {
+    public final void createGraphicFromPath(String modelPath, String texturePath, float x, float y, Node toAttach, float scale) {
         AssetManager a = app.getAssetManager();
         spatial = a.loadModel(modelPath);
         material = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
         Texture t = a.loadTexture(texturePath);
         material.setTexture("DiffuseMap", t);
         spatial.setMaterial(material);
+        spatial.scale(scale);
         
         materialActive = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
         materialActive.setBoolean("UseMaterialColors", true);
@@ -100,26 +101,26 @@ public class GraphicalModule extends Node{
         this.removeFromParent();
     }
     
-    public GraphicalModule createOrientedModuleGraphics(OrientedModule om, Node nodeToAttach, float x, float y) {
+    public GraphicalModule createOrientedModuleGraphics(OrientedModule om, Node nodeToAttach, float x, float y, float scale) {
         switch (om.moduleType) {
             case ARMOR:
-                return new GMArmor(om, nodeToAttach, x, y, app);
+                return new GMArmor(om, nodeToAttach, x, y, app, scale);
             case ARMOR_DIAGONAL:
-                return new GMArmorDiagonal(om, nodeToAttach, x, y, app);
+                return new GMArmorDiagonal(om, nodeToAttach, x, y, app, scale);
             case COCKPIT:
-                return new GMCockpit(om, nodeToAttach, x, y, app);
+                return new GMCockpit(om, nodeToAttach, x, y, app, scale);
             case ENERGY_GENERATOR:
-                return new GMEnergyGenerator(om, nodeToAttach, x, y, app);
+                return new GMEnergyGenerator(om, nodeToAttach, x, y, app, scale);
             case SHIELD:
-                return new GMShieldGenerator(om, nodeToAttach, x, y, app);
+                return new GMShieldGenerator(om, nodeToAttach, x, y, app, scale);
             case STORAGE:
-                return new GMStorage(om, nodeToAttach, x, y, app);
+                return new GMStorage(om, nodeToAttach, x, y, app, scale);
             case THRUSTER:
-                return new GMThruster(om, nodeToAttach, x, y, app);
+                return new GMThruster(om, nodeToAttach, x, y, app, scale);
             case WEAPON:
-                return new GMLaserGun(om, nodeToAttach, x, y, app);
+                return new GMLaserGun(om, nodeToAttach, x, y, app, scale);
             default:
-                return new GMArmor(om, nodeToAttach, x, y, app);
+                return new GMArmor(om, nodeToAttach, x, y, app, scale);
         }
     }
 }
