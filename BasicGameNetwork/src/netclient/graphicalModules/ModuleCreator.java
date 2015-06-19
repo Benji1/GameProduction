@@ -57,7 +57,7 @@ public class ModuleCreator {
             case ENERGY_GENERATOR:
                 return new ShipModule(om, x, y, nodeToAttach, ship, app);
             case SHIELD:
-                return new ShipModule(om, x, y, nodeToAttach, ship, app);
+                return new ShipShield(om, x, y, nodeToAttach, ship, app);
             case STORAGE:
                 return new ShipModule(om, x, y, nodeToAttach, ship, app);
             case THRUSTER:
