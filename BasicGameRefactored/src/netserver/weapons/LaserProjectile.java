@@ -16,6 +16,7 @@ import netserver.modules.BasicModule;
 import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.shipdesigns.TestShipDesigns;
+import netutil.NetMessages;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -34,7 +35,14 @@ public class LaserProjectile extends Projectile {
         this.startForce = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "InitialAcceleration", float.class);
         this.lifetime = cr.getFromMap(cr.getBaseMap("LaserProjectile"), "Lifetime", float.class);
 
-        createBox(spawnPoint, fireDirection);        
+        createBox(spawnPoint, fireDirection);             
+                
+        // network spawn msg
+        NetMessages.SpawnLaserProjectileMsg msg = new NetMessages.SpawnLaserProjectileMsg(id, spawnPoint, fireDirection);
+        msg.setReliable(true);
+        app.getServer().broadcast(msg);
+        
+        ServiceManager.getUpdateableManager().addNetworkUpdateable(this);
     }
 
     private void createBox(Vec2 spawnPoint, Vec2 fireDirection) {
@@ -127,11 +135,11 @@ public class LaserProjectile extends Projectile {
     }
 
     public Vector3f getTranslation() {
-        return this.getLocalTranslation();
+        return spatial.getLocalTranslation();
     }
 
     public Quaternion getRotation() {
-        return this.getLocalRotation();
+        return spatial.getLocalRotation();
     }
 
     public Vec2 getVelocity() {
