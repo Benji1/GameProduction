@@ -23,6 +23,8 @@ import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.config.ConfigReader;
 import netserver.shipdesigns.TestShipDesigns;
+import netutil.NetMessages;
+import netutil.NetMessages.ExplosionParticleMsg;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -199,6 +201,9 @@ public abstract class BasicModule extends JBox2dNode  {
                 new Vector3f (this.body.getPosition().x, 0, this.body.getPosition().y), 
                 ship.getApp().getRootNode()
                 );
+        
+        ExplosionParticleMsg msg = new ExplosionParticleMsg(new Vec2(this.body.getPosition().x, this.body.getPosition().y));
+        ship.getApp().getServer().broadcast(msg);
         
         if (shouldSpawnItem()) {
             spawnItem();

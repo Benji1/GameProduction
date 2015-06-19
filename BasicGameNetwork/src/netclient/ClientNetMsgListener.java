@@ -19,14 +19,18 @@ import com.jme3.scene.shape.Box;
 import netclient.otherGraphics.GItem;
 import netclient.otherGraphics.GLaserProjectile;
 import netclient.otherGraphics.GSpaceStation;
+import netserver.modules.Explosion;
+import netserver.modules.ShieldHitExplosion;
 import netserver.services.ServiceManager;
 import netutil.NetMessages;
 import netutil.NetMessages.DeleteGraphicObjectMsg;
+import netutil.NetMessages.ExplosionParticleMsg;
 import netutil.NetMessages.GraphicObjPosAndRotMsg;
 import netutil.NetMessages.ModuleActivatedMsg;
 import netutil.NetMessages.ModuleDestroyedMsg;
 import netutil.NetMessages.NearStationMsg;
 import netutil.NetMessages.PosAndRotMsg;
+import netutil.NetMessages.ShieldHitParticleMsg;
 import netutil.NetMessages.ShipChangedMsg;
 import netutil.NetMessages.SpawnItemMsg;
 import netutil.NetMessages.SpawnLaserProjectileMsg;
@@ -271,6 +275,32 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                         public Object call() throws Exception {
                             GSpaceStation station = new GSpaceStation(msg.getSpawnPoint(), app);
                             app.gameRunState.graphicObjects.put(msg.getId(), station);
+                            return null;
+                        }
+                    });
+                } else if (m instanceof ExplosionParticleMsg) {
+                    final ExplosionParticleMsg msg = (ExplosionParticleMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            Explosion exp = new Explosion(
+                                app.getAssetManager(), 
+                                new Vector3f (msg.getSpawnPoint().x, 0, msg.getSpawnPoint().y), 
+                                app.gameRunState.localRootNode
+                            );
+                            return null;
+                        }
+                    });
+                } else if (m instanceof ShieldHitParticleMsg) {
+                    final ShieldHitParticleMsg msg = (ShieldHitParticleMsg)m;
+                    
+                    this.app.enqueue(new Callable() {
+                        public Object call() throws Exception {
+                            ShieldHitExplosion exp = new ShieldHitExplosion(
+                                app.getAssetManager(), 
+                                new Vector3f (msg.getSpawnPoint().x, 0, msg.getSpawnPoint().y), 
+                                app.gameRunState.localRootNode
+                            );
                             return null;
                         }
                     });
