@@ -106,7 +106,6 @@ public class ServerConManager implements ConnectionListener {
                         
                         for (INetworkPosAndRotUpdateable u : ServiceManager.getUpdateableManager().getNetorkUpdateables()) {
                             GraphicObjPosAndRotMsg msg = new GraphicObjPosAndRotMsg(u.getTranslation(), u.getRotation(), u.getVelocity(), u.getAngVelocity(), u.getId());
-                            msg.setReliable(true);
                             app.getServer().broadcast(msg);
                         }
 			

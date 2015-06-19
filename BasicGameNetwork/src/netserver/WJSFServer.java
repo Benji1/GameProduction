@@ -111,7 +111,7 @@ public class WJSFServer extends SimpleApplication {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
         
-    	camNode.setLocalTranslation(new Vector3f(0, 100 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+    	camNode.setLocalTranslation(new Vector3f(0, 300 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
         camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
     

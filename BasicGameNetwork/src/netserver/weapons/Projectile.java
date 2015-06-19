@@ -39,14 +39,8 @@ public abstract class Projectile extends JBox2dNode implements IUpdateable, INet
         
         lifetimeCounter = 0;      
         ServiceManager.getUpdateableManager().addUpdateable(this);
-        ServiceManager.getUpdateableManager().addNetworkUpdateable(this);
         
         id = ServiceManager.getIdProvider().getFreeId();
-        
-        // network spawn msg
-        SpawnLaserProjectileMsg msg = new SpawnLaserProjectileMsg(id, spawnPoint, fireDirection);
-        msg.setReliable(true);
-        app.getServer().broadcast(msg);
     }
         
     @Override
