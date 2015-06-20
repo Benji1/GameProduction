@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 
 import gui.ModuleType;
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -133,8 +136,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     
     private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1);//, new Vec2(x, y), 0);
-
+        square.setAsBox(1, 1);
+        
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
         fDef.density = 1.0f;

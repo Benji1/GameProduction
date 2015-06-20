@@ -154,7 +154,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     private void generatePhysicsFixture(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();        
-        square.setAsBox(1, 1, new Vec2(x, y), 0);
+        square.setAsBox(1, 1);//, new Vec2(x, y), 0);
         
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
