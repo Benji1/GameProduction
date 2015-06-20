@@ -16,6 +16,11 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
 import gui.ModuleType;
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
 import services.updater.IUpdateable;
 import universe.Abs_ChunkNode;
 
@@ -29,6 +34,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public int shipWidth = 22;
     public BasicModule[][] modules = new BasicModule[shipHeight][shipWidth];
     public ArrayList<InteractiveModule> interactiveModules = new ArrayList<InteractiveModule>();
+    private Body body;
     public Cockpit cockpit;    
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
@@ -44,6 +50,10 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         app.ships.add(this); 
         this.player = player;
         activatedThrusterCount = 0;
+    }
+    
+    public Body getBody() {
+        return body;
     }
     
     public void setPlayer(Player player) {
@@ -108,8 +118,8 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     
     public void addModuleAtBody(BasicModule module, Point p) {
         modules[p.x][p.y] = module;
-
-        module.onPlacedBody(this);
+        generatePhysicsBody(p.x, p.y, this.colliderType, this.collidingWith);
+        module.onPlaced(this);
         informOtherModulesOfAddedModule(module, p);
     }
 
@@ -119,6 +129,28 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     
     public void addModuleAtFromOffsetBody(BasicModule module, Point offset) {
         addModuleAtBody(module, offsetToActual(offset));
+    }
+    
+    private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
+        PolygonShape square = new PolygonShape();
+        square.setAsBox(1, 1);//, new Vec2(x, y), 0);
+
+        FixtureDef fDef = new FixtureDef();
+        fDef.shape = square;
+        fDef.density = 1.0f;
+        fDef.friction = 0.6f;
+        fDef.filter.categoryBits = colliderType;
+        fDef.filter.maskBits = collidingWith;
+
+        BodyDef bDef = new BodyDef();
+        bDef.position.set(x, y);
+        bDef.type = BodyType.DYNAMIC;
+
+        this.body = PhysicsWorld.world.createBody(bDef);
+        this.body.createFixture(fDef);
+        this.body.setUserData(this);
+        //body.setLinearDamping(linearDampingFactor);
+        PhysicsWorld.world.setContactListener(cockpit);
     }
 
     private void informOtherModulesOfAddedModule(BasicModule module, Point p) {

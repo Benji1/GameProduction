@@ -31,7 +31,6 @@ import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
@@ -52,8 +51,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     protected float linearDampingFactor = cr.getFromMap(cr.getBaseMap("Thruster"), "LinearDamping", float.class);
     protected BasicShip ship;
     protected String moduleName;
-    protected ColorRGBA color = ColorRGBA.Gray;
-    protected Body body;
+    protected ColorRGBA color = ColorRGBA.Gray;    
     protected Spatial spatial;
     protected Material material;
     protected ModuleType type;
@@ -68,37 +66,14 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     public void toggleDamping() {
         float temp = oldDamping;
-        oldDamping = body.getLinearDamping();
-        body.setLinearDamping(temp);
-    }
-
-    private void lockToShip() {
-        Point pos = ship.getActualPositionInGrid(this);
-
-        lockTo(ship.getModule(new Point(pos.x + 1, pos.y)));
-        lockTo(ship.getModule(new Point(pos.x - 1, pos.y)));
-        lockTo(ship.getModule(new Point(pos.x, pos.y + 1)));
-        lockTo(ship.getModule(new Point(pos.x, pos.y - 1)));
-    }
-
-    private void lockTo(BasicModule lockon) {
-        if (lockon != null) {
-            WeldJointDef wjDef = new WeldJointDef();
-            wjDef.initialize(lockon.body, this.body, lockon.body.getPosition());
-            wjDef.collideConnected = false;
-            wjDef.frequencyHz = 0;
-            PhysicsWorld.world.createJoint(wjDef);
-        }
+        oldDamping = ship.getBody().getLinearDamping();
+        ship.getBody().setLinearDamping(temp);
     }
 
     public String getModuleName() {
         return moduleName;
     }
-
-    public Body getBody() {
-        return body;
-    }
-
+    
     public BasicShip getShip() {
         return ship;
     }
@@ -141,33 +116,10 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         }
         
         generatePhysicsFixture(x, y, ship.colliderType, ship.collidingWith);
-        setPhysicsCenter(body);
+        setPhysicsCenter(ship.getBody());
 
         this.attachChild(spatial);
         ship.attachChild(this);
-
-        //lockToShip();
-    }
-
-    public void onPlacedBody(BasicShip ship) {
-        this.ship = ship;
-
-        create3DBody();
-        int x = ship.getActualPositionInGrid(this).x * 2;
-        int y = ship.getActualPositionInGrid(this).y * 2;
-        
-        if (ship.cockpitPos != null) {
-            x += ship.cockpitPos.x;
-            y += ship.cockpitPos.z;
-        }
-
-        generatePhysicsBody(x, y, ship.colliderType, ship.collidingWith);
-        setPhysicsCenter(body);
-
-        this.attachChild(spatial);
-        ship.attachChild(this);
-
-        //lockToShip();
     }
 
     protected void create3DBody() {
@@ -202,7 +154,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
     private void generatePhysicsFixture(int x, int y, int colliderType, int collidingWith) {
         PolygonShape square = new PolygonShape();        
-        square.setAsBox(1, 1, new Vec2(x/2, y/2), 0);
+        square.setAsBox(1, 1, new Vec2(x, y), 0);
         
         FixtureDef fDef = new FixtureDef();
         fDef.shape = square;
@@ -210,37 +162,10 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
         fDef.friction = 0.6f;
         fDef.filter.categoryBits = colliderType;
         fDef.filter.maskBits = collidingWith;
-
-        for (int i = 0; i < this.ship.modules.length; i++)
-            for (int j = 0; j < this.ship.modules[0].length; j++)
-                if (this.ship.modules[i][j] != null) 
-                    this.body = this.ship.modules[i][j].body;
                 
-        body.createFixture(fDef);
-        body.setUserData(this);
-        body.setLinearDamping(linearDampingFactor*10000);
-        PhysicsWorld.world.setContactListener(this);
-    }
-
-    private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
-        PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1);//, new Vec2(x, y), 0);
-
-        FixtureDef fDef = new FixtureDef();
-        fDef.shape = square;
-        fDef.density = 1.0f;
-        fDef.friction = 0.6f;
-        fDef.filter.categoryBits = colliderType;
-        fDef.filter.maskBits = collidingWith;
-
-//        BodyDef bDef = new BodyDef();
-        bDef.position.set(x, y);
-        bDef.type = BodyType.DYNAMIC;
-
-        body = PhysicsWorld.world.createBody(bDef);
-        body.createFixture(fDef);
-        body.setUserData(this);
-        body.setLinearDamping(linearDampingFactor);
+        ship.getBody().createFixture(fDef);
+        ship.getBody().setUserData(this);
+        ship.getBody().setLinearDamping(linearDampingFactor);
         PhysicsWorld.world.setContactListener(this);
     }
 
@@ -249,14 +174,14 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
 
         Explosion exp = new Explosion(
                 ship.getApp().getAssetManager(),
-                new Vector3f(this.body.getPosition().x, 0, this.body.getPosition().y),
+                new Vector3f(this.ship.getBody().getPosition().x, 0, this.ship.getBody().getPosition().y),
                 ship.getApp().getRootNode());
 
         if (shouldSpawnItem()) {
             spawnItem();
         }
         this.detachAllChildren();
-        ship.getApp().bodiesToRemove.add(body);
+        ship.getApp().bodiesToRemove.add(ship.getBody());
         ship.sperateInNewShips();
     }
 
@@ -266,7 +191,7 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
     }
 
     public void spawnItem() {
-        float angleRad = body.getAngle();
+        float angleRad = ship.getBody().getAngle();
         Quaternion q = new Quaternion();
         q.fromAngleAxis(-angleRad, new Vector3f(0f, 1f, 0f));
 
@@ -275,13 +200,13 @@ public abstract class BasicModule extends JBox2dNode implements ContactListener 
             saveSpatials.add(s.clone());
         }
 
-        ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, body.getPosition(), q, ship.getApp()));
+        ship.getApp().itemsToCreate.add(new EncapsulatingItem(type, saveSpatials, ship.getBody().getPosition(), q, ship.getApp()));
     }
 
     public void destroyWithoutSeperation() {
         onRemove();
         this.detachAllChildren();
-        ship.getApp().bodiesToRemove.add(body);
+        ship.getApp().bodiesToRemove.add(ship.getBody());
     }
 
     // HELPER METHOD MAYBE SOMEWHERE ELSE WOULD BE A BETTER PLACE

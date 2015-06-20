@@ -36,9 +36,9 @@ public class LaserGun extends Weapon {
 
     @Override
     protected void fire() {
-        Vec2 fireDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation).mul(-1));
+        Vec2 fireDirection = ship.getBody().getWorldVector(FacingDirection.getDirectionVector(orientation).mul(-1));
         
-        LaserProjectile p = new LaserProjectile(body.getWorldPoint(body.getLocalCenter()).add(new Vec2(2f * fireDirection.x, 2f * fireDirection.y)), fireDirection, ship.getApp());
+        LaserProjectile p = new LaserProjectile(ship.getBody().getWorldPoint(ship.getBody().getLocalCenter()).add(new Vec2(2f * fireDirection.x, 2f * fireDirection.y)), fireDirection, ship.getApp());
         fire_sound.setPitch((float) Math.random() * 0.1f + 0.95f);
         fire_sound.playInstance();
         

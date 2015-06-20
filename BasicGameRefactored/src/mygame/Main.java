@@ -279,7 +279,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
             float min = 0.1f;
             float max = 100f;
-            float speedFactor = this.player.getShip().cockpit.getBody().getLinearVelocity().lengthSquared() * 0.1f;
+            float speedFactor = this.player.getShip().getBody().getLinearVelocity().lengthSquared() * 0.1f;
 
             speedFactor = Math.max(min, speedFactor);
             speedFactor = Math.min(speedFactor, max);

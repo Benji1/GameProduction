@@ -39,8 +39,8 @@ public class Thruster extends InteractiveModule {
     }
 
     protected void onActive() {
-        Vec2 forceDirection = body.getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude);
-        body.applyForce(forceDirection, body.getPosition());
+        Vec2 forceDirection = ship.getBody().getWorldVector(FacingDirection.getDirectionVector(orientation)).mul(forceMagnitude);
+        ship.getBody().applyForce(forceDirection, ship.getBody().getPosition());
     }
    
     @Override
@@ -105,10 +105,10 @@ public class Thruster extends InteractiveModule {
     
     public final Vector3f getParticleSpawnDirection(float initialVelocity)
     {   
-        if (getBody() == null)
+        if (ship.getBody() == null)
             return new Vector3f(0f, 0f, 0f);
         
-        float angle = this.getBody().getAngle();
+        float angle = this.ship.getBody().getAngle();
         float x = (float)Math.cos(angle + 90f);        
         float y = (float)Math.sin(angle + 90f);
 

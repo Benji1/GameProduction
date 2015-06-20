@@ -97,7 +97,7 @@ public class ShieldCollider extends Node {
         fDef.filter.maskBits = TestShipDesigns.MASK_SHIELD;
         
         BodyDef bDef = new BodyDef();
-        bDef.position.set(s.getBody().getWorldCenter().x, s.getBody().getWorldCenter().y);
+        bDef.position.set(s.getShip().getBody().getWorldCenter().x, s.getShip().getBody().getWorldCenter().y);
         bDef.type = BodyType.DYNAMIC;
 
         body = PhysicsWorld.world.createBody(bDef);
@@ -107,7 +107,7 @@ public class ShieldCollider extends Node {
 
     private void lockToShield() {
         RevoluteJointDef wjDef = new RevoluteJointDef();
-        wjDef.initialize(s.getBody(), this.body, s.getBody().getPosition());
+        wjDef.initialize(s.getShip().getBody(), this.body, s.getShip().getBody().getPosition());
         wjDef.collideConnected = false;
         PhysicsWorld.world.createJoint(wjDef);
     }
