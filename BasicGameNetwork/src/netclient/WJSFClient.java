@@ -16,6 +16,7 @@ import netclient.states.MainMenuState;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
+import com.jme3.audio.AudioNode;
 import com.jme3.font.BitmapFont;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
@@ -58,7 +59,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
         settings.setBitsPerPixel(24);
         settings.setSamples(16);
 
-        WJSFClient app = new WJSFClient();
+        app = new WJSFClient();
         app.setSettings(settings);
         app.settings = settings;
         
@@ -66,6 +67,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 
         app.start();
     }
+    static WJSFClient app;
     
     @Override
     public void simpleInitApp() {
@@ -82,6 +84,8 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
     	
     	this.gui = new GUI(this);
         ServiceManager.getEditorManager().setClient(this);
+        
+        CreateBGSound();
     }
     
     @Override
@@ -116,6 +120,15 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 		this.stateManager.detach(this.gameRunState);
 		this.stateManager.attach(this.mainMenuState);
 	}
+    public void CreateBGSound()
+    {
+        AudioNode audioNode = new AudioNode(app.getAssetManager(), "Sound/Effects/bg.wav", false);
+        audioNode.setPositional(false);
+        audioNode.setLooping(true);
+        audioNode.setVolume(1f);
+        app.getRootNode().attachChild(audioNode);
+        audioNode.play();
+    }
     
     
     /**********************************

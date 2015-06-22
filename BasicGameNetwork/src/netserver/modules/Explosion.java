@@ -5,6 +5,7 @@
 package netserver.modules;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -43,6 +44,14 @@ public class Explosion extends JBox2dNode {
         fire.emitAllParticles();
         fire.setParticlesPerSec(0f);
         root.attachChild(fire);
+        
+        AudioNode audioNode = new AudioNode(a, "Sound/Effects/explosion.wav", false);
+        audioNode.setPositional(false);
+        audioNode.setLooping(false);
+        audioNode.setVolume(1f);        
+        audioNode.setPitch((float)Math.random() * 0.2f + 0.9f);
+        this.attachChild(audioNode);
+        audioNode.play();
     }
     
     // TODO dont know why this isn't beeing called. do i have to register somewhere?
