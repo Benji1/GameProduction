@@ -121,7 +121,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     
     public void addModuleAtBody(BasicModule module, Point p) {
         modules[p.x][p.y] = module;
-        generatePhysicsBody(p.x, p.y, this.colliderType, this.collidingWith);
+        generatePhysicsBody(p.x, p.y);
         module.onPlaced(this);
         informOtherModulesOfAddedModule(module, p);
     }
@@ -134,25 +134,13 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
         addModuleAtBody(module, offsetToActual(offset));
     }
     
-    private void generatePhysicsBody(int x, int y, int colliderType, int collidingWith) {
-        PolygonShape square = new PolygonShape();
-        square.setAsBox(1, 1);
-        
-        FixtureDef fDef = new FixtureDef();
-        fDef.shape = square;
-        fDef.density = 1.0f;
-        fDef.friction = 0.6f;
-        fDef.filter.categoryBits = colliderType;
-        fDef.filter.maskBits = collidingWith;
-
+    private void generatePhysicsBody(int x, int y) {
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyType.DYNAMIC;
 
         this.body = PhysicsWorld.world.createBody(bDef);
-        this.body.createFixture(fDef);
         this.body.setUserData(this);
-        //body.setLinearDamping(linearDampingFactor);
         PhysicsWorld.world.setContactListener(cockpit);
     }
 
