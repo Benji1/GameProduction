@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import netclient.gui.ModuleType;
 
 import netserver.weapons.ShieldCollider;
+import netutil.NetMessages.ShieldHitParticleMsg;
+import org.jbox2d.common.Vec2;
 
 /**
  *
@@ -99,6 +101,8 @@ public class Shield extends InteractiveModule {
                 hitpoint, 
                 ship.getApp().getRootNode()
                 );
+        ShieldHitParticleMsg msg = new ShieldHitParticleMsg(new Vec2(hitpoint.x, hitpoint.z));
+        ship.getApp().getServer().broadcast(msg);
     }
 
     @Override

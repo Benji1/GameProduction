@@ -15,12 +15,12 @@ import netclient.gui.OrientedModule;
  */
 public class GMStorage extends GraphicalModule {
     
-    public GMStorage(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+    public GMStorage(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app, float scale) {
         super(orientedModule, nodeToAttach, x, y, app);
         
         modelPath = "3dmodels/storage.obj";
         texturePath = "3dmodels/storage_ao.png";
         
-        createMyGraphic(x, y);
+        createMyGraphic(x, y, scale);
     }
 }

@@ -15,12 +15,12 @@ import netclient.gui.OrientedModule;
  */
 public class GMArmorDiagonal  extends GraphicalModule {
     
-    public GMArmorDiagonal(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+    public GMArmorDiagonal(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app, float scale) {
         super(orientedModule, nodeToAttach, x, y, app);
         
         modelPath = "3dmodels/armor_half.obj";
         texturePath = "3dmodels/armor_half_ao.png";
         
-        createMyGraphic(x, y);
+        createMyGraphic(x, y, scale);
     }
 }

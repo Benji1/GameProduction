@@ -15,18 +15,18 @@ import netclient.gui.OrientedModule;
  */
 public class GMThruster extends GraphicalModule {
     
-    public GMThruster(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+    public GMThruster(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app, float scale) {
         super(orientedModule, nodeToAttach, x, y, app);
         
         colorActive = ColorRGBA.Orange;
         modelPath = "3dmodels/thruster.obj";
         texturePath = "3dmodels/thruster_ao.png";
         
-        createMyGraphic(x, y);
+        createMyGraphic(x, y, scale);
     }
     
     @Override
-    protected void createMyGraphic(float x, float y) {
-        super.createMyGraphic(x, y);        
+    protected void createMyGraphic(float x, float y, float scale) {
+        super.createMyGraphic(x, y, scale);        
     }
 }

@@ -35,6 +35,26 @@ public class GameContactListener implements ContactListener {
         checkLaserProjectileModuleCollision(cntct);
         checkLaserProjectileShieldCollision(cntct);
         checkItemModuleCollision(cntct);
+        checkItemSensor(cntct);
+    }
+    
+    public void checkItemSensor(Contact cntct) {
+        Item i = null;
+        BasicModule m = null;
+
+        if ((cntct.getFixtureA().isSensor() && cntct.getFixtureA().getBody().getUserData() instanceof Item) && cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
+            i = (Item) cntct.getFixtureA().getBody().getUserData();
+            m = (BasicModule) cntct.getFixtureB().getBody().getUserData();
+        } else if ((cntct.getFixtureB().isSensor() && cntct.getFixtureB().getBody().getUserData() instanceof Item) && cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
+            i = (Item) cntct.getFixtureB().getBody().getUserData();
+            m = (BasicModule) cntct.getFixtureA().getBody().getUserData();
+        }
+        
+        if(i != null && m != null) {
+            if (m.getShip().canCollectItem()) {
+                i.handleModuleSensor(m.getBody().getPosition());
+            }
+        }
     }
 
     public void checkLaserProjectileModuleCollision(Contact cntct) {
@@ -76,10 +96,10 @@ public class GameContactListener implements ContactListener {
         Item i = null;
         BasicModule m = null;
 
-        if (cntct.getFixtureA().getBody().getUserData() instanceof Item && cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
+        if ((!cntct.getFixtureA().isSensor() && cntct.getFixtureA().getBody().getUserData() instanceof Item) && cntct.getFixtureB().getBody().getUserData() instanceof BasicModule) {
             i = (Item) cntct.getFixtureA().getBody().getUserData();
             m = (BasicModule) cntct.getFixtureB().getBody().getUserData();
-        } else if (cntct.getFixtureB().getBody().getUserData() instanceof Item && cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
+        } else if ((!cntct.getFixtureB().isSensor() && cntct.getFixtureB().getBody().getUserData() instanceof Item) && cntct.getFixtureA().getBody().getUserData() instanceof BasicModule) {
             i = (Item) cntct.getFixtureB().getBody().getUserData();
             m = (BasicModule) cntct.getFixtureA().getBody().getUserData();
         }

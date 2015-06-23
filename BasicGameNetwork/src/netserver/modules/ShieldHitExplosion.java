@@ -5,6 +5,7 @@
 package netserver.modules;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -43,6 +44,14 @@ public class ShieldHitExplosion extends JBox2dNode {
         fire.emitAllParticles();
         fire.setParticlesPerSec(0f);
         root.attachChild(fire);
+        
+        
+        AudioNode audioNode = new AudioNode(a, "Sound/Effects/shield_hit_short.wav", false);
+        audioNode.setPositional(false);
+        audioNode.setLooping(false);
+        audioNode.setVolume(1f);
+        this.attachChild(audioNode);
+        audioNode.play();
     }
     
     // TODO dont know why this isn't beeing called. do i have to register somewhere?
@@ -53,7 +62,7 @@ public class ShieldHitExplosion extends JBox2dNode {
         timeAlive += delta;
         if (timeAlive > duration)
             fire.removeFromParent();
-        System.out.println("ParticleSystem alive!");
+        //System.out.println("ParticleSystem alive!");
     }
 
 }

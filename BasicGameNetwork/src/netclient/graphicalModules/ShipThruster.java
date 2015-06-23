@@ -5,6 +5,7 @@
 package netclient.graphicalModules;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -22,6 +23,7 @@ import netclient.gui.OrientedModule;
 public class ShipThruster extends ShipModule{
     
     public ParticleEmitter fire;
+    public AudioNode audioNode;
     
     public ShipThruster(OrientedModule orientedModule, float x, float y, Node shipRoot, ClientShip ship, WJSFClient app) {
         super(orientedModule, x, y, shipRoot, ship, app);
@@ -43,8 +45,13 @@ public class ShipThruster extends ShipModule{
         fire.setRandomAngle(true);
         fire.getParticleInfluencer().setVelocityVariation(0.1f);
         fire.setParticlesPerSec(0f);
-        
         gm.attachChild(fire);
+        
+        audioNode = new AudioNode(a, "Sound/Effects/thruster.wav", false);
+        audioNode.setPositional(false);
+        audioNode.setLooping(true);
+        audioNode.setVolume(1f);
+        gm.attachChild(audioNode);
     }
     
      @Override
@@ -52,6 +59,9 @@ public class ShipThruster extends ShipModule{
         super.activate();   
         ship.increaseActivatedThrusterCount();        
         fire.setParticlesPerSec(60f);
+        
+        audioNode.setVolume(1f);
+        audioNode.play();
     }
     
     @Override
@@ -59,6 +69,9 @@ public class ShipThruster extends ShipModule{
         super.deactivate();
         ship.decreaseActivatedThrusterCount();
         fire.setParticlesPerSec(0f);
+        
+        audioNode.setVolume(0f);
+        audioNode.stop();
     }
     
     @Override

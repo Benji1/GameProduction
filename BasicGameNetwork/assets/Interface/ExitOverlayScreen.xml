@@ -8,7 +8,7 @@
 					<onEndScreen name="move" mode="out" direction="top" length="200" startDelay="0" inherit="true"/>
 				</effect>
 				<panel childLayout="vertical">
-					<control name="button" id="button" label="LOGOUT" width="100%" height="50px"> 
+					<control name="button" id="button" style="custom-button" label="LOGOUT" width="100%" height="50px"> 
 						<interact onClick="pressLogOut()"/>                       
 					</control>
 				</panel>

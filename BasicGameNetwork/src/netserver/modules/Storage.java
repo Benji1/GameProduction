@@ -53,6 +53,10 @@ public class Storage extends BasicModule {
         return false;
     }
     
+    public boolean isFull() {
+        return itemsInStorage.size() >= maxStoredItems;
+    }
+    
     @Override
     public void onPlaced(BasicShip ship) {
         super.onPlaced(ship);

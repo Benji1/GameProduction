@@ -16,19 +16,19 @@ import netclient.gui.OrientedModule;
  */
 public class GMEnergyGenerator extends GraphicalModule {
     
-    public GMEnergyGenerator(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+    public GMEnergyGenerator(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app, float scale) {
         super(orientedModule, nodeToAttach, x, y, app);
         
         colorActive = ColorRGBA.Yellow;
         modelPath = "3dmodels/generator.obj";
         texturePath = "3dmodels/generator_ao.png";
         
-        createMyGraphic(x, y);
+        createMyGraphic(x, y, scale);
     }
     
     @Override
-    protected void createMyGraphic(float x, float y) {
-        createGraphicFromPath("3dmodels/armor.obj", "3dmodels/armor_ao.png", x, y);
-        super.createMyGraphic(x, y);
+    protected void createMyGraphic(float x, float y, float scale) {
+        createGraphicFromPath("3dmodels/armor.obj", "3dmodels/armor_ao.png", x, y, scale);
+        super.createMyGraphic(x, y, scale);
     }
 }

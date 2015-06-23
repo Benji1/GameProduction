@@ -4,6 +4,8 @@
  */
 package netclient.gui;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.event.KeyInputEvent;
@@ -108,7 +110,18 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     }
     
     public void exitMenu() {
+        playSound("Sound/Effects/Beep1.wav");
         nifty.gotoScreen("start");
+    }
+    
+    public void playSound(String filename) {
+        AudioNode audioNode = new AudioNode(ship.app.getAssetManager(), filename, false);
+        audioNode.setPositional(false);
+        audioNode.setLooping(false);
+        audioNode.setVolume(1f);
+        audioNode.setPitch((float) Math.random() * 0.05f + 0.95f);
+        ship.shipRoot.attachChild(audioNode);
+        audioNode.play();
     }
     
     public void rotatePart(String id) {

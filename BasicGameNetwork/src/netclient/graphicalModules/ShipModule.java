@@ -26,7 +26,7 @@ public class ShipModule {
         this.shipRoot = shipRoot;
         this.ship = ship;
         this.orientedModule = orientedModule;
-        this.gm = ModuleCreator.createOrientedGraphicalModule(orientedModule, shipRoot, x, y, app);
+        this.gm = ModuleCreator.createOrientedGraphicalModule(orientedModule, shipRoot, x, y, app, 1f);
         
         shipRoot.attachChild(gm);
     }

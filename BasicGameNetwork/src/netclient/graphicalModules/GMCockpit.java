@@ -15,12 +15,12 @@ import netclient.gui.OrientedModule;
  */
 public class GMCockpit extends GraphicalModule {
     
-    public GMCockpit(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app) {
+    public GMCockpit(OrientedModule orientedModule, Node nodeToAttach, float x, float y, WJSFClient app, float scale) {
         super(orientedModule, nodeToAttach, x, y, app);
         
         modelPath = "3dmodels/cockpit.obj";
         texturePath = "3dmodels/cockpit_ao.png";
         
-        createMyGraphic(x, y);
+        createMyGraphic(x, y, scale);
     }
 }

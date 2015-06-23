@@ -43,6 +43,9 @@ public class NetMessages {
         Serializer.registerClass(DeleteGraphicObjectMsg.class);
         Serializer.registerClass(ModuleDestroyedMsg.class);
         Serializer.registerClass(SpawnItemMsg.class);
+        Serializer.registerClass(SpawnSpaceStationMsg.class);
+        Serializer.registerClass(ExplosionParticleMsg.class);
+        Serializer.registerClass(ShieldHitParticleMsg.class);
     }
 
     @Serializable
@@ -343,6 +346,54 @@ public class NetMessages {
         public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
         public Quaternion getRot() {return rot;}
         public OrientedModule getOrientedModule() {return om;}
+    }
+    
+    @Serializable
+    public static class SpawnSpaceStationMsg extends AbstractMessage {
+        private int id;
+        private float spawnX;
+        private float spawnY;
+        
+        public SpawnSpaceStationMsg() {}
+        
+        public SpawnSpaceStationMsg(int id, Vec2 spawnPoint) {
+            this.id = id;
+            this.spawnX = spawnPoint.x;
+            this.spawnY = spawnPoint.y;
+        }
+        
+        public int getId() {return this.id;}
+        public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
+    }
+    
+    @Serializable
+    public static class ExplosionParticleMsg extends AbstractMessage {
+        private float spawnX;
+        private float spawnY;
+        
+        public ExplosionParticleMsg() {}
+        
+        public ExplosionParticleMsg(Vec2 spawnPoint) {
+            this.spawnX = spawnPoint.x;
+            this.spawnY = spawnPoint.y;
+        }
+        
+        public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
+    }
+    
+    @Serializable
+    public static class ShieldHitParticleMsg extends AbstractMessage {
+        private float spawnX;
+        private float spawnY;
+        
+        public ShieldHitParticleMsg() {}
+        
+        public ShieldHitParticleMsg(Vec2 spawnPoint) {
+            this.spawnX = spawnPoint.x;
+            this.spawnY = spawnPoint.y;
+        }
+        
+        public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
     }
     
     /**********************************

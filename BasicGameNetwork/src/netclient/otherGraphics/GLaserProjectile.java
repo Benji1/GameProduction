@@ -52,7 +52,6 @@ public class GLaserProjectile extends GraphicObject {
         this.setLocalRotation(q);    
         
         this.attachChild(spatial);
-        spatial.updateGeometricState();
     }
     
     private void playFireSound() {
@@ -68,9 +67,9 @@ public class GLaserProjectile extends GraphicObject {
 
     @Override
     public void delete() {
-        spatial.removeFromParent();
-        this.removeFromParent();
+        spatial.removeFromParent();        
         fire_sound.removeFromParent();
+        this.removeFromParent();
     }
     
 }

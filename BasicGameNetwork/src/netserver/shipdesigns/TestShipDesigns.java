@@ -7,8 +7,6 @@ package netserver.shipdesigns;
 import com.jme3.input.KeyInput;
 import java.awt.Point;
 import java.util.ArrayList;
-
-import netclient.WJSFClient;
 import netserver.BasicShip;
 import netserver.WJSFServer;
 import netserver.NetPlayer;
@@ -47,19 +45,17 @@ public class TestShipDesigns {
     
     ArrayList<Integer> testFire;
     
-    public static final int CATEGORY_PLAYER = 0x0001;
-    public static final int CATEGORY_ENEMY = 0x0002;
+    public static final int CATEGORY_SHIP = 0x0001;
     public static final int CATEGORY_SCENERY = 0x0004;
     public static final int CATEGORY_PROJECTILE = 0x0008;
     public static final int CATEGORY_SHIELD = 0x0010;
     public static final int CATEGORY_ITEM = 0x0020;
     
-    public static final int MASK_PLAYER = CATEGORY_ENEMY | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
-    public static final int MASK_ENEMY = CATEGORY_PLAYER | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
+    public static final int MASK_SHIP = CATEGORY_SHIP | CATEGORY_SCENERY | CATEGORY_PROJECTILE | CATEGORY_ITEM;
     public static final int MASK_SCENERY = -1;
-    public static final int MASK_PROJECTILE = CATEGORY_PLAYER | CATEGORY_SHIELD | CATEGORY_ENEMY;
+    public static final int MASK_PROJECTILE = CATEGORY_SHIP | CATEGORY_SHIELD;
     public static final int MASK_SHIELD = CATEGORY_PROJECTILE;
-    public static final int MASK_ITEM = CATEGORY_PLAYER | CATEGORY_ENEMY;
+    public static final int MASK_ITEM = CATEGORY_SHIP;
     
     public TestShipDesigns(WJSFServer main) {
         this.main = main;
@@ -133,8 +129,6 @@ public class TestShipDesigns {
     public BasicShip createPlayerShip(NetPlayer player) {
         BasicShip s = new BasicShip(main, "PlayerShip", player);
         
-        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
-        
         Cockpit cp = new Cockpit();
         s.addModuleAtFromOffset(cp, new Point(0,0));
         s.addModuleAtFromOffset(new Storage(), new Point(-1, 0));
@@ -145,8 +139,8 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Thruster(right, FacingDirection.RIGHT), new Point(-1, 1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -1));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
-        s.addModuleAtFromOffset(new Storage(), new Point(-1, -1));
-        s.addModuleAtFromOffset(new Storage(), new Point(1, -1));
+        s.addModuleAtFromOffset(new Armor(), new Point(-1, -1));
+        s.addModuleAtFromOffset(new Armor(), new Point(1, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(-2, -1));
         s.addModuleAtFromOffset(new Armor(), new Point(2, -1));
         s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 0));
@@ -158,8 +152,6 @@ public class TestShipDesigns {
 
     public BasicShip createTestTargetShip() {
         BasicShip s = new BasicShip(main, "TargetShip");
-        
-        s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
         
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, -9));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -8));
@@ -189,8 +181,6 @@ public class TestShipDesigns {
      public BasicShip createTestTargetShip2() {
         BasicShip s = new BasicShip(main, "TargetShip");
         
-        s.setColliderTypeAndWith(CATEGORY_ENEMY, MASK_ENEMY);
-        
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, -9));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -8));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -7));
@@ -216,8 +206,6 @@ public class TestShipDesigns {
     
     public BasicShip createStickShip(NetPlayer player) {
         BasicShip s = new BasicShip(main, "PlayerShip", player);
-
-        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(-1, 0));
@@ -242,8 +230,6 @@ public class TestShipDesigns {
     
     public BasicShip createBasicShip() {
         BasicShip s = new BasicShip(main, "PlayerShip");
-
-        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));
@@ -261,8 +247,6 @@ public class TestShipDesigns {
     
     public BasicShip createBasicShip2() {
         BasicShip s = new BasicShip(main, "PlayerShip");
-
-        s.setColliderTypeAndWith(CATEGORY_PLAYER, MASK_PLAYER);
         
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, 0));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, 1));

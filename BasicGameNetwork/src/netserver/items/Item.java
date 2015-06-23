@@ -22,6 +22,7 @@ import netserver.shipdesigns.TestShipDesigns;
 import netutil.NetMessages;
 import netutil.NetMessages.DeleteGraphicObjectMsg;
 import netutil.NetMessages.SpawnItemMsg;
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -71,15 +72,26 @@ public class Item extends JBox2dNode implements IUpdateable, INetworkPosAndRotUp
     }
 
     private void generatePhysicsBody(float x, float y) {
+        // for collision
         PolygonShape rect = new PolygonShape();
         rect.setAsBox(0.5f, 0.5f);
-
+        
         FixtureDef fDef = new FixtureDef();
         fDef.shape = rect;
         fDef.density = 0.01f;
         fDef.friction = 0.0f;
         fDef.filter.categoryBits = TestShipDesigns.CATEGORY_ITEM;
         fDef.filter.maskBits = TestShipDesigns.MASK_ITEM;
+        
+        // sensor for moving towards player for easier collecting        
+        CircleShape sensorShape = new CircleShape();
+        sensorShape.m_radius = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("Storage"), "SensorRange", float.class);
+        
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.shape = sensorShape;
+        sensorDef.isSensor = true;
+        sensorDef.filter.categoryBits = TestShipDesigns.CATEGORY_ITEM;
+        sensorDef.filter.maskBits = TestShipDesigns.MASK_ITEM;
 
         // set body                        
         BodyDef bDef = new BodyDef();
@@ -89,6 +101,7 @@ public class Item extends JBox2dNode implements IUpdateable, INetworkPosAndRotUp
 
         body = PhysicsWorld.world.createBody(bDef);
         body.createFixture(fDef);
+        body.createFixture(sensorDef);
         body.setUserData(this);
     }
     
@@ -174,5 +187,11 @@ public class Item extends JBox2dNode implements IUpdateable, INetworkPosAndRotUp
 
     public int getId() {
         return id;
+    }
+    
+    public void handleModuleSensor(Vec2 modulePos) {
+        Vec2 force = modulePos.sub(body.getPosition());
+        
+        body.applyForce(force, body.getPosition());
     }
 }

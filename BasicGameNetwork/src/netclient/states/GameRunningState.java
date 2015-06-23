@@ -146,11 +146,11 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         //
         // OFFLINE INPUT
         //
-
+        
         if (name.equals("ToggleUniverseDebug")) {
             if (!keyPressed) {
                 //System.out.println(camNode.getLocalTranslation().y + "/ " + 70 * (this.viewPort.getCamera().getWidth() / 1280f));
-// if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
+                // if (camNode.getLocalTranslation().y == 70 * (this.viewPort.getCamera().getWidth() / 1600f)) {
                 if (universeDebug) {
                     universeDebug = false;
                     //camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
@@ -186,48 +186,48 @@ public class GameRunningState extends AbstractAppState implements ActionListener
             //this.app.getInputManager().addRawInputListener(this);
         }
     }
-
+    
     @Override
     public void update(float tpf) {
         this.msgManager.update(tpf);
         
         // f.ex. for adjusting thruster particles to current velocity
         if (this.playerShip != null) {
-            this.playerShip.update();
+            this.playerShip.update(tpf);
         }
         for (ClientShip clientShip : clientShips) {
-            clientShip.update();
+            clientShip.update(tpf);
         }
-
+        
         //this.background.updateBackground();
         if (this.playerShip != null && !universeDebug) {
             updateCamPos(tpf);
         }
     }
-
+    
     @Override
     public void cleanup() {
         super.cleanup();
-
+        
         this.app.getInputManager().clearMappings();
         this.app.getRootNode().detachChild(this.localRootNode);
     }
-
+    
     /**
      * Nifty Stuff
      */
     @Override
     public void bind(Nifty arg0, Screen arg1) {
     }
-
+    
     @Override
     public void onEndScreen() {
     }
-
+    
     @Override
     public void onStartScreen() {
     }
-
+    
     public void pressLogOut() {
         this.app.getStateManager().detach(this.app.gameRunState);
         this.app.getStateManager().attach(this.app.mainMenuState);
@@ -243,55 +243,55 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     float cameraMoveBackCooldown = 0f;
     float camYspeed = 10f;
     float crap = 0f;
-
+    
     public void updateCamPos(float delta) {
         if (cameraType == 0) {
             currentCamPos.x = playerShip.shipRoot.getLocalTranslation().x;
             currentCamPos.z = playerShip.shipRoot.getLocalTranslation().z + 0.1f;
             currentCamPos.y = this.cameraMinHeight * 5f;
-
+            
             camNode.setLocalTranslation(currentCamPos);
             camNode.lookAt(playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
         } else if (cameraType == 1){
             previousCamPos = currentCamPos;
             currentCamPos = new Vector3f();
-
+            
             float min = 0.1f;
             float max = 100f;
             float speedFactor = playerShip.getVelocity().lengthSquared() * 0.1f;
-
+            
             speedFactor = Math.max(min, speedFactor);
             speedFactor = Math.min(speedFactor, max);
             float t = inverseLerp(0f, max + min, speedFactor);
             float offsetFactor = 1f - t;
-
+            
             currentCamPos.x = playerShip.shipRoot.getLocalTranslation().x + camXOffset * offsetFactor;
             currentCamPos.z = playerShip.shipRoot.getLocalTranslation().z + camZOffset * offsetFactor;
-
+            
             float newY =
                     lerp(
                     previousCamPos.y,
                     this.cameraMinHeight + speedFactor,
                     camPosChangeLerpValue);
-
+            
             if (!playerShip.hasActivatedThruster() || newY > previousCamPos.y) {
                 currentCamPos.y = newY;
             } else {
                 currentCamPos.y = previousCamPos.y;
             }
-
+            
             camNode.setLocalTranslation(currentCamPos);
             camNode.lookAt(playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
         } else if (cameraType == 2) {
             previousCamPos = currentCamPos;
             currentCamPos = new Vector3f();
-                        
+            
             float newY =
                     lerp(
                     previousCamPos.y,
                     this.cameraMinHeight + crap,
                     camPosChangeLerpValue);
-
+            
             
             if (playerShip.hasActivatedThruster()) 
                 cameraMoveBackCooldown = cooldown;
@@ -321,33 +321,33 @@ public class GameRunningState extends AbstractAppState implements ActionListener
             camNode.lookAt(playerShip.shipRoot.getLocalTranslation(), Vector3f.UNIT_Y);
         }
     }
-
+    
     float lerp(float v0, float v1, float t) {
         return (1 - t) * v0 + t * v1;
     }
-
+    
     float inverseLerp(float a, float b, float x) {
         return (x - a) / (b - a);
     }
     
     public void beginInput() {
     }
-
+    
     public void endInput() {
     }
-
+    
     public void onJoyAxisEvent(JoyAxisEvent evt) {
     }
-
+    
     public void onJoyButtonEvent(JoyButtonEvent evt) {
     }
-
+    
     public void onMouseMotionEvent(MouseMotionEvent evt) {
     }
-
+    
     public void onMouseButtonEvent(MouseButtonEvent evt) {
     }
-
+    
     public void onKeyEvent(KeyInputEvent evt) {
         //
         // NETWORKING INPUT
@@ -359,7 +359,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
             this.app.client.send(msg);
         }
     }
-
+    
     public void onTouchEvent(TouchEvent evt) {
     }
 }

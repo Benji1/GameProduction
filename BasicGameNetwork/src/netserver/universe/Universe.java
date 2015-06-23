@@ -48,7 +48,6 @@ public class Universe {
     private UniverseChunk[][] universeChunks;
     //public List<SolarSystem> systems;
     private int universeCenter = UNIVERSE_SIZE / 2;
-    //public List<Spatial> stations;
     
     // Debug Stuff
     private Node debugBoxes;
@@ -125,6 +124,7 @@ public class Universe {
     	float mindis = Float.MAX_VALUE;
     	for (Abs_ChunkNode s: this.getChunk(shippos).spaceStations){
     		float dis = (s.getLocalTranslation().subtract(shippos)).length();
+
     		if (dis < mindis)
     			mindis = dis;
     	}
@@ -172,6 +172,32 @@ public class Universe {
     
     public UniverseChunk getChunk(Vector3f pos) {
     	return this.universeChunks[(int)(pos.x / this.CHUNK_SIZE)][(int)(pos.z / this.CHUNK_SIZE)];
+    }
+    
+    public ArrayList<UniverseChunk> getAllSurroundingChunks(int chunkX, int chunkZ) {
+    	ArrayList<UniverseChunk> chunks = new ArrayList<UniverseChunk>();
+    	
+    	for(int i = -1; i < 3; i++) {
+    		for (int j = -1; j < 3; j++) {
+    			chunks.add(this.getChunk(chunkX + i, chunkZ + j));
+    		}
+    	}
+    	
+    	return chunks;
+    }
+    
+    public ArrayList<SpaceStation> getAllNearbyStations(Vector3f pos) {
+    	return this.getAllNearbyStations((int)(pos.x / Universe.CHUNK_SIZE), (int)(pos.z / Universe.CHUNK_SIZE));
+    }
+    
+    public ArrayList<SpaceStation> getAllNearbyStations(int chunkX, int chunkZ) {
+    	ArrayList<SpaceStation> stations = new ArrayList<SpaceStation>();
+    	
+    	for(UniverseChunk c : this.getAllSurroundingChunks(chunkX, chunkZ))
+    		for(Abs_ChunkNode s : c.getListOfType(ChunkNodeType.SpaceStations))
+    			stations.add((SpaceStation)s);
+    	
+    	return stations;
     }
     
     public void toggleUniverseDebug() {
