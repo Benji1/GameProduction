@@ -204,10 +204,6 @@ public class ClientShip {
         lastPos = msg.getPos();
         lastDir = msg.getDir();
         lastDeltaAcc = deltaAccumulator;
-        //shipRoot.setLocalTranslation(lastPos);
-        //shipRoot.setLocalRotation(lastDir);
-        //setVelocity(msg.getVelocity());
-        //setAngVelocity(msg.getAngVel());
     }
     
     private void updatePosAndRot() {
@@ -223,12 +219,55 @@ public class ClientShip {
         Quaternion deltaAngularVelocity = predictedDir.mult(1f / deltaTime);
         Quaternion rotation = lastDir.add(deltaAngularVelocity.mult(newDeltaTime));
         shipRoot.setLocalRotation(rotation);
-        
-        /*Vector3f pos = shipRoot.getLocalTranslation();
-        pos.interpolate(lastPos, 0.1f);
-        shipRoot.setLocalTranslation(pos);
-        Quaternion dir = shipRoot.getLocalRotation();
-        dir.slerp(lastDir, 0.1f);
-        shipRoot.setLocalRotation(dir);*/
     }
+    
+    /*private Vector3f[] lastKnownPos = new Vector3f[3];
+    private Quaternion[] lastKnownDir = new Quaternion[3];
+    private float[] lastKnownTime = new float[3];
+    private float deltaAccumulator;
+    
+    public void handlePosAndRotMsg(PosAndRotMsg msg) {
+        lastKnownPos[2] = lastKnownPos[1];
+        lastKnownPos[1] = lastKnownPos[0];
+        lastKnownPos[0] = msg.getPos();
+        lastKnownDir[2] = lastKnownDir[1];
+        lastKnownDir[1] = lastKnownDir[0];        
+        lastKnownDir[0] = msg.getDir();
+        lastKnownTime[2] = lastKnownTime[1];
+        lastKnownTime[1] = lastKnownTime[0];
+        lastKnownTime[0] = deltaAccumulator;
+    }
+    
+    private void updatePosAndRot() {
+        //PrevPredictedPathVector = Last_KnownPos[1] – Last_KnownPos[2]
+        Vector3f prevPredictedPathVector = lastKnownPos[1].subtract(lastKnownPos[2]);
+        //PrevDeltaTime = Last_KnownTime[1] – Last_KnownTime[2]
+        float prevDeltaTime = lastKnownTime[1] - lastKnownTime[2];
+        //StartDeltaTime = Last_KnownTime[0] – Last_KnownTime[2]
+        float startDeltaTime = lastKnownTime[0] - lastKnownTime[2];
+        //PrevVelocity = PrevPredictedPathVector / PrevDeltaTime
+        Vector3f prevVelocity = prevPredictedPathVector.divide(prevDeltaTime);
+        //StartPos = Last_KnownPos[2] + StartDeltaTime * PrevVelocity
+        Vector3f startPos = lastKnownPos[2].add(prevVelocity.mult(startDeltaTime));
+        //CurrentDeltaTime = Now - Last_KnownTime[0]
+        float currentDeltaTime = deltaAccumulator - lastKnownTime[0];
+        //PredictedPathVector = Last_KnownPos[0] – Last_KnownPos[1]
+        Vector3f predictedPathVector = lastKnownPos[0].subtract(lastKnownPos[1]);
+        //DeltaTime = Last_KnownTime[0] – Last_KnownTime[1]
+        float deltaTime = lastKnownTime[0] - lastKnownTime[1];
+        //EndPos = Last_KnownPos[0] + CurrentDeltaTime * PredictedPathVector / DeltaTime
+        Vector3f endPos = lastKnownPos[0].add(predictedPathVector.divide(deltaTime).mult(currentDeltaTime));
+        //LinearConvergenceVector = EndPos - StartPos
+        Vector3f linearConvergenceVector = endPos.subtract(startPos);
+        //Velocity = LinearConvergenceVector / DeltaTime
+        Vector3f velocity = linearConvergenceVector.divide(deltaTime);
+        //NewPos = StartPos + CurrentDeltaTime * Velocity
+        Vector3f newPos = startPos.add(velocity.mult(currentDeltaTime));
+        shipRoot.setLocalTranslation(newPos);
+        
+        Quaternion predictedDir = lastKnownDir[0].subtract(lastKnownDir[1]);
+        Quaternion deltaAngularVelocity = predictedDir.mult(1f / deltaTime);
+        Quaternion rotation = lastKnownDir[0].add(deltaAngularVelocity.mult(currentDeltaTime));
+        shipRoot.setLocalRotation(rotation);
+    }*/
 }
