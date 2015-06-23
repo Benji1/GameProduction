@@ -9,46 +9,46 @@
         <attributes backgroundImage="Interface/Images/BigButtons.png"
                     imageMode="sprite-resize:450,62,0,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
-        <effect>
-            <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
-            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,1,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
-        </effect>
+                    <effect>
+                        <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
+                        <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,1,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+                    </effect>
     </style>
     <style id="small-button#panel">
         <attributes backgroundImage="Interface/Images/SmallButtons.png"
                     imageMode="sprite-resize:84,48,0,10,64,10,10,10,64,10,28,10,64,10,10"
                     childLayout="center"/>
-        <effect>
-            <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
-            <onHover name="imageOverlay" filename="Interface/Images/SmallButtons.png" imageMode="sprite-resize:84,48,1,10,64,10,10,10,64,10,28,10,64,10,10" post="true"/>
-            <onFocus name="imageOverlay" filename="Interface/Images/SmallButtons.png" imageMode="sprite-resize:84,48,2,10,64,10,10,10,64,10,28,10,64,10,10" post="true"/>
-        </effect>
+                    <effect>
+                        <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
+                        <onHover name="imageOverlay" filename="Interface/Images/SmallButtons.png" imageMode="sprite-resize:84,48,1,10,64,10,10,10,64,10,28,10,64,10,10" post="true"/>
+                        <onFocus name="imageOverlay" filename="Interface/Images/SmallButtons.png" imageMode="sprite-resize:84,48,2,10,64,10,10,10,64,10,28,10,64,10,10" post="true"/>
+                    </effect>
     </style>
     <style id="custom-button-top#panel">
         <attributes backgroundImage="Interface/Images/BigButtons.png"
                     imageMode="sprite-resize:450,62,2,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
-        <effect>
-            <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
-            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,3,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
-        </effect>
+                    <effect>
+                        <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
+                        <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,3,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+                    </effect>
     </style>
     <style id="custom-button-middle#panel">
         <attributes backgroundImage="Interface/Images/BigButtons.png"
                     imageMode="sprite-resize:450,62,4,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
-        <effect>
-            <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
-            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,5,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
-        </effect>
+                    <effect>
+                        <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
+                        <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,5,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+                    </effect>
     </style>
     <style id="custom-button-bottom#panel">
         <attributes backgroundImage="Interface/Images/BigButtons.png"
                     imageMode="sprite-resize:450,62,6,129,192,129,13,129,192,129,36,129,192,129,13"
                     childLayout="center"/>
-        <effect>
-            <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
-            <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,7,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
-        </effect>
+                    <effect>
+                        <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep2.wav)" />
+                        <onHover name="imageOverlay" filename="Interface/Images/BigButtons.png" imageMode="sprite-resize:450,62,7,129,192,129,13,129,192,129,36,129,192,129,13" post="true"/>
+                    </effect>
     </style>
 </nifty-styles>

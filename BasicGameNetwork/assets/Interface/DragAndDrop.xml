@@ -6,6 +6,7 @@
             <onStartHover name="nop" onStartEffect="playSound(Sound/Effects/Beep1.wav)" />
         </effect>
         <panel id="#draggableContent">
+            
         </panel>
     </controlDefinition>
     <controlDefinition name="custom-droppable" childRootId="#droppableContent" controller="netclient.gui.dragAndDrop.DroppableControl">

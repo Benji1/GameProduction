@@ -40,6 +40,7 @@
                         </panel>
                     </panel>
                     <panel id="parts-container" childLayout="absolute">
+                        
                     </panel>
                 </panel>
                 <panel id="description-panel" style="custom-panel" height="250px" width="100%" childLayout="absolute">

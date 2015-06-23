@@ -1,5 +1,6 @@
 package netclient;
 
+import com.jme3.math.Quaternion;
 import netclient.graphicalModules.GraphicalModule;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -25,6 +26,7 @@ import static netclient.gui.ModuleType.THRUSTER;
 import static netclient.gui.ModuleType.WEAPON;
 import netclient.gui.OrientedModule;
 import netclient.gui.inventory.InventoryCategory;
+import netutil.NetMessages.PosAndRotMsg;
 import org.jbox2d.common.Vec2;
 
 public class ClientShip {
@@ -179,7 +181,7 @@ public class ClientShip {
         return angVelocity;
     }
     
-    public void update() {
+    public void update(float delta) {
         for (int i=0; i<gmodules.length; i++) {
             for (int j=0; j<gmodules[i].length; j++) {
                 if (gmodules[i][j] != null) {
@@ -187,5 +189,46 @@ public class ClientShip {
                 }
             }
         }
+        deltaAccumulator += delta;
+        updatePosAndRot();
+    }
+    
+    private Vector3f lastPos, lastLastPos;
+    private Quaternion lastDir, lastLastDir;
+    private float deltaAccumulator, lastDeltaAcc, lastLastDeltaAcc;
+    
+    public void handlePosAndRotMsg(PosAndRotMsg msg) {
+        lastLastPos = lastPos;
+        lastLastDir = lastDir;
+        lastLastDeltaAcc = lastDeltaAcc;
+        lastPos = msg.getPos();
+        lastDir = msg.getDir();
+        lastDeltaAcc = deltaAccumulator;
+        //shipRoot.setLocalTranslation(lastPos);
+        //shipRoot.setLocalRotation(lastDir);
+        //setVelocity(msg.getVelocity());
+        //setAngVelocity(msg.getAngVel());
+    }
+    
+    private void updatePosAndRot() {
+        float deltaTime = lastDeltaAcc - lastLastDeltaAcc;
+        float newDeltaTime = deltaAccumulator - lastLastDeltaAcc;
+
+        Vector3f predictedPathVector = lastPos.subtract(lastLastPos);
+        Vector3f deltaVelocity = predictedPathVector.divide(deltaTime);
+        Vector3f pos = lastPos.add(deltaVelocity.mult(newDeltaTime));
+        shipRoot.setLocalTranslation(pos);
+        
+        Quaternion predictedDir = lastDir.subtract(lastLastDir);
+        Quaternion deltaAngularVelocity = predictedDir.mult(1f / deltaTime);
+        Quaternion rotation = lastDir.add(deltaAngularVelocity.mult(newDeltaTime));
+        shipRoot.setLocalRotation(rotation);
+        
+        /*Vector3f pos = shipRoot.getLocalTranslation();
+        pos.interpolate(lastPos, 0.1f);
+        shipRoot.setLocalTranslation(pos);
+        Quaternion dir = shipRoot.getLocalRotation();
+        dir.slerp(lastDir, 0.1f);
+        shipRoot.setLocalRotation(dir);*/
     }
 }
