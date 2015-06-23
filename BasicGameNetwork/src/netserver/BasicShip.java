@@ -17,7 +17,10 @@ import netserver.services.updater.IUpdateable;
 import netserver.universe.Abs_ChunkNode;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+
 import java.util.Map;
+
 import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
 import netserver.modules.Armor;
@@ -31,7 +34,7 @@ import netserver.modules.Thruster;
  *
  * @author 1337
  */
-public class BasicShip extends Abs_ChunkNode implements IUpdateable {
+public class BasicShip extends Node implements IUpdateable {
 
     public int shipHeight = 22;
     public int shipWidth = 22;
@@ -41,12 +44,15 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
     public Vector3f cockpitPos;
     public int colliderType, collidingWith;
     private NetPlayer player;
-
+    private WJSFServer app;
+    
     public BasicShip(WJSFServer app, String name) {
         this(app, name, null);
     }
     public BasicShip(WJSFServer app, String name, NetPlayer player) {
-        super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
+        //super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
+    	super(name);
+    	this.app = app;
         app.getRootNode().attachChild(this);
         //app.gameRunState.ships.add(this);
         this.player = player;
@@ -61,7 +67,7 @@ public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     @Override
     public void update(float tpf) {
-        super.update(tpf);
+        //super.update(tpf);
 
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {

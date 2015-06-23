@@ -10,21 +10,24 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 
-public class Planet extends Abs_ChunkNode {
+public class Planet extends Node {
 	Geometry model;
-        SolarSystem system;
+    SolarSystem system;
+    WJSFServer app;
 	float distance = 0;
 	float orbit = 0;
 	float orbitspeed = 0;
 	float ellypsiness = 1.25f;
 	
 	public Planet(WJSFServer app, SolarSystem system){
-		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
+		super(CBNameGenerator.getName());
+		this.app = app;
 		this.system = system;
-                this.init();
+        this.init();
 	}
 	
 	private void init(){
@@ -62,17 +65,17 @@ public class Planet extends Abs_ChunkNode {
 		this.setLocalRotation(rotation);
 	}
 	
-	public void update(float tpf){
-                this.orbit += orbitspeed*tpf;
+	public void update(float tpf) {
+        this.orbit += orbitspeed*tpf;
 		this.orbit%=360;
                 
 		float x = (float) (this.distance *system.sizescale * Math.cos(this.orbit)* this.ellypsiness);
 		float y = (float) (this.distance *system.sizescale * Math.sin(this.orbit) / this.ellypsiness);
 		this.setLocalTranslation(x, 0, y);
-                this.model.rotate(0, 0, orbitspeed*tpf*10);
-        }
+		this.model.rotate(0, 0, orbitspeed*tpf*10);
+	}
         
-        private float getSize(){
+	private float getSize() {
 		float size =  1f;
 		size += (float) (Math.random()*2.0f);
 		size += (Math.sin((distance)/(double)(system.radius)* 3.4f -0.25f))*10f;

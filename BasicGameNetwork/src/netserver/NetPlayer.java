@@ -39,20 +39,20 @@ public class NetPlayer {
      **********************************/
 	
 	public void update(float tpf) {
-		
+		this.ship.update(tpf);
 	}
         
-        public void handleKeyEvent(Integer keyCode, boolean keyPressed) {
-            if (keyPressed) {
-                ship.handleKeyPressed(keyCode);
-            } else {
-                ship.handleKeyReleased(keyCode);
-            }
+    public void handleKeyEvent(Integer keyCode, boolean keyPressed) {
+        if (keyPressed) {
+            ship.handleKeyPressed(keyCode);
+        } else {
+            ship.handleKeyReleased(keyCode);
         }
-        
-        public void updateBaseInventory(ModuleType[] itemsInBase) {
-            inventory.setItemsInBase(itemsInBase);
-        }
+    }
+    
+    public void updateBaseInventory(ModuleType[] itemsInBase) {
+        inventory.setItemsInBase(itemsInBase);
+    }
 	
 	
 	/**********************************

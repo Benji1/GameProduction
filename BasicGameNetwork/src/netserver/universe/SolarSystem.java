@@ -1,5 +1,7 @@
 package netserver.universe;
 
+import com.jme3.math.Vector3f;
+
 import netclient.WJSFClient;
 import netserver.WJSFServer;
 import netserver.universe.Abs_ChunkNode;
@@ -17,8 +19,8 @@ public class SolarSystem extends Abs_ChunkNode {
 	public float timescale = 100f;
 	public float sizescale = 1f;
 	
-	public SolarSystem(WJSFServer app){
-		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
+	public SolarSystem(WJSFServer app, Vector3f pos) {
+		super(app, CBNameGenerator.getName(), ChunkNodeType.SolarSystems, true, pos);
 		this.init();
 	}
 	

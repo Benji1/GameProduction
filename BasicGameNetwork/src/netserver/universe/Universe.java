@@ -33,7 +33,7 @@ public class Universe {
      **********************************/
     
     public static final float CHUNK_SIZE = 100;
-    public static final int UNIVERSE_SIZE = 999;
+    public static final int UNIVERSE_SIZE = 200;
     
     
     
@@ -46,9 +46,9 @@ public class Universe {
     
     // PLACEHOLDERS FOR UNIVERSE STORAGE
     private UniverseChunk[][] universeChunks;
-    public List<SolarSystem> systems;
+    //public List<SolarSystem> systems;
     private int universeCenter = UNIVERSE_SIZE / 2;
-    public List<Spatial> stations;
+    //public List<Spatial> stations;
     
     // Debug Stuff
     private Node debugBoxes;
@@ -70,9 +70,9 @@ public class Universe {
             }
         }
         
-        this.initDebug();
-        this.systems = new ArrayList<SolarSystem>();
-        this.stations = new ArrayList<Spatial>();
+        //this.initDebug();
+        //this.systems = new ArrayList<SolarSystem>();
+        //this.stations = new ArrayList<Spatial>();
     }
     
     
@@ -112,7 +112,7 @@ public class Universe {
                 BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
                 BitmapText ch = new BitmapText(f, false);
                 ch.setSize(3);
-                ch.setText("NumShips: " + this.universeChunks[this.universeCenter][this.universeCenter].getListOfType(ChunkNodeType.Ship).size());
+                //ch.setText("NumShips: " + this.universeChunks[this.universeCenter][this.universeCenter].getListOfType(ChunkNodeType.Ship).size());
                 ch.setColor(ColorRGBA.White);
                 ch.rotate(-1.57079633f,0,0);
                 ch.setLocalTranslation(Universe.CHUNK_SIZE * i, 1, Universe.CHUNK_SIZE * j);
@@ -121,36 +121,9 @@ public class Universe {
         }
     }
     
-     public void addStation(float x, float z){
-    	Box shape = new Box(7, 2, 5);
-    	Spatial station = app.getAssetManager().loadModel("3dmodels/station.obj");
-		Material sphereMat = new Material(app.getAssetManager(), 
-				"Common/MatDefs/Light/Lighting.j3md");
-		sphereMat.setBoolean("UseMaterialColors", true);
-		
-		ColorRGBA color = ColorRGBA.DarkGray;
-		sphereMat.setColor("Diffuse", color);
-		sphereMat.setColor("Ambient", color);
-		station.setMaterial(sphereMat);	
-		app.getRootNode().attachChild(station);
-		this.stations.add(station);
-		station.setLocalTranslation(x, -5, z);
-                station.setLocalScale(2f);
-                
-        BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
-        BitmapText info = new BitmapText(f, true);
-        info.setColor(ColorRGBA.Green);
-        info.rotate((float) -Math.PI/2f,0,0);
-        info.scale(0.2f);
-        info.setQueueBucket(Bucket.Transparent);
-        info.setText("Press 'E' to enter");
-        info.setLocalTranslation(x-13, 3, z);
-        app.getRootNode().attachChild(info);
-    }
-    
     public boolean nearStation(Vector3f shippos){
     	float mindis = Float.MAX_VALUE;
-    	for (Spatial s: stations){
+    	for (Abs_ChunkNode s: this.getChunk(shippos).spaceStations){
     		float dis = (s.getLocalTranslation().subtract(shippos)).length();
     		if (dis < mindis)
     			mindis = dis;
@@ -166,8 +139,8 @@ public class Universe {
                 this.universeChunks[i][j].update(tpf);
             }
         }
-    	for (SolarSystem s: systems)
-    		s.update(tpf);
+    	//for (SolarSystem s: systems)
+    	//	s.update(tpf);
         
     	//if(this.isDebug)
     	//	this.app.gameRunState.textShipPos.setText("PosChunk: " + this.app.gameRunState.playersShip.getChunkX() + "/" + this.app.gameRunState.playersShip.getChunkX() + "\nPosCurChunk: " + this.app.gameRunState.playersShip.getPosCurChunk().toString() + "\nPosAbs: " + this.app.gameRunState.playersShip.getWorldTranslation().toString());
@@ -195,6 +168,10 @@ public class Universe {
     		return null;
     	
     	return this.universeChunks[chunkX + this.universeCenter][chunkZ + this.universeCenter];
+    }
+    
+    public UniverseChunk getChunk(Vector3f pos) {
+    	return this.universeChunks[(int)(pos.x / this.CHUNK_SIZE)][(int)(pos.z / this.CHUNK_SIZE)];
     }
     
     public void toggleUniverseDebug() {

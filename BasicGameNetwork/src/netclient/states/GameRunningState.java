@@ -64,8 +64,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public Node localRootNode;
     public CameraNode camNode;
     private Background background;
-    public BitmapText textShipPos;
-    public BitmapText textNewChunk;
+
     public ClientShip playerShip;
     public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
     public ClientNetMsgListener msgManager;
@@ -98,7 +97,6 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         super.initialize(stateManager, app);
 
         this.initLight();
-        this.initHUD();
         //this.initKeys();
         this.initCamera();
         this.background = new Background(this.app);
@@ -136,19 +134,6 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.app.getInputManager().addListener(this, "ToggleUniverseDebug", "ToggleEditor", "ExitOverlay");
     }
 
-    private void initHUD() {
-        this.textShipPos = new BitmapText(this.app.defaultFont, false);
-        this.textShipPos.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
-        this.textShipPos.setColor(ColorRGBA.Green);                             // font color
-        this.textShipPos.setText("POS");             // the text
-        this.textShipPos.setLocalTranslation(0, this.app.settings.getHeight(), 0); // position
-
-        this.textNewChunk = new BitmapText(this.app.defaultFont, false);
-        this.textNewChunk.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
-        this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
-        this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
-        this.textNewChunk.setLocalTranslation(this.app.settings.getWidth() - 250, this.app.settings.getHeight(), 0); // position
-    }
 
     private void initLight() {
         AmbientLight ambient = new AmbientLight();
@@ -170,13 +155,9 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                     universeDebug = false;
                     //camNode.setLocalTranslation(new Vector3f(0, 200 * (this.viewPort.getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
-                    this.app.getGuiNode().attachChild(this.textShipPos);
-                    this.app.getGuiNode().attachChild(this.textNewChunk);
                 } else {
                     camNode.setLocalTranslation(new Vector3f(0, 70 * (this.app.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
                     //this.u.toggleUniverseDebug();
-                    this.app.getGuiNode().detachChild(this.textShipPos);
-                    this.app.getGuiNode().detachChild(this.textNewChunk);
                     universeDebug = true;
                 }
             }

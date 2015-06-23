@@ -17,12 +17,15 @@ import netserver.universe.UniverseGenerator;
 import netutil.NetMessages;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.font.BitmapText;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.system.JmeContext;
+
 import netserver.items.EncapsulatingItem;
 import netserver.items.Item;
 import netserver.physics.GameContactListener;
@@ -59,6 +62,10 @@ public class WJSFServer extends SimpleApplication {
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
     public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
     
+    // Debug stuff
+    public BitmapText textShipPos;
+    public BitmapText textNewChunk;
+    
     /**********************************
      ************ METHODS  ************
      **********************************/
@@ -94,11 +101,12 @@ public class WJSFServer extends SimpleApplication {
         this.designs = new TestShipDesigns(this);
         this.gameCollisionListener = new GameContactListener(this);
         
-        // init game
-        this.initWorld();
-        
         // init debug stuff
         this.initCamera();
+        this.initHUD();
+        
+        // init game
+        this.initWorld();
     }
 
     private void initWorld() {
@@ -111,8 +119,25 @@ public class WJSFServer extends SimpleApplication {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
         
-    	camNode.setLocalTranslation(new Vector3f(0, 100 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+    	camNode.setLocalTranslation(new Vector3f(0, 1000 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+    	camNode.getCamera().setFrustumFar(1000);
         camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
+    }
+    
+    private void initHUD() {
+        this.textShipPos = new BitmapText(this.guiFont, false);
+        this.textShipPos.setSize(this.guiFont.getCharSet().getRenderedSize());      // font size
+        this.textShipPos.setColor(ColorRGBA.Green);                             // font color
+        this.textShipPos.setText("POS");             // the text
+        this.textShipPos.setLocalTranslation(0, this.settings.getHeight(), 0); // position
+        this.getGuiNode().attachChild(this.textShipPos);
+        
+        this.textNewChunk = new BitmapText(this.guiFont, false);
+        this.textNewChunk.setSize(this.guiFont.getCharSet().getRenderedSize());      // font size
+        this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
+        this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
+        this.textNewChunk.setLocalTranslation(this.settings.getWidth() - 350, this.settings.getHeight(), 0); // position
+        this.getGuiNode().attachChild(this.textNewChunk);
     }
     
     @Override
@@ -165,6 +190,16 @@ public class WJSFServer extends SimpleApplication {
         //
         this.gameCollisionListener = new GameContactListener(this);
         this.conManager.update(tpf);
+        
+        //
+        // UPDATE DEBUG
+        //
+        String s = "POS SHIPS:\n";
+        
+        for(NetPlayer pl : this.conManager.players)
+        	s += pl.ship.cockpit.getLocalTranslation().toString() + "\n";
+        
+        this.textShipPos.setText(s);
     }
     
     public void phyicsUpdate(float delta) {

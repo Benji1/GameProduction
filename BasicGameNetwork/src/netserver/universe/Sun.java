@@ -13,16 +13,19 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 
-public class Sun extends Abs_ChunkNode {
+public class Sun extends Node {
 	Geometry model;
 	PointLight light;
-        public float radius;
+    public float radius;
 	SolarSystem system;
+	private WJSFServer app;
         
 	public Sun(WJSFServer app, SolarSystem parent){
-		super(app, CBNameGenerator.getName(), ChunkNodeType.Universe);
+		super(CBNameGenerator.getName());
+		this.app = app;
 		this.system = parent;
 		this.init();
 	}
