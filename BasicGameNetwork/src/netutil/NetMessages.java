@@ -420,7 +420,8 @@ public class NetMessages {
         public String getName() {return this.name;}
         public int getId() {return this.id;}
     }
-
+    
+    @Serializable
     public static class SpawnUniverseEntity extends AbstractMessage {
     	public float spawnX;
         public float spawnY;
