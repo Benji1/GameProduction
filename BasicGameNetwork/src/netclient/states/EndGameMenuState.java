@@ -45,13 +45,17 @@ public class EndGameMenuState extends AbstractAppState implements ScreenControll
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app.getInputManager().setCursorVisible(true);
-        this.app.gui.goToEndGameScreen();
+        reset();
     }
     
     @Override
     public void cleanup() {
         super.cleanup();
+    }
+    
+    public void reset() {
+        this.app.getInputManager().setCursorVisible(true);
+        this.app.gui.goToEndGameScreen();
     }
     
     @Override
