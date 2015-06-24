@@ -452,10 +452,10 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
                 case KeyInput.KEY_Y: result.add("Y"); break;
                 case KeyInput.KEY_Z: result.add("Z"); break;
                 case KeyInput.KEY_SPACE: result.add("_"); break;
-                case KeyInput.KEY_LSHIFT: result.add("RS"); break;
-                case KeyInput.KEY_RSHIFT: result.add("LS"); break;
-                case KeyInput.KEY_LCONTROL: result.add("RC"); break;
-                case KeyInput.KEY_RCONTROL: result.add("LC"); break;
+                case KeyInput.KEY_LSHIFT: result.add("LS"); break;
+                case KeyInput.KEY_RSHIFT: result.add("RS"); break;
+                case KeyInput.KEY_LCONTROL: result.add("LC"); break;
+                case KeyInput.KEY_RCONTROL: result.add("RC"); break;
                 case KeyInput.KEY_TAB: result.add("<>"); break;
                 case KeyInput.KEY_LEFT: result.add("<"); break;
                 case KeyInput.KEY_RIGHT: result.add(">"); break;

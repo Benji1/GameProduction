@@ -70,7 +70,7 @@ public class KeyBindingInputHandler implements RawInputListener {
     }
 
     public void onKeyEvent(KeyInputEvent evt) {
-        if (!evt.isRepeating() && evt.isPressed()) {
+        if (!evt.isRepeating() && !evt.isPressed()) {
             try {
                 editorController.keyBindCallback(evt, modulePos);
             } catch (Exception e) {
