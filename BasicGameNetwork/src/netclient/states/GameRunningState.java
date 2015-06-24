@@ -223,10 +223,11 @@ public class GameRunningState extends AbstractAppState implements ActionListener
             clientShip.update(tpf);
         }
         
-        //this.background.updateBackground();
+
         if (this.playerShip != null && !universeDebug) {
             updateCamPos(tpf);
         }
+
         
         // update debug
         if(this.playerShip != null)
@@ -238,6 +239,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         	s += "\n" + o.getValue().getName() + ": " + o.getValue().getLocalTranslation().toString();
         
         this.textNewChunk.setText(s);
+
+        this.background.updateBackground();
     }
     
     @Override
@@ -245,6 +248,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         super.cleanup();
         
         this.app.getInputManager().clearMappings();
+        this.app.getInputManager().removeRawInputListener(this);
         this.app.getRootNode().detachChild(this.localRootNode);
         
         this.app.getGuiNode().detachChild(this.textShipPos);

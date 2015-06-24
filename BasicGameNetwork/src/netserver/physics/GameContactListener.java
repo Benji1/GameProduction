@@ -119,8 +119,10 @@ public class GameContactListener implements ContactListener {
     }
     
     public void sendRefreshGraphicOfShipMsg(BasicShip ship) {
-        NetMessages.ModuleDestroyedMsg msg = new NetMessages.ModuleDestroyedMsg(ship.getPlayer().con.getId(), ship.getOrientedModuleArray());
-        msg.setReliable(true);
-        app.getServer().broadcast(msg);
+        if (ship.getPlayer() != null) {
+            NetMessages.ModuleDestroyedMsg msg = new NetMessages.ModuleDestroyedMsg(ship.getPlayer().con.getId(), ship.getOrientedModuleArray());
+            msg.setReliable(true);
+            app.getServer().broadcast(msg);
+        }
     }
 }

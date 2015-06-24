@@ -193,8 +193,8 @@ public class ClientShip {
         updatePosAndRot();
     }
     
-    private Vector3f lastPos, lastLastPos;
-    private Quaternion lastDir, lastLastDir;
+    private Vector3f lastPos = new Vector3f(), lastLastPos = new Vector3f();
+    private Quaternion lastDir = new Quaternion(), lastLastDir = new Quaternion();
     private float deltaAccumulator, lastDeltaAcc, lastLastDeltaAcc;
     
     public void handlePosAndRotMsg(PosAndRotMsg msg) {

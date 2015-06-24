@@ -10,11 +10,18 @@ import com.jme3.network.ConnectionListener;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;
+import netserver.items.Item;
 import netserver.services.ServiceManager;
 import netserver.services.updater.INetworkPosAndRotUpdateable;
 import netserver.universe.SpaceStation;
+import netutil.NetMessages;
+import netutil.NetMessages.ClientEnteredMsg;
+import netutil.NetMessages.GraphicObjPosAndRotMsg;
+import netutil.NetMessages.NearStationMsg;
+import netutil.NetMessages.PosAndRotMsg;
+import netutil.NetMessages.SpawnItemMsg;
+import netutil.NetMessages.SpawnSpaceStationMsg;
 
-import netutil.NetMessages.*;
 import org.jbox2d.common.Vec2;
 
 public class ServerConManager implements ConnectionListener {
@@ -78,6 +85,13 @@ public class ServerConManager implements ConnectionListener {
                     app.getServer().broadcast(Filters.in(arg1), syncStation);                               
                 }
                 
+                // send all floating items to the new player
+                for (Item i : app.floatingItems) {
+                    SpawnItemMsg syncItem = new SpawnItemMsg(i.getId(), i.get2DTranslation(), i.getRotation(), i.getOrientedModule());
+                    syncItem.setReliable(true);
+                    app.getServer().broadcast(syncItem);
+                }
+                
                 // add new player to list
                 players.add(newPl);
                 
@@ -97,6 +111,14 @@ public class ServerConManager implements ConnectionListener {
         }
     }
     
+    public void kickPlayer(int id) {
+        for (NetPlayer pl : this.players) {
+            if (pl.con.getId() == id) {
+                pl.con.close(NetMessages.PLAYER_DIED_MSG);
+            }
+        }
+    }
+    
     public void update(float tpf) {
         // update player
         for(NetPlayer pl : this.players)
@@ -106,15 +128,17 @@ public class ServerConManager implements ConnectionListener {
         this.curPosAndRotUpdate += tpf;
         if(this.curPosAndRotUpdate >= this.posAndRotUpdate) {
             for(NetPlayer pl : this.players) {
-                this.app.getServer().broadcast(new PosAndRotMsg(pl.ship.cockpit.getLocalTranslation(), pl.ship.cockpit.getLocalRotation(), pl.ship.cockpit.getVelocity(), pl.ship.cockpit.getAngVelocity(), pl.con.getId()));
+                if (pl.ship.cockpit != null) {
+                    this.app.getServer().broadcast(new PosAndRotMsg(pl.ship.cockpit.getLocalTranslation(), pl.ship.cockpit.getLocalRotation(), pl.ship.cockpit.getVelocity(), pl.ship.cockpit.getAngVelocity(), pl.con.getId()));
                 
-                // Send also with position??
-                boolean nearby = this.app.getUniverse().nearStation(pl.getShip().cockpit.getWorldTranslation());
-                this.app.getServer().broadcast(new NearStationMsg(nearby, pl.con.getId()));
+                    // Send also with position??
+                    boolean nearby = this.app.getUniverse().nearStation(pl.getShip().cockpit.getWorldTranslation());
+                    this.app.getServer().broadcast(new NearStationMsg(nearby, pl.con.getId()));
+                }
             }
             
             for (INetworkPosAndRotUpdateable u : ServiceManager.getUpdateableManager().getNetorkUpdateables()) {
-                GraphicObjPosAndRotMsg msg = new GraphicObjPosAndRotMsg(u.getTranslation(), u.getRotation(), u.getVelocity(), u.getAngVelocity(), u.getId());
+                GraphicObjPosAndRotMsg msg = new GraphicObjPosAndRotMsg(u.get3DTranslation(), u.getRotation(), u.getVelocity(), u.getAngVelocity(), u.getId());
                 app.getServer().broadcast(msg);
             }
             

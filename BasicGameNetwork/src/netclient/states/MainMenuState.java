@@ -82,7 +82,7 @@ public class MainMenuState extends AbstractAppState implements ScreenController,
 	
 	public void pressLogIn() {
 		try {
-            this.app.client = Network.connectToServer("localhost", NetMessages.PORT);
+            this.app.client = Network.connectToServer(NetMessages.IP, NetMessages.PORT);
             this.app.client.addClientStateListener(this.app);
             this.app.client.start();
             this.app.client.addMessageListener(this.app.gameRunState.msgManager);

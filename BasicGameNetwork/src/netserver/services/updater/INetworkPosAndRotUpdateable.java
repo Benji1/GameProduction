@@ -10,7 +10,7 @@ import org.jbox2d.common.Vec2;
 
 public interface INetworkPosAndRotUpdateable {
     
-    public Vector3f getTranslation();
+    public Vector3f get3DTranslation();
     public Quaternion getRotation();
     public Vec2 getVelocity();
     public float getAngVelocity();

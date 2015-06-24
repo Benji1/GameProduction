@@ -10,6 +10,8 @@ import netclient.gui.OrientedModule;
 import org.jbox2d.common.Vec2;
 
 public class NetMessages {
+    
+    public static final String PLAYER_DIED_MSG = "Player died";
 
 	
 	/**********************************
@@ -17,6 +19,7 @@ public class NetMessages {
      **********************************/
 	
     public static final int PORT = 6143;
+    public static final String IP = "localhost";
 
     
     

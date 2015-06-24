@@ -91,7 +91,9 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                         app.gameRunState.clientShips.add(ship);
                         app.gameRunState.localRootNode.attachChild(ship.shipRoot);
                     }
-                    
+
+                    ship.shipRoot.setLocalTranslation(msg.getPos());
+
                     return null;
                 }
             });
@@ -103,7 +105,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
             this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
-                    if(app.gameRunState.playerShip.id == msg.getId()) {
+                    if(app.gameRunState.playerShip != null && app.gameRunState.playerShip.id == msg.getId()) {
                         app.gameRunState.nearStation = msg.getNearby();
                     }
                     return null;
@@ -189,8 +191,11 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
             this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
-                    app.gameRunState.graphicObjects.get(msg.getId()).update(msg);
-                    return null;
+                    if (app.gameRunState.graphicObjects.get(msg.getId()) != null) {
+                        app.gameRunState.graphicObjects.get(msg.getId()).update(msg);
+                    }
+                    
+                    return null;                    
                 }
             });
         } else if (m instanceof DeleteGraphicObjectMsg) {
@@ -198,7 +203,9 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
             this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
-                    app.gameRunState.graphicObjects.get(msg.getId()).delete();
+                    if (app.gameRunState.graphicObjects.get(msg.getId()) != null) {
+                        app.gameRunState.graphicObjects.get(msg.getId()).delete();
+                    }
                     return null;
                 }
             });
