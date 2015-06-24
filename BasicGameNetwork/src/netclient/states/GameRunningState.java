@@ -10,6 +10,7 @@ import netclient.ClientShip;
 import netclient.WJSFClient;
 import netclient.gui.GUI;
 import netclient.universe.Background;
+import netclient.universe.UniverseEntityManager;
 import netserver.BasicShip;
 import netserver.WJSFServer;
 import netserver.physics.PhysicsWorld;
@@ -63,7 +64,7 @@ import netserver.weapons.Projectile;
 
 public class GameRunningState extends AbstractAppState implements ActionListener, ScreenController, RawInputListener {
 
-    private WJSFClient app;
+    public WJSFClient app;
     public Node localRootNode;
     public CameraNode camNode;
     private Background background;
@@ -71,6 +72,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public ClientShip playerShip;
     public ArrayList<ClientShip> clientShips = new ArrayList<ClientShip>();
     public ClientNetMsgListener msgManager;
+    public UniverseEntityManager uemanager;
 
     private int cameraType = 2; // 0, 1 or 2
     private float cameraMinHeight = 0f;
@@ -119,6 +121,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         wall.setMaterial(mat_brick);
         wall.setLocalTranslation(0,0,0);
         this.localRootNode.attachChild(wall);
+        
+        this.uemanager = new UniverseEntityManager(this);
     }
 
     @Override
@@ -249,6 +253,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.textNewChunk.setText(s);
 
         this.background.updateBackground();
+        this.uemanager.update(tpf);
     }
     
     @Override

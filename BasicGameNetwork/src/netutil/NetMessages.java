@@ -1,12 +1,15 @@
 package netutil;
 
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
+
 import netclient.gui.ModuleType;
 import netclient.gui.OrientedModule;
+
 import org.jbox2d.common.Vec2;
 
 public class NetMessages {
@@ -50,6 +53,8 @@ public class NetMessages {
         Serializer.registerClass(ExplosionParticleMsg.class);
         Serializer.registerClass(ShieldHitParticleMsg.class);
         Serializer.registerClass(PlayerNameMsg.class);
+        Serializer.registerClass(SpawnUniverseEntity.class);
+        Serializer.registerClass(UpdateUniverseEntity.class);
     }
 
     @Serializable
@@ -414,6 +419,43 @@ public class NetMessages {
         
         public String getName() {return this.name;}
         public int getId() {return this.id;}
+    }
+
+    public static class SpawnUniverseEntity extends AbstractMessage {
+    	public float spawnX;
+        public float spawnY;
+        public float size;
+        public int texture;
+        public ColorRGBA color;
+        public boolean light;
+        public int ID;
+        
+        public SpawnUniverseEntity() {}
+        
+        public SpawnUniverseEntity(float x, float y, float size, int texture, ColorRGBA color, boolean light, int ID){
+        	this.spawnX = x;
+        	this.spawnY = y;
+        	this.size = size;
+        	this.texture = texture;
+        	this.color = color;
+        	this.light = light;
+        	this.ID = ID;
+        }
+    }
+    
+    @Serializable
+    public static class UpdateUniverseEntity extends AbstractMessage {
+    	public float x;
+    	public float y;
+    	public int ID;
+    	
+    	public UpdateUniverseEntity() {}
+    	
+    	public UpdateUniverseEntity(float x, float y, int ID){
+    		this.x = x;
+    		this.y = y;
+    		this.ID = ID;
+    	}
     }
     
     /**********************************

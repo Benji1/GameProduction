@@ -39,6 +39,7 @@ import netutil.NetMessages.ShipChangedMsg;
 import netutil.NetMessages.SpawnItemMsg;
 import netutil.NetMessages.SpawnLaserProjectileMsg;
 import netutil.NetMessages.SpawnSpaceStationMsg;
+import netutil.NetMessages.SpawnUniverseEntity;
 import netutil.NetMessages.ToggleEditorMsg;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
@@ -276,10 +277,11 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                     return null;
                 }
             });
+
         } else if (m instanceof PlayerNameMsg) {
         	final PlayerNameMsg msg = (PlayerNameMsg)m;
             
-            this.app.enqueue(new Callable() {
+        	this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
                 	if(msg.getId() == app.gameRunState.playerShip.id) {
                 		app.gameRunState.playerShip.name = msg.getName();
@@ -292,6 +294,16 @@ public class ClientNetMsgListener implements MessageListener<Client> {
 	                        }
 	                    }
                 	}
+                	return null;
+                }
+            });
+        } else if (m instanceof SpawnUniverseEntity) {
+            final SpawnUniverseEntity msg = (SpawnUniverseEntity)m;
+            
+            this.app.enqueue(new Callable() {
+                public Object call() throws Exception {
+                	app.gameRunState.uemanager.addEntity(msg.spawnX, msg.spawnY, msg.size, msg.texture, msg.color, msg.light, msg.ID);
+
                     return null;
                 }
             });

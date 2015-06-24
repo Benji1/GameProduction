@@ -5,6 +5,7 @@ import netserver.WJSFServer;
 import netserver.universe.Abs_ChunkNode;
 import netserver.universe.CBNameGenerator;
 import netserver.universe.SolarSystem;
+import netutil.NetMessages;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -22,9 +23,14 @@ public class Planet extends Node {
 	float orbit = 0;
 	float orbitspeed = 0;
 	float ellypsiness = 1.25f;
+	int ID;
+	int texture = 1;
+	ColorRGBA color;
+	float radius;
 	
 	public Planet(WJSFServer app, SolarSystem system){
 		super(CBNameGenerator.getName());
+		this.ID = CBNameGenerator.getID();
 		this.app = app;
 		this.system = system;
         this.init();
@@ -40,14 +46,15 @@ public class Planet extends Node {
 		//this.setLocalTranslation(distance, 0, 0);
 		this.orbitspeed = 10f/(distance*distance);
 		this.distance = distance;
-		Sphere shape = new Sphere(32, 32, getSize());
+		this.radius = getSize();
+		Sphere shape = new Sphere(32, 32, radius);
 		shape.setTextureMode(Sphere.TextureMode.Projected);
 		
 		Material sphereMat = new Material(app.getAssetManager(), 
 				"Common/MatDefs/Light/Lighting.j3md");
 		sphereMat.setBoolean("UseMaterialColors", true);
 		
-		ColorRGBA color = ColorRGBA.randomColor();
+		color = ColorRGBA.randomColor();
 		sphereMat.setColor("Diffuse", color);
 		sphereMat.setColor("Ambient", color);
 		
@@ -60,9 +67,20 @@ public class Planet extends Node {
 		
 		this.model.setMesh(shape);
 		this.orbit = orbit;
-                Quaternion rotation = new Quaternion();
+        Quaternion rotation = new Quaternion();
 		rotation.fromAngles(1.2f, 0, 0);
 		this.setLocalRotation(rotation);
+		float x = (float) (this.distance *system.sizescale * Math.cos(this.orbit)* this.ellypsiness);
+		float y = (float) (this.distance *system.sizescale * Math.sin(this.orbit) / this.ellypsiness);
+		this.setLocalTranslation(x, 0, y);
+		}
+	
+	public NetMessages.SpawnUniverseEntity getSpawnMessage(){
+		return new NetMessages.SpawnUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, radius, texture, color, false, ID);
+	}
+	
+	public NetMessages.UpdateUniverseEntity getUpdateMessage(){
+		return new NetMessages.UpdateUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, ID);
 	}
 	
 	public void update(float tpf) {
@@ -84,13 +102,17 @@ public class Planet extends Node {
 		return size;
 	}
 	
+	
+	
 	private Texture getTexture(){
 		int type = (int)(Math.random()*2+1);
 		if (distance/system.radius < 0.3f || distance/system.radius > 0.8f){
+			this.texture = type;
 			return app.getAssetManager().loadTexture("textures/planet_solid_"+type+".png");
 		}
 		else
 		{
+			this.texture = type+2;
 			return app.getAssetManager().loadTexture("textures/planet_gas_"+type+".png");
 		}
 	}

@@ -1,6 +1,8 @@
 package netserver.universe;
 
 import com.jme3.math.Vector3f;
+import com.jme3.network.Filters;
+import com.jme3.network.HostedConnection;
 
 import netclient.WJSFClient;
 import netserver.WJSFServer;
@@ -39,9 +41,20 @@ public class SolarSystem extends Abs_ChunkNode {
 			float distance = (float) ((radRemain/(float)(numPlanets-i))*((Math.random()*0.75f)+0.25f)) + this.radius-radRemain;
 			//System.out.println(distance);
 			radRemain += (radius - radRemain) - distance;
-			planets[i].setTransform(distance, (float) (Math.random()*360f));
-			
+			planets[i].setTransform(distance, (float) (Math.random()*360f));			
 		}
+	}
+	
+	public void broadcastSpawn(){
+		this.app.getServer().broadcast(sun.getSpawnMessage());
+		for (Planet p:planets)
+			this.app.getServer().broadcast(p.getSpawnMessage());
+	}
+	
+	public void broadcastSpawnTo(HostedConnection player){
+		this.app.getServer().broadcast(Filters.in(player), sun.getSpawnMessage());
+		for (Planet p:planets)
+			this.app.getServer().broadcast(Filters.in(player), p.getSpawnMessage());
 	}
 	
 	public void update(float tpf){

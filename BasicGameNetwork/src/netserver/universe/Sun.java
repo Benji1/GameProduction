@@ -6,6 +6,7 @@ import netserver.universe.Abs_ChunkNode;
 import netserver.universe.CBNameGenerator;
 import netserver.universe.SolarSystem;
 import netserver.universe.Abs_ChunkNode.ChunkNodeType;
+import netutil.NetMessages;
 
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
@@ -22,9 +23,11 @@ public class Sun extends Node {
     public float radius;
 	SolarSystem system;
 	private WJSFServer app;
+	int ID;
         
 	public Sun(WJSFServer app, SolarSystem parent){
 		super(CBNameGenerator.getName());
+		this.ID = CBNameGenerator.getID();
 		this.app = app;
 		this.system = parent;
 		this.init();
@@ -48,6 +51,14 @@ public class Sun extends Node {
 		light.setRadius(radius*100);
 		light.setPosition(this.getWorldTranslation());
 		app.getRootNode().addLight(light);
+	}
+	
+	public NetMessages.SpawnUniverseEntity getSpawnMessage(){
+		return new NetMessages.SpawnUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, radius, 0, ColorRGBA.White, true, ID);
+	}
+	
+	public NetMessages.UpdateUniverseEntity getUpdateMessage(){
+		return new NetMessages.UpdateUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, ID);
 	}
 	
 	public void update(float tpf){
