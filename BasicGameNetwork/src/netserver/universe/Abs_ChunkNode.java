@@ -64,7 +64,7 @@ public abstract class Abs_ChunkNode extends Node {
     public Abs_ChunkNode(WJSFServer app, String name, ChunkNodeType t, boolean isStatic, Vector3f posAbsolute) {
     	this(app, name, t, isStatic,
     			(int)(posAbsolute.x / Universe.CHUNK_SIZE), (int)(posAbsolute.z / Universe.CHUNK_SIZE),
-    			new Vector3f(posAbsolute.x - (int)(posAbsolute.x / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE, posAbsolute.y, posAbsolute.z - (int)(posAbsolute.z / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE));
+    			new Vector3f(posAbsolute.x + ((int)(posAbsolute.x / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1), posAbsolute.y, posAbsolute.x + ((int)(posAbsolute.z / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1)));
     }
     
     protected Abs_ChunkNode() {}
@@ -79,7 +79,7 @@ public abstract class Abs_ChunkNode extends Node {
     
     public void update(float tpf) {
     	if(!this.isStatic) {
-	    	this.posCurChunk = new Vector3f((Universe.CHUNK_SIZE / 2) - this.getLocalTranslation().x - this.chunkX * Universe.CHUNK_SIZE, this.posCurChunk.y, (Universe.CHUNK_SIZE / 2) - this.getLocalTranslation().z - this.chunkZ * Universe.CHUNK_SIZE);
+	    	this.posCurChunk = new Vector3f(this.getLocalTranslation().x + this.chunkX * Universe.CHUNK_SIZE * -1, this.posCurChunk.y, this.getLocalTranslation().z + this.chunkZ * Universe.CHUNK_SIZE * -1);
 	    	this.recalcChunkPos();
     	}
     }

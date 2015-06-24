@@ -1,6 +1,9 @@
 package netserver.physics;
 
+import netserver.universe.Universe;
+
 import org.jbox2d.dynamics.Body;
+
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -11,7 +14,7 @@ public class JBox2dNode extends Node {
 	private Quaternion bodyAngle;
 	
 	public JBox2dNode() {
-		this.bodyPos = Vector3f.ZERO;
+		this.bodyPos = new Vector3f(0, Universe.Y_LAYER_SHIPS, 0);
 		this.bodyAngle = new Quaternion();
 	}
 	

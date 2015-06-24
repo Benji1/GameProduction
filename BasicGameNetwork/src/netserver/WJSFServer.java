@@ -18,12 +18,16 @@ import netutil.NetMessages;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.scene.CameraNode;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
+import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 
 import netserver.items.EncapsulatingItem;
@@ -108,6 +112,14 @@ public class WJSFServer extends SimpleApplication {
         
         // init game
         this.initWorld();
+        
+        Box box = new Box(2f,2f,2f);
+        Spatial wall = new Geometry("Box", box );
+        Material mat_brick = new Material(this.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        mat_brick.setTexture("ColorMap", this.getAssetManager().loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+        wall.setMaterial(mat_brick);
+        wall.setLocalTranslation(0,0,0);
+        this.rootNode.attachChild(wall);
     }
 
     private void initWorld() {
@@ -199,7 +211,7 @@ public class WJSFServer extends SimpleApplication {
         String s = "POS SHIPS:\n";
         
         for(NetPlayer pl : this.conManager.players)
-        	s += pl.ship.getLocalTranslation().toString() + "\n";
+        	s += pl.ship.cockpit.getLocalTranslation().toString() + "\n";
         
         this.textShipPos.setText(s);
     }

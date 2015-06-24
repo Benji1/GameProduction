@@ -4,6 +4,8 @@
  */
 package netclient.otherGraphics;
 
+import java.util.Map;
+
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
@@ -11,7 +13,10 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+
 import netclient.WJSFClient;
+import netserver.services.ServiceManager;
+
 import org.jbox2d.common.Vec2;
 
 public class GSpaceStation extends GraphicObject {
@@ -29,7 +34,7 @@ public class GSpaceStation extends GraphicObject {
     }
     
     private void createStation(float x, float z) {
-        this.setLocalTranslation(x, -6, z);
+        this.setLocalTranslation(x, ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "UniverseLayer", float.class), z);
         
     	station = app.getAssetManager().loadModel("3dmodels/station.obj");
         Material sphereMat = new Material(app.getAssetManager(), 

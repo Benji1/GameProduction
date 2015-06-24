@@ -34,6 +34,14 @@
         "InitialAcceleration": 1000,
         "Lifetime": 2.0,
     },
+    "UniverseConfig": {
+        "UniverseSize": 200,
+        "ChunkSize": 100,
+        "YLayers": {
+            "ShipLayer": 0,
+            "UniverseLayer": -10
+        }
+    },
     "ConfigExamples": {
         "Example1": 1,
         "Example2": "Example",

@@ -10,9 +10,9 @@ public class UniverseGenerator {
 	
 	
 	public static void debugSystem(WJSFServer app, Universe u){
-		SolarSystem sys = new SolarSystem(app, new Vector3f(-20, -5, -20));
-		SpaceStation s1 = new SpaceStation(app, new Vector3f(20, -5, 20));
-		SpaceStation s2 = new SpaceStation(app, new Vector3f(-110, -5, -110));
+		SolarSystem sys = new SolarSystem(app, new Vector3f(-50, Universe.Y_LAYER_UNIVERSE, -50));
+		SpaceStation s1 = new SpaceStation(app, new Vector3f(20, Universe.Y_LAYER_UNIVERSE, 20));
+		SpaceStation s2 = new SpaceStation(app, new Vector3f(-110, Universe.Y_LAYER_UNIVERSE, -110));
 		//app.getRootNode().attachChild(sys);
 		//sys.setLocalTranslation(-100, -5, 0);
 		//u.systems.add(sys);

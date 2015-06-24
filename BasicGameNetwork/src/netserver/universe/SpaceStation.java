@@ -43,8 +43,8 @@ public class SpaceStation extends Abs_ChunkNode {
 		station.setMaterial(sphereMat);	
 		this.attachChild(station);
         station.setLocalScale(2f);
-        station.setLocalTranslation(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z);
-
+        station.setLocalTranslation(0, 0, 0);
+        
         BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
         BitmapText info = new BitmapText(f, true);
         info.setColor(ColorRGBA.Green);
@@ -52,7 +52,7 @@ public class SpaceStation extends Abs_ChunkNode {
         info.scale(0.2f);
         info.setQueueBucket(Bucket.Transparent);
         info.setText("Press 'E' to enter");
-        info.setLocalTranslation(this.getLocalTranslation().x - 13, this.getLocalTranslation().y + 3, this.getLocalTranslation().z);
+        info.setLocalTranslation(-13, 3, 0);
         this.attachChild(info);
 	}
     

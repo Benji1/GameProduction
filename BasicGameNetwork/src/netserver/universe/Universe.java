@@ -3,9 +3,12 @@ package netserver.universe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import netclient.WJSFClient;
 import netserver.WJSFServer;
+import netserver.services.ServiceManager;
+import netserver.services.config.ConfigReader;
 import netserver.universe.Abs_ChunkNode;
 import netserver.universe.SolarSystem;
 import netserver.universe.Universe;
@@ -31,11 +34,11 @@ public class Universe {
     /**********************************
      ************ GLOBALS  ************
      **********************************/
-    
-    public static final float CHUNK_SIZE = 100;
-    public static final int UNIVERSE_SIZE = 200;
-    
-    
+
+    public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
+    public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
+    public static final float Y_LAYER_SHIPS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "ShipLayer", float.class);
+    public static final float Y_LAYER_UNIVERSE = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "UniverseLayer", float.class);
     
     
     /**********************************
@@ -171,7 +174,7 @@ public class Universe {
     }
     
     public UniverseChunk getChunk(Vector3f pos) {
-    	System.out.println((int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + "/" + (int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)));
+    	System.out.println((int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + "/" + (int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + " - " + this.universeChunks[(int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter][(int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter].spaceStations.size());
     	return this.universeChunks[(int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter][(int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter];
     }
     

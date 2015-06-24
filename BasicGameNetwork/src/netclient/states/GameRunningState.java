@@ -111,6 +111,14 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
         this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
         this.textNewChunk.setLocalTranslation(this.app.settings.getWidth() - 350, this.app.settings.getHeight(), 0); // position
+        
+        Box box = new Box(1f,1f,1f);
+        Spatial wall = new Geometry("Box", box );
+        Material mat_brick = new Material(this.app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        mat_brick.setTexture("ColorMap", this.app.getAssetManager().loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+        wall.setMaterial(mat_brick);
+        wall.setLocalTranslation(0,0,0);
+        this.localRootNode.attachChild(wall);
     }
 
     @Override
