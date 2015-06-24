@@ -222,6 +222,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         if (this.playerShip != null && !universeDebug) {
             updateCamPos(tpf);
         }
+        this.background.updateBackground();
     }
     
     @Override
