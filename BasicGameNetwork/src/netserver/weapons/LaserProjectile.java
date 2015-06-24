@@ -135,7 +135,7 @@ public class LaserProjectile extends Projectile {
         markForDeletion();
     }
 
-    public Vector3f getTranslation() {
+    public Vector3f get3DTranslation() {
         return spatial.getLocalTranslation();
     }
 

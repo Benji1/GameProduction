@@ -25,7 +25,7 @@ public class PosAndRotMsgHandler implements Callable {
     }
     
     public Object call() throws Exception {
-        if (app.gameRunState.playerShip.id == msg.getId()) {
+        if (app.gameRunState.playerShip != null && app.gameRunState.playerShip.id == msg.getId()) {
             app.gameRunState.playerShip.handlePosAndRotMsg(msg);
             //Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, msg.getPos().toString());
         } else {

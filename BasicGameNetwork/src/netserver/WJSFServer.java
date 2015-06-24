@@ -58,6 +58,7 @@ public class WJSFServer extends SimpleApplication {
     public ArrayList<Projectile> projectilesToRemove = new ArrayList<Projectile>();
     public ArrayList<EncapsulatingItem> itemsToCreate = new ArrayList<EncapsulatingItem>();
     public ArrayList<Item> itemsToRemove = new ArrayList<Item>();
+    public ArrayList<Item> floatingItems = new ArrayList<Item>();
     
     /**********************************
      ************ METHODS  ************
@@ -155,6 +156,7 @@ public class WJSFServer extends SimpleApplication {
         while (!itemsToRemove.isEmpty()) {
             Item i = itemsToRemove.get(0);
             itemsToRemove.remove(0);
+            floatingItems.remove(i);
             i.delete();
         }
         

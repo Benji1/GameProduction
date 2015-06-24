@@ -26,6 +26,7 @@ import com.jme3.network.Network;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
+import netclient.states.EndGameMenuState;
 import netserver.services.ServiceManager;
 
 public class WJSFClient extends SimpleApplication implements ClientStateListener {
@@ -41,6 +42,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 	
 	public GameRunningState gameRunState;
 	public MainMenuState mainMenuState;
+        public EndGameMenuState endGameMenuState;
 	
     public Client client;
     
@@ -80,6 +82,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
     	
     	this.mainMenuState = new MainMenuState(this);
     	this.gameRunState = new GameRunningState(this);
+        this.endGameMenuState = new EndGameMenuState(this);
     	this.stateManager.attach(this.mainMenuState);
     	
     	this.gui = new GUI(this);
@@ -110,15 +113,20 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 		Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
 		
 		this.stateManager.detach(this.mainMenuState);
+                this.gameRunState = new GameRunningState(this);
 		this.stateManager.attach(this.gameRunState);
 	}
 
 	@Override
 	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
-		Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
-		
-		this.stateManager.detach(this.gameRunState);
-		this.stateManager.attach(this.mainMenuState);
+                Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
+                this.stateManager.detach(this.gameRunState);
+                
+                if (arg1 != null && arg1.reason != null && arg1.reason.equals(NetMessages.PLAYER_DIED_MSG)) {
+                    this.stateManager.attach(this.endGameMenuState);
+                } else {
+                    this.stateManager.attach(this.mainMenuState);
+                }
 	}
     public void CreateBGSound()
     {

@@ -35,5 +35,6 @@ public class EncapsulatingItem {
     
     public void init() {
         Item i = new Item(om, spatials, spawnPoint, rotation, app);
+        app.floatingItems.add(i);
     }
 }

@@ -229,6 +229,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         super.cleanup();
         
         this.app.getInputManager().clearMappings();
+        this.app.getInputManager().removeRawInputListener(this);
         this.app.getRootNode().detachChild(this.localRootNode);
     }
     

@@ -159,7 +159,7 @@ public class Item extends JBox2dNode implements IUpdateable, INetworkPosAndRotUp
         app.itemsToRemove.add(this);
      }
 
-    public Vector3f getTranslation() {
+    public Vector3f get3DTranslation() {
         Vector3f bodyPos = new Vector3f(
                 (float) body.getWorldPoint(body.getLocalCenter()).x,
                 0.0f,
@@ -167,6 +167,10 @@ public class Item extends JBox2dNode implements IUpdateable, INetworkPosAndRotUp
         
         
         return bodyPos;
+    }
+    
+    public Vec2 get2DTranslation() {
+        return new Vec2(body.getWorldPoint(body.getLocalCenter()).x, body.getWorldPoint(body.getLocalCenter()).y);
     }
 
     public Quaternion getRotation() {
@@ -193,5 +197,9 @@ public class Item extends JBox2dNode implements IUpdateable, INetworkPosAndRotUp
         Vec2 force = modulePos.sub(body.getPosition());
         
         body.applyForce(force, body.getPosition());
+    }
+    
+    public OrientedModule getOrientedModule() {
+        return om;
     }
 }

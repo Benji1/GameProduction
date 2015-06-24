@@ -17,6 +17,7 @@ public class GUI {
     public static final String START_SCREEN = "start";
     public static final String EMPTY_SCREEN = "empty";
     public static final String EXIT_OVERLAY_SCREEN = "exitOverlay";
+    public static final String END_GAME_SCREEN = "endGame";
     
     private Nifty nifty;
     private WJSFClient app;
@@ -25,6 +26,7 @@ public class GUI {
     private Screen startScreen;
     private Screen emptyScreen;
     private Screen exitOverlayScreen;
+    private Screen endGameScreen;
     
     public GUI(WJSFClient app) {
         this.app = app;
@@ -43,15 +45,18 @@ public class GUI {
         nifty.loadControlFile("nifty-default-controls.xml");
         nifty.loadControlFile("Interface/DragAndDrop.xml");
         nifty.loadControlFile("Interface/CustomControls.xml");
-        nifty.fromXml("Interface/StartScreen.xml", "start", this.app.mainMenuState, this.app.gameRunState);
+        nifty.fromXml("Interface/StartScreen.xml", START_SCREEN, this.app.mainMenuState, this.app.gameRunState);
         nifty.addXml("Interface/ExitOverlayScreen.xml");
         nifty.addXml("Interface/EditorScreen.xml");
-        nifty.addXml("Interface/EmptyScreen.xml");        
+        nifty.addXml("Interface/EmptyScreen.xml"); 
+        nifty.registerScreenController(this.app.endGameMenuState);
+        nifty.addXml("Interface/EndGameScreen.xml");        
         
         editorScreen = nifty.getScreen(EDITOR_SCREEN);
         emptyScreen = nifty.getScreen(EMPTY_SCREEN);
         startScreen = nifty.getScreen(START_SCREEN);
         exitOverlayScreen = nifty.getScreen(EXIT_OVERLAY_SCREEN);
+        endGameScreen = nifty.getScreen(END_GAME_SCREEN);
     }
     
     public String getCurrentScreenId() {
@@ -68,5 +73,8 @@ public class GUI {
     }
     public void goToExitOverlayScreen() {
     	nifty.gotoScreen(exitOverlayScreen.getScreenId());
+    }
+    public void goToEndGameScreen() {
+        nifty.gotoScreen(endGameScreen.getScreenId());
     }
 }
