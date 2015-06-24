@@ -13,6 +13,8 @@ public class InventoryCategory {
     public static final InventoryCategory THRUSTER_CAT = new InventoryCategory(ModuleType.THRUSTER);
     public static final InventoryCategory COCKPIT_CAT = new InventoryCategory(ModuleType.COCKPIT);
     public static final InventoryCategory ENERGY_CAT = new InventoryCategory(ModuleType.ENERGY_GENERATOR);
+    public static final InventoryCategory STORAGE_CAT = new InventoryCategory(ModuleType.STORAGE);
+    public static final InventoryCategory SHIELD_CAT = new InventoryCategory(ModuleType.SHIELD);
     
     private ModuleType[] types;
     private int[] typeIds;

@@ -699,4 +699,12 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
         clearPartsPanel();
         setupPartsPanel(InventoryCategory.THRUSTER_CAT);
     }
+    public void selectStorage() {
+        clearPartsPanel();
+        setupPartsPanel(InventoryCategory.STORAGE_CAT);
+    }
+    public void selectShield() {
+        clearPartsPanel();
+        setupPartsPanel(InventoryCategory.SHIELD_CAT);
+    }
 }

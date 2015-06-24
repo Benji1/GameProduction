@@ -30,6 +30,8 @@ public class Inventory {
         addMultipleItems(ModuleType.THRUSTER, 50);//4
         addMultipleItems(ModuleType.COCKPIT, 50);//1
         addMultipleItems(ModuleType.ENERGY_GENERATOR, 50);//3
+        addMultipleItems(ModuleType.STORAGE, 50);
+        addMultipleItems(ModuleType.SHIELD, 50);
     }
     
     private void addMultipleItems(ModuleType moduleType, int count) {

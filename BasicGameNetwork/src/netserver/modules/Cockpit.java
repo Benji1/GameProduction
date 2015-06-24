@@ -47,15 +47,16 @@ public class Cockpit extends BasicModule {
     @Override
     public void onRemove() {
         super.onRemove();      
-        ship.cockpit = null;
-        // TODO SET NEW PHYSICS CENTER OR FIND BETTER SOLUTION
-        // atm player needs to start anew
-        this.ship.getApp().getConManager().kickPlayer(this.ship.getPlayer().con.getId());
+        ship.cockpit = null;        
     }
 
     @Override
     public void destroy() {
         super.destroy();
         ship.disable();
+        
+        // TODO SET NEW PHYSICS CENTER OR FIND BETTER SOLUTION
+        // atm player needs to start anew
+        this.ship.getApp().getConManager().kickPlayer(this.ship.getPlayer().con.getId());
     }
 }

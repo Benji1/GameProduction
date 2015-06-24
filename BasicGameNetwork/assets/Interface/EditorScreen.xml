@@ -8,34 +8,46 @@
                         <onStartScreen name="move" mode="in" direction="top" length="200" inherit="true" timeType="exp" factor="1.5"/>
                         <onEndScreen name="move" mode="out" direction="top" length="200" inherit="true"/>
                     </effect>
-                    <panel id="type-selection" height="50" valign="top" childLayout="horizontal">
+                    <panel id="type-selection" height="50" valign="top" childLayout="horizontal">                        
                         <panel childLayout="center">
                             <control name="select-button" style="small-button" label="Cockpit" id="cockpit-select-button" width="100%" height="100%">
                                 <interact onClick="selectCockpit()"/>
                             </control>
                         </panel>
-                        <panel width="4px"></panel>
+                        <panel width="3px"></panel>
                         <panel childLayout="center">
                             <control name="select-button" style="small-button" label="Armor" id="armor-select-button" width="100%" height="100%">
                                 <interact onClick="selectArmor()"/>
                             </control>
                         </panel>
-                        <panel width="4px"></panel>
+                        <panel width="3px"></panel>
                         <panel childLayout="center">
                             <control name="select-button" style="small-button" label="Thruster" id="thruster-select-button" width="100%" height="100%">
                                 <interact onClick="selectThruster()"/>
                             </control>
                         </panel>
-                        <panel width="4px"></panel>
+                        <panel width="3px"></panel>
                         <panel childLayout="center">
                             <control name="select-button" style="small-button" label="Weapon" id="weapon-select-button" width="100%" height="100%">
                                 <interact onClick="selectWeapon()"/>
                             </control>
                         </panel>
-                        <panel width="4px"></panel>
+                        <panel width="3px"></panel>
                         <panel childLayout="center">
                             <control name="select-button" style="small-button" label="Energy" id="energy-select-button" width="100%" height="100%">
                                 <interact onClick="selectEnergy()"/>
+                            </control>
+                        </panel>
+                        <panel width="3px"></panel>
+                        <panel childLayout="center">
+                            <control name="select-button" style="small-button" label="Storage" id="storage-select-button" width="100%" height="100%">
+                                <interact onClick="selectStorage()"/>
+                            </control>
+                        </panel>
+                        <panel width="3px"></panel>
+                        <panel childLayout="center">
+                            <control name="select-button" style="small-button" label="Shield" id="shield-select-button" width="100%" height="100%">
+                                <interact onClick="selectShield()"/>
                             </control>
                         </panel>
                     </panel>

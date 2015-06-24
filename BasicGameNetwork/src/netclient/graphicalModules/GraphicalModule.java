@@ -7,11 +7,13 @@ package netclient.graphicalModules;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
 import netclient.ClientShip;
 import netclient.WJSFClient;
+import netclient.gui.ModuleType;
 import static netclient.gui.ModuleType.ARMOR;
 import static netclient.gui.ModuleType.ARMOR_DIAGONAL;
 import static netclient.gui.ModuleType.COCKPIT;
@@ -21,6 +23,7 @@ import static netclient.gui.ModuleType.STORAGE;
 import static netclient.gui.ModuleType.THRUSTER;
 import static netclient.gui.ModuleType.WEAPON;
 import netclient.gui.OrientedModule;
+import netserver.modules.FacingDirection;
 
 /**
  *
@@ -65,6 +68,59 @@ public class GraphicalModule extends Node{
         material.setTexture("DiffuseMap", t);
         spatial.setMaterial(material);
         spatial.scale(scale);
+        
+        float yRotation;
+        
+        switch (orientedModule.facingDirection) {
+            case FORWARD:
+                if (orientedModule.moduleType.equals(ModuleType.THRUSTER)) {
+                    yRotation = (float) Math.toRadians(180);
+                } else if (orientedModule.moduleType.equals(ModuleType.WEAPON)) {
+                    yRotation = (float) Math.toRadians(0);
+                } else if (orientedModule.moduleType.equals(ModuleType.COCKPIT) || orientedModule.moduleType.equals(ModuleType.ARMOR_DIAGONAL)) {
+                    yRotation = (float) Math.toRadians(90);
+                } else {
+                    yRotation = (float) Math.toRadians(0);
+                }
+                break;
+            case BACKWARD:
+                if (orientedModule.moduleType.equals(ModuleType.THRUSTER)) {
+                    yRotation = (float) Math.toRadians(0);
+                } else if (orientedModule.moduleType.equals(ModuleType.WEAPON)) {
+                    yRotation = (float) Math.toRadians(180);
+                } else if (orientedModule.moduleType.equals(ModuleType.COCKPIT) || orientedModule.moduleType.equals(ModuleType.ARMOR_DIAGONAL)) {
+                    yRotation = (float) Math.toRadians(270);
+                } else {
+                    yRotation = (float) Math.toRadians(180);
+                }
+                break;
+            case LEFT:
+                if (orientedModule.moduleType.equals(ModuleType.THRUSTER)) {
+                    yRotation = (float) Math.toRadians(270);
+                } else if (orientedModule.moduleType.equals(ModuleType.WEAPON)) {
+                    yRotation = (float) Math.toRadians(90);
+                } else if (orientedModule.moduleType.equals(ModuleType.COCKPIT) || orientedModule.moduleType.equals(ModuleType.ARMOR_DIAGONAL)) {
+                    yRotation = (float) Math.toRadians(180);
+                } else {
+                    yRotation = (float) Math.toRadians(90);
+                }
+                break;
+            case RIGHT:
+                if (orientedModule.moduleType.equals(ModuleType.THRUSTER)) {
+                    yRotation = (float) Math.toRadians(90);
+                } else if (orientedModule.moduleType.equals(ModuleType.WEAPON)) {
+                    yRotation = (float) Math.toRadians(270);
+                } else if (orientedModule.moduleType.equals(ModuleType.COCKPIT) || orientedModule.moduleType.equals(ModuleType.ARMOR_DIAGONAL)) {
+                    yRotation = (float) Math.toRadians(0);
+                } else {
+                    yRotation = (float) Math.toRadians(270);
+                }
+                break;
+            default:
+                yRotation = (float) Math.toRadians(0);                    
+        }
+        
+        spatial.rotate(0, yRotation, 0);
         
         materialActive = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
         materialActive.setBoolean("UseMaterialColors", true);
