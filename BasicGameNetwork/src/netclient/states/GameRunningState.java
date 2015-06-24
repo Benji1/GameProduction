@@ -194,7 +194,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
                 }
             }
         } else if (name.equals("ExitOverlay") && !keyPressed) {
-            if (!this.app.gui.getCurrentScreenId().equals(GUI.EXIT_OVERLAY_SCREEN)) {
+            if (this.app.gui.getCurrentScreenId().equals(GUI.EMPTY_SCREEN)) {
                 this.app.gui.goToExitOverlayScreen();
                 this.app.getInputManager().setCursorVisible(true);
             } else {

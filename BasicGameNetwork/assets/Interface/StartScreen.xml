@@ -5,10 +5,11 @@
             <panel id="parts-panel" style="custom-panel" height="470" width="470" align="center" valign="center" childLayout="center">
                 <effect>
                     <onStartScreen name="move" mode="in" direction="top" length="200" startDelay="0" inherit="true"/>
-                    <onEndScreen name="move" mode="out" direction="top" length="200" startDelay="0" inherit="true"/>
+                    <onEndScreen name="move" mode="out" direction="t" length="200" startDelay="0" inherit="true"/>
                 </effect>
                 <panel childLayout="vertical">
-                    <control name="textfield" id="input" text="enter username" width="100%" height="50px"/>
+					<control name="label" id="nameLabel" font="Interface/Fonts/Agency-FB-Bold-24.fnt" color="#fff" text="WeldJointStarForce" width="100%" height="50px" />
+                    <control name="textfield" id="input" text="" width="100%" height="50px"/>
                     <control name="button" id="button" style="custom-button" label="LOGIN" width="100%" height="50px"> 
                         <interact onClick="pressLogIn()"/>
                     </control>

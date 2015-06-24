@@ -1,10 +1,18 @@
 package netclient;
 
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
+
 import netclient.graphicalModules.GraphicalModule;
+
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+
 import java.util.ArrayList;
+
 import netclient.graphicalModules.GMArmor;
 import netclient.graphicalModules.GMArmorDiagonal;
 import netclient.graphicalModules.GMCockpit;
@@ -27,6 +35,7 @@ import static netclient.gui.ModuleType.WEAPON;
 import netclient.gui.OrientedModule;
 import netclient.gui.inventory.InventoryCategory;
 import netutil.NetMessages.PosAndRotMsg;
+
 import org.jbox2d.common.Vec2;
 
 public class ClientShip {
@@ -50,6 +59,8 @@ public class ClientShip {
     public ArrayList<ModuleType> itemsInBase;
     public WJSFClient app;
     private int activatedThrusterCount;
+    
+    public BitmapText info;
 
     /**
      * ********************************
@@ -69,6 +80,16 @@ public class ClientShip {
         this.gmodules = new ShipModule[ship.length][ship[0].length];
         this.velocity = new Vec2();
 
+        BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
+        info = new BitmapText(f, true);
+        info.setColor(ColorRGBA.Green);
+        info.rotate((float) -Math.PI/2f,0,0);
+        info.scale(0.2f);
+        info.setQueueBucket(RenderQueue.Bucket.Transparent);
+        info.setText(name);
+        info.setLocalTranslation(0, 1, 0);
+        this.shipRoot.attachChild(info);
+        
         // build ship
         refreshGraphicsOfShip();
     }

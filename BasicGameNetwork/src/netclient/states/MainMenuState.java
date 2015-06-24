@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import netclient.WJSFClient;
 import netserver.WJSFServer;
 import netutil.NetMessages;
+import netutil.NetMessages.*;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -19,6 +20,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
@@ -77,15 +79,24 @@ public class MainMenuState extends AbstractAppState implements ScreenController,
 	@Override
 	public void onStartScreen() {
 		Element niftyElement = this.nifty.getCurrentScreen().findElementByName("loginLabel");
-		niftyElement.getRenderer(TextRenderer.class).setText("");
+		niftyElement.getRenderer(TextRenderer.class).setText("Please enter a Username");
 	}
 	
 	public void pressLogIn() {
+		TextField input = this.nifty.getCurrentScreen().findNiftyControl("input", TextField.class);
+		if(input.getDisplayedText().equals(""))
+			return;
+
 		try {
             this.app.client = Network.connectToServer(NetMessages.IP, NetMessages.PORT);
             this.app.client.addClientStateListener(this.app);
             this.app.client.start();
             this.app.client.addMessageListener(this.app.gameRunState.msgManager);
+            
+            PlayerNameMsg msg = new PlayerNameMsg(this.app.client.getId(), input.getDisplayedText());
+            msg.setReliable(true);
+            this.app.client.send(msg);
+            
         } catch (Exception e) {
         	// log error
         	Logger.getLogger(WJSFServer.class.getName()).log(Level.SEVERE, null, e);

@@ -67,13 +67,13 @@ public class ServerConManager implements ConnectionListener {
                 // TODO: load player stuff
                 
                 // send player ship data
-                ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.ship.getOrientedModuleArray(), newPl.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
+                ClientEnteredMsg msg = new ClientEnteredMsg("DefaultPlayerName", arg1.getId(), newPl.ship.getOrientedModuleArray(), newPl.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
                 msg.setReliable(true);
                 app.getServer().broadcast(msg);
                 
                 // send all other ships to the new player
                 for(NetPlayer pl : players) {
-                    ClientEnteredMsg syncPl = new ClientEnteredMsg("PlayerName", pl.con.getId(), pl.ship.getOrientedModuleArray(), pl.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
+                    ClientEnteredMsg syncPl = new ClientEnteredMsg(pl.ship.getName(), pl.con.getId(), pl.ship.getOrientedModuleArray(), pl.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
                     syncPl.setReliable(true);
                     app.getServer().broadcast(Filters.in(arg1), syncPl);
                 }

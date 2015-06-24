@@ -1,16 +1,19 @@
 package netserver;
 
 import com.jme3.input.KeyInput;
+
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import netutil.NetMessages.KeyPressedMsg;
 import netutil.NetMessages.NetMsg;
+import netutil.NetMessages.PlayerNameMsg;
 
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
+
 import netutil.NetMessages.ShipChangedMsg;
 import netutil.NetMessages.ToggleEditorMsg;
 
@@ -51,23 +54,39 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 				}
 			});
 		} else if (m instanceof ShipChangedMsg) {
-                    final ShipChangedMsg msg = (ShipChangedMsg)m;
-                    
-                    this.app.enqueue(new Callable() {
-                        public Object call() throws Exception {                            
-                            for (NetPlayer pl : app.getConManager().players) {
-                                if (pl.con.getId() == client.getId()) {
-                                    // update ship on server
-                                    pl.ship.onShipChanged(msg.getModules());
-                                    pl.updateBaseInventory(msg.getModulesInBase());
-                                }                                
-                            }
-                            // send update to all clients
-                            app.getServer().broadcast(msg);
-                            
-                            return null;
-                        }
-                    });
-                }
+	        final ShipChangedMsg msg = (ShipChangedMsg)m;
+	        
+	        this.app.enqueue(new Callable() {
+	            public Object call() throws Exception {                            
+	                for (NetPlayer pl : app.getConManager().players) {
+	                    if (pl.con.getId() == client.getId()) {
+	                        // update ship on server
+	                        pl.ship.onShipChanged(msg.getModules());
+	                        pl.updateBaseInventory(msg.getModulesInBase());
+	                    }                                
+	                }
+	                // send update to all clients
+	                app.getServer().broadcast(msg);
+	                
+	                return null;
+	            }
+	        });
+		} else if (m instanceof PlayerNameMsg) {
+			final PlayerNameMsg msg = (PlayerNameMsg)m;
+	        
+	        this.app.enqueue(new Callable() {
+	            public Object call() throws Exception {                            
+	                for (NetPlayer pl : app.getConManager().players) {
+	                    if (pl.con.getId() == client.getId()) {
+	                        pl.getShip().setName(msg.getName());
+	                    }
+	                }
+	                
+	                app.getServer().broadcast(msg);
+	                
+	                return null;
+	            }
+	        });
+		}
 	}
 }

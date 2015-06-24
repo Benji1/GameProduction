@@ -111,7 +111,7 @@ public class EditorScreenController implements ScreenController, DroppableDropFi
     
     public void exitMenu() {
         playSound("Sound/Effects/Beep1.wav");
-        nifty.gotoScreen("start");
+        nifty.gotoScreen("empty");
     }
     
     public void playSound(String filename) {

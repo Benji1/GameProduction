@@ -35,6 +35,8 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
      ********** CLASS FIELDS  *********
      **********************************/
 	
+	static WJSFClient app;
+	
 	public AppSettings settings;
 	public BitmapFont defaultFont;
 	
@@ -42,7 +44,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 	
 	public GameRunningState gameRunState;
 	public MainMenuState mainMenuState;
-        public EndGameMenuState endGameMenuState;
+    public EndGameMenuState endGameMenuState;
 	
     public Client client;
     
@@ -69,7 +71,6 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 
         app.start();
     }
-    static WJSFClient app;
     
     @Override
     public void simpleInitApp() {
@@ -129,6 +130,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
                     this.stateManager.attach(this.mainMenuState);
                 }
 	}
+	
     public void CreateBGSound()
     {
         AudioNode audioNode = new AudioNode(app.getAssetManager(), "Sound/Effects/bg.wav", false);

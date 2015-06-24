@@ -150,10 +150,6 @@ public class Universe {
 		if(movedX != 0 || movedZ != 0) {
 			this.universeChunks[n.getChunkX() + this.universeCenter - movedX][n.getChunkZ() + this.universeCenter - movedZ].getListOfType(n.getType()).remove(n);
 			this.universeChunks[n.getChunkX() + this.universeCenter][n.getChunkZ() + this.universeCenter].getListOfType(n.getType()).add(n);
-			
-			if(this.isDebug && n.getName().equals("BasicShip")) {
-				this.debugBoxes.setLocalTranslation(n.getChunkX() * CHUNK_SIZE, 0, n.getChunkZ() * CHUNK_SIZE);
-			}
 		}
     }
     

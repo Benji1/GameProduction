@@ -49,6 +49,7 @@ public class NetMessages {
         Serializer.registerClass(SpawnSpaceStationMsg.class);
         Serializer.registerClass(ExplosionParticleMsg.class);
         Serializer.registerClass(ShieldHitParticleMsg.class);
+        Serializer.registerClass(PlayerNameMsg.class);
     }
 
     @Serializable
@@ -397,6 +398,22 @@ public class NetMessages {
         }
         
         public Vec2 getSpawnPoint() {return new Vec2(spawnX, spawnY);}
+    }
+    
+    @Serializable
+    public static class PlayerNameMsg extends AbstractMessage {
+    	private int id;
+        private String name;
+        
+        public PlayerNameMsg() {}
+        
+        public PlayerNameMsg(int id, String name) {
+        	this.id = id;
+            this.name = name;
+        }
+        
+        public String getName() {return this.name;}
+        public int getId() {return this.id;}
     }
     
     /**********************************

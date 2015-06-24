@@ -4,9 +4,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import netserver.WJSFServer;
 import netutil.NetMessages.ClientEnteredMsg;
 import netutil.NetMessages.NetMsg;
+
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -16,6 +18,7 @@ import com.jme3.network.MessageListener;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+
 import netclient.otherGraphics.GItem;
 import netclient.otherGraphics.GLaserProjectile;
 import netclient.otherGraphics.GSpaceStation;
@@ -29,6 +32,7 @@ import netutil.NetMessages.GraphicObjPosAndRotMsg;
 import netutil.NetMessages.ModuleActivatedMsg;
 import netutil.NetMessages.ModuleDestroyedMsg;
 import netutil.NetMessages.NearStationMsg;
+import netutil.NetMessages.PlayerNameMsg;
 import netutil.NetMessages.PosAndRotMsg;
 import netutil.NetMessages.ShieldHitParticleMsg;
 import netutil.NetMessages.ShipChangedMsg;
@@ -269,6 +273,25 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                             new Vector3f (msg.getSpawnPoint().x, 0, msg.getSpawnPoint().y), 
                             app.gameRunState.localRootNode
                             );
+                    return null;
+                }
+            });
+        } else if (m instanceof PlayerNameMsg) {
+        	final PlayerNameMsg msg = (PlayerNameMsg)m;
+            
+            this.app.enqueue(new Callable() {
+                public Object call() throws Exception {
+                	if(msg.getId() == app.gameRunState.playerShip.id) {
+                		app.gameRunState.playerShip.name = msg.getName();
+                		app.gameRunState.playerShip.info.setText(msg.getName());
+                	} else {
+	                	for (ClientShip s : app.gameRunState.clientShips) {
+	                        if (s.id == msg.getId()) {
+	                            s.name = msg.getName();
+	                            s.info.setText(msg.getName());
+	                        }
+	                    }
+                	}
                     return null;
                 }
             });
