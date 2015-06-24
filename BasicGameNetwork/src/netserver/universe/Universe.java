@@ -171,7 +171,8 @@ public class Universe {
     }
     
     public UniverseChunk getChunk(Vector3f pos) {
-    	return this.universeChunks[(int)(pos.x / this.CHUNK_SIZE)][(int)(pos.z / this.CHUNK_SIZE)];
+    	System.out.println((int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + "/" + (int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)));
+    	return this.universeChunks[(int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter][(int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter];
     }
     
     public ArrayList<UniverseChunk> getAllSurroundingChunks(int chunkX, int chunkZ) {

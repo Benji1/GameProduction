@@ -73,9 +73,9 @@ public class ServerConManager implements ConnectionListener {
                 
                 // send all space stations to the new player
                 for (SpaceStation station : app.getUniverse().getAllNearbyStations(newPl.ship.getLocalTranslation())) {
-                    SpawnSpaceStationMsg syncStation = new SpawnSpaceStationMsg(station.getId(), station.getSpawnPoint());
+                    SpawnSpaceStationMsg syncStation = new SpawnSpaceStationMsg(station.getId(), station.getLocalTranslation());
                     syncStation.setReliable(true);
-                    app.getServer().broadcast(syncStation);                               
+                    app.getServer().broadcast(Filters.in(arg1), syncStation);                               
                 }
                 
                 // add new player to list

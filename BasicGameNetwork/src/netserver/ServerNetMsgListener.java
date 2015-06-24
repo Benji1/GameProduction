@@ -33,17 +33,17 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 					// find player and update input status
 					for(NetPlayer pl : app.getConManager().players) {
 						if(pl.con.getId() == client.getId()) {
-                                                        if (msg.getKeyCode().equals(KeyInput.KEY_E) && !msg.getKeyPressed()) {
-                                                                // toggle editor
-                                                                pl.getInventory().moveItemsFromShipToBaseStorage();
-                                                                ToggleEditorMsg msg = new ToggleEditorMsg(pl.con.getId(), pl.getInventory().getModulesInBase());
-                                                                msg.setReliable(true);
-                                                                app.getServer().broadcast(msg);
-                                                        } else {
-                                                                pl.handleKeyEvent(msg.getKeyCode(), msg.getKeyPressed());
-                                                        }
-                                                        
-                                                        return null;
+	                        if (msg.getKeyCode().equals(KeyInput.KEY_E) && !msg.getKeyPressed()) {
+                                // toggle editor
+                                pl.getInventory().moveItemsFromShipToBaseStorage();
+                                ToggleEditorMsg msg = new ToggleEditorMsg(pl.con.getId(), pl.getInventory().getModulesInBase());
+                                msg.setReliable(true);
+                                app.getServer().broadcast(msg);
+	                        } else {
+                                pl.handleKeyEvent(msg.getKeyCode(), msg.getKeyPressed());
+	                        }
+	                        
+	                        return null;
 						}
 					}
 					

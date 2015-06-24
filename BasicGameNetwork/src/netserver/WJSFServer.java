@@ -119,7 +119,7 @@ public class WJSFServer extends SimpleApplication {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
         
-    	camNode.setLocalTranslation(new Vector3f(0, 1000 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
+    	camNode.setLocalTranslation(new Vector3f(0, 1500 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
     	camNode.getCamera().setFrustumFar(1000);
         camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
@@ -197,7 +197,7 @@ public class WJSFServer extends SimpleApplication {
         String s = "POS SHIPS:\n";
         
         for(NetPlayer pl : this.conManager.players)
-        	s += pl.ship.cockpit.getLocalTranslation().toString() + "\n";
+        	s += pl.ship.getLocalTranslation().toString() + "\n";
         
         this.textShipPos.setText(s);
     }

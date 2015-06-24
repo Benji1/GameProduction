@@ -1,6 +1,7 @@
 package netclient.states;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +53,9 @@ import com.jme3.scene.shape.Box;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+
 import java.util.HashMap;
+
 import netclient.gui.ModuleType;
 import netclient.otherGraphics.GLaserProjectile;
 import netclient.otherGraphics.GraphicObject;
@@ -83,13 +86,31 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     // projectiles, floating items, ... (everything that needs its pos updated)
     public HashMap<Integer , GraphicObject> graphicObjects = new HashMap<Integer, GraphicObject>();
 
+    // Debug stuff
+    public BitmapText textShipPos;
+    public BitmapText textNewChunk;
+    
     public GameRunningState() {
     }
 
     public GameRunningState(WJSFClient app) {
         this.app = app;
         this.msgManager = new ClientNetMsgListener(app);
-        this.localRootNode = new Node("GameRunningNode");       
+        this.localRootNode = new Node("GameRunningNode");
+        
+        // Debug text
+        this.textShipPos = new BitmapText(this.app.defaultFont, false);
+        this.textShipPos.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
+        this.textShipPos.setColor(ColorRGBA.Green);                             // font color
+        this.textShipPos.setText("POS");             // the text
+        this.textShipPos.setLocalTranslation(0, this.app.settings.getHeight(), 0); // position
+
+        
+        this.textNewChunk = new BitmapText(this.app.defaultFont, false);
+        this.textNewChunk.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
+        this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
+        this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
+        this.textNewChunk.setLocalTranslation(this.app.settings.getWidth() - 350, this.app.settings.getHeight(), 0); // position
     }
 
     @Override
@@ -107,6 +128,9 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.app.gui.goToEmptyScreen();
         this.app.getInputManager().setCursorVisible(false);
         this.app.getInputManager().addRawInputListener(this);
+        
+        this.app.getGuiNode().attachChild(this.textShipPos);
+        this.app.getGuiNode().attachChild(this.textNewChunk);
     }
 
     public void initCamera() {        
@@ -203,6 +227,17 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         if (this.playerShip != null && !universeDebug) {
             updateCamPos(tpf);
         }
+        
+        // update debug
+        if(this.playerShip != null)
+        	this.textShipPos.setText(this.playerShip.shipRoot.getLocalTranslation().toString());
+        
+        String s = "Positions:";
+        
+        for(Entry<Integer, GraphicObject> o : this.graphicObjects.entrySet())
+        	s += "\n" + o.getValue().getName() + ": " + o.getValue().getLocalTranslation().toString();
+        
+        this.textNewChunk.setText(s);
     }
     
     @Override
@@ -211,6 +246,9 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         
         this.app.getInputManager().clearMappings();
         this.app.getRootNode().detachChild(this.localRootNode);
+        
+        this.app.getGuiNode().detachChild(this.textShipPos);
+        this.app.getGuiNode().detachChild(this.textNewChunk);
     }
     
     /**

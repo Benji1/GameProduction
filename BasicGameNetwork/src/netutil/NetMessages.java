@@ -356,10 +356,10 @@ public class NetMessages {
         
         public SpawnSpaceStationMsg() {}
         
-        public SpawnSpaceStationMsg(int id, Vec2 spawnPoint) {
+        public SpawnSpaceStationMsg(int id, Vector3f spawnPoint) {
             this.id = id;
             this.spawnX = spawnPoint.x;
-            this.spawnY = spawnPoint.y;
+            this.spawnY = spawnPoint.z;
         }
         
         public int getId() {return this.id;}

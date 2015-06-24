@@ -27,7 +27,7 @@ public class SpaceStation extends Abs_ChunkNode {
         createStation();
         
         // network spawn msg
-        SpawnSpaceStationMsg msg = new SpawnSpaceStationMsg(id, new Vec2(this.getChunkX(), this.getChunkZ()));
+        SpawnSpaceStationMsg msg = new SpawnSpaceStationMsg(id, this.getLocalTranslation());
         msg.setReliable(true);
         app.getServer().broadcast(msg);
     }
@@ -55,16 +55,8 @@ public class SpaceStation extends Abs_ChunkNode {
         info.setLocalTranslation(this.getLocalTranslation().x - 13, this.getLocalTranslation().y + 3, this.getLocalTranslation().z);
         this.attachChild(info);
 	}
-	
-    public Vector3f getPosition() {
-        return this.getLocalTranslation();
-    }
     
     public int getId() {
         return id;
-    }
-    
-    public Vec2 getSpawnPoint() {
-        return new Vec2(this.getChunkX(), this.getChunkZ());
     }
 }

@@ -92,23 +92,6 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                         app.gameRunState.localRootNode.attachChild(ship.shipRoot);
                     }
                     
-                    // add testbox
-                    Spatial spatial;
-                    Material material;    
-                    
-                    Box box = new Box(1, 0.4f, 1);
-                    spatial = new Geometry("Box", box);
-                    material = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-                    
-                    ColorRGBA color = ColorRGBA.Blue;
-                    material.setBoolean("UseMaterialColors", true);
-                    material.setColor("Ambient", color);
-                    material.setColor("Diffuse", color);
-                    
-                    spatial.setMaterial(material);
-                    ship.shipRoot.attachChild(spatial);
-                    ship.shipRoot.setLocalTranslation(msg.getPos());
-                    
                     return null;
                 }
             });
