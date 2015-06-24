@@ -89,7 +89,7 @@ public class ServerConManager implements ConnectionListener {
                 for (Item i : app.floatingItems) {
                     SpawnItemMsg syncItem = new SpawnItemMsg(i.getId(), i.get2DTranslation(), i.getRotation(), i.getOrientedModule());
                     syncItem.setReliable(true);
-                    app.getServer().broadcast(syncItem);
+                    app.getServer().broadcast(Filters.in(arg1), syncItem);
                 }
                 
                 // add new player to list
