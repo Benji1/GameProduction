@@ -23,7 +23,8 @@ public class UniverseChunk {
 	
     public ArrayList<Abs_ChunkNode> solarSystems;
     public ArrayList<Abs_ChunkNode> spaceStations;
-    //public ArrayList<Abs_ChunkNode> shipEntities;       // all "working" ships
+    public ArrayList<Abs_ChunkNode> playerShips;       // all "working" ships
+    //public ArrayList<Abs_ChunkNode> computerShips;
     //public ArrayList<Abs_ChunkNode> debrisEntities;     // destroyed ship parts
     //public ArrayList<Abs_ChunkNode> asteroidEntities;   // asteroids
     
@@ -43,7 +44,8 @@ public class UniverseChunk {
     public UniverseChunk(int x, int z) {
         this.solarSystems = new ArrayList<Abs_ChunkNode>();
         this.spaceStations = new ArrayList<Abs_ChunkNode>();
-        //this.shipEntities = new ArrayList<Abs_ChunkNode>();
+        this.playerShips = new ArrayList<Abs_ChunkNode>();
+        //this.computerShips = new ArrayList<Abs_ChunkNode>();
         //this.debrisEntities = new ArrayList<Abs_ChunkNode>();
         //this.asteroidEntities = new ArrayList<Abs_ChunkNode>();
         
@@ -89,10 +91,9 @@ public class UniverseChunk {
      **********************************/
     
     public ArrayList<Abs_ChunkNode> getListOfType(Abs_ChunkNode.ChunkNodeType type) {
-    	//if(type == ChunkNodeType.Ship) {return this.shipEntities;}
-        //if(type == ChunkNodeType.Debris) {return this.debrisEntities;}
-        //else if(type == ChunkNodeType.Asteroid) {return this.asteroidEntities;}
-        if(type == ChunkNodeType.SolarSystems) {return this.solarSystems;}
+    	if(type == ChunkNodeType.PlayerShips) {return this.playerShips;}
+    	//else if(type == ChunkNodeType.Computerships) {return this.computerShips;}
+    	else if(type == ChunkNodeType.SolarSystems) {return this.solarSystems;}
         else if(type == ChunkNodeType.SpaceStations) {return this.spaceStations;}
         else {System.out.println("ChunkNode was not assigned an EntityType.");return null;}
     }

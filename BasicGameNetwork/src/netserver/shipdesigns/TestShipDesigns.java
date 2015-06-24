@@ -149,9 +149,9 @@ public class TestShipDesigns {
         
         return s;
     }
-
+/*
     public BasicShip createTestTargetShip() {
-        BasicShip s = new BasicShip(main, "TargetShip");
+        BasicShip s = new BasicShip(main, "TargetShip", );
         
         s.addModuleAtFromOffset(new Cockpit(), new Point(0, -9));
         s.addModuleAtFromOffset(new EnergyGenerator(), new Point(0, -8));
@@ -202,7 +202,7 @@ public class TestShipDesigns {
         //s.activateModules("Shield");
         
         return s;
-    }
+    }*/
     
     public BasicShip createStickShip(NetPlayer player) {
         BasicShip s = new BasicShip(main, "PlayerShip", player);
@@ -227,7 +227,7 @@ public class TestShipDesigns {
 
         return s;
     }
-    
+    /*
     public BasicShip createBasicShip() {
         BasicShip s = new BasicShip(main, "PlayerShip");
         
@@ -262,5 +262,5 @@ public class TestShipDesigns {
         s.addModuleAtFromOffset(new Shield(shield), new Point(-2, 1));
         
         return s;
-    }    
+    }    */
 }
