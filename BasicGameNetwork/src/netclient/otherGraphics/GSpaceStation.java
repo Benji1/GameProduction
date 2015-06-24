@@ -34,7 +34,7 @@ public class GSpaceStation extends GraphicObject {
     }
     
     private void createStation(float x, float z) {
-        this.setLocalTranslation(x, ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "UniverseLayer", float.class), z);
+        this.setLocalTranslation(x, (float) ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "UniverseLayer", float.class), z);
         
     	station = app.getAssetManager().loadModel("3dmodels/station.obj");
         Material sphereMat = new Material(app.getAssetManager(), 
