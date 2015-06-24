@@ -29,19 +29,19 @@ public class GSpaceStation extends GraphicObject {
     }
     
     private void createStation(float x, float z) {
-        this.setLocalTranslation(x, -5, z);
+        this.setLocalTranslation(x, -6, z);
         
-        Box shape = new Box(7, 2, 5);
     	station = app.getAssetManager().loadModel("3dmodels/station.obj");
         Material sphereMat = new Material(app.getAssetManager(), 
                         "Common/MatDefs/Light/Lighting.j3md");
         sphereMat.setBoolean("UseMaterialColors", true);
 
-        ColorRGBA color = ColorRGBA.DarkGray;
+        ColorRGBA color = ColorRGBA.Gray;
         sphereMat.setColor("Diffuse", color);
         sphereMat.setColor("Ambient", color);
+        sphereMat.setTexture("DiffuseMap", app.getAssetManager().loadTexture("textures/station_tex.jpg"));
         station.setMaterial(sphereMat);	
-        station.setLocalScale(2f);       
+        station.setLocalScale(1.5f);       
                 
         BitmapFont f = this.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
         info = new BitmapText(f, true);
