@@ -27,7 +27,7 @@ import netserver.modules.Thruster;
  *
  * @author 1337
  */
-public class BasicShip extends Node implements IUpdateable {
+public class BasicShip extends Abs_ChunkNode implements IUpdateable {
 
     public int shipHeight = 22;
     public int shipWidth = 22;
@@ -38,12 +38,13 @@ public class BasicShip extends Node implements IUpdateable {
     private NetPlayer player;
     private WJSFServer app;
     
-    public BasicShip(WJSFServer app, String name) {
-        this(app, name, null);
+    private BasicShip(WJSFServer app, String name) {
+        //this(app, name, null);
     }
+    
     public BasicShip(WJSFServer app, String name, NetPlayer player) {
-        //super(app, name, Abs_ChunkNode.ChunkNodeType.Ship);
-    	super(name);
+        super(app, name, Abs_ChunkNode.ChunkNodeType.PlayerShips, false, new Vector3f(0,0,0));
+    	//super(name);
     	this.app = app;
         app.getRootNode().attachChild(this);
         //app.gameRunState.ships.add(this);
@@ -59,7 +60,7 @@ public class BasicShip extends Node implements IUpdateable {
 
     @Override
     public void update(float tpf) {
-        //super.update(tpf);
+        super.update(tpf, this.cockpit.getLocalTranslation());
 
         for (int i = 0; i < modules.length; i++) {
             for (int j = 0; j < modules[0].length; j++) {

@@ -17,7 +17,7 @@ public abstract class Abs_ChunkNode extends Node {
      ************ GLOBALS  ************
      **********************************/
 	
-	public enum ChunkNodeType { SolarSystems, SpaceStations }
+	public enum ChunkNodeType { PlayerShips, Computerships, SolarSystems, SpaceStations }
 	
 	
 	
@@ -27,14 +27,15 @@ public abstract class Abs_ChunkNode extends Node {
      ********** CLASS FIELDS  *********
      **********************************/
 	
-    protected WJSFServer app;  				// the main game class
+    protected WJSFServer app;  		// the main game class
     private ChunkNodeType type;		// the type of the Node
+    
     private int chunkX;            	// the current chunkX
     private int chunkZ;            	// the current chunkZ
     private int chunkXLast;			// the last chunkX
     private int chunkZLast;			// the last chunkZ
     private Vector3f posCurChunk;   // the position within the current chunk
-    private Vector3f lastAbsPos;
+    private Vector3f posToCheck;
     
     private boolean isStatic;
     
@@ -50,19 +51,20 @@ public abstract class Abs_ChunkNode extends Node {
     	System.out.println(name + ": " + chunkX + "/" + chunkZ + ", " + posInChunk.toString());
         this.app = app;
         this.type = t;
+        this.isStatic = isStatic;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.chunkXLast = chunkX;
         this.chunkZLast = chunkZ;
         this.posCurChunk = posInChunk;
-        this.lastAbsPos = new Vector3f(posInChunk.x + chunkX * Universe.CHUNK_SIZE, posInChunk.y, posInChunk.z + chunkZ * Universe.CHUNK_SIZE);
-        this.setLocalTranslation(this.lastAbsPos);
+        this.posToCheck = new Vector3f(posInChunk.x + chunkX * Universe.CHUNK_SIZE, posInChunk.y, posInChunk.z + chunkZ * Universe.CHUNK_SIZE);
+        this.setLocalTranslation(this.posToCheck);
         this.app.getUniverse().getChunk(chunkX, chunkZ).getListOfType(this.type).add(this);
         this.app.getRootNode().attachChild(this);
     }
     
     public Abs_ChunkNode(WJSFServer app, String name, ChunkNodeType t, boolean isStatic, Vector3f posAbsolute) {
-    	this(app, name, t, isStatic,
+    	this(app, name, t, isStatic, 
     			(int)(posAbsolute.x / Universe.CHUNK_SIZE), (int)(posAbsolute.z / Universe.CHUNK_SIZE),
     			new Vector3f(posAbsolute.x + ((int)(posAbsolute.x / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1), posAbsolute.y, posAbsolute.x + ((int)(posAbsolute.z / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1)));
     }
@@ -77,9 +79,15 @@ public abstract class Abs_ChunkNode extends Node {
      ************ METHODS  ************
      **********************************/
     
-    public void update(float tpf) {
+    public void update (float tpf) {
+    	this.update(tpf, this.getLocalTranslation());
+    }
+    
+    public void update(float tpf, Vector3f posToCheck) {
+    	this.posToCheck = posToCheck;
+    	
     	if(!this.isStatic) {
-	    	this.posCurChunk = new Vector3f(this.getLocalTranslation().x + this.chunkX * Universe.CHUNK_SIZE * -1, this.posCurChunk.y, this.getLocalTranslation().z + this.chunkZ * Universe.CHUNK_SIZE * -1);
+	    	this.posCurChunk = new Vector3f(this.posToCheck.x + this.chunkX * Universe.CHUNK_SIZE * -1, this.posCurChunk.y, this.posToCheck.z + this.chunkZ * Universe.CHUNK_SIZE * -1);
 	    	this.recalcChunkPos();
     	}
     }
@@ -92,31 +100,31 @@ public abstract class Abs_ChunkNode extends Node {
             this.chunkX++;
             this.chunkXLast++;
             this.posCurChunk.x = -(Universe.CHUNK_SIZE / 2);
-            //this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + this.name + " entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         } else if(this.posCurChunk.x < -(Universe.CHUNK_SIZE / 2)) {
             this.chunkX--;
             this.chunkXLast--;
             this.posCurChunk.x = Universe.CHUNK_SIZE / 2;
-            //this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + this.name + " entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         }
         
         if(this.posCurChunk.z > Universe.CHUNK_SIZE / 2) {
             this.chunkZ++;
             this.chunkZLast++;
             this.posCurChunk.z = -(Universe.CHUNK_SIZE / 2);
-            //this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + this.name + " entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         } else if(this.posCurChunk.z < -(Universe.CHUNK_SIZE / 2)) {
             this.chunkZ--;
             this.chunkZLast--;
             this.posCurChunk.z = Universe.CHUNK_SIZE / 2;
-            //this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + this.name + " entered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
         }
         
         this.app.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
         
         // check universe if we discovered a new chunk
-        this.discoveredNewChunk(this.chunkX, this.chunkZ);
-        //    this.app.gameRunState.textNewChunk.setText(this.app.gameRunState.textNewChunk.getText() + "Discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+        if(this.discoveredNewChunk(this.chunkX, this.chunkZ))
+            this.app.textNewChunk.setText(this.app.textNewChunk.getText() + this.name + " discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
     }
     
     private boolean discoveredNewChunk(int chunkX, int chunkZ) {

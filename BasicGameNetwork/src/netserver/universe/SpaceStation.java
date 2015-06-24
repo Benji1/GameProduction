@@ -52,7 +52,7 @@ public class SpaceStation extends Abs_ChunkNode {
         info.scale(0.2f);
         info.setQueueBucket(Bucket.Transparent);
         info.setText("Press 'E' to enter");
-        info.setLocalTranslation(-13, 3, 0);
+        info.setLocalTranslation(-13f, 3f, 0);
         this.attachChild(info);
 	}
     
