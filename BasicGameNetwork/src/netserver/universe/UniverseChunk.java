@@ -6,6 +6,7 @@ package netserver.universe;
 
 import java.util.ArrayList;
 
+import com.jme3.network.HostedConnection;
 import com.jme3.scene.Node;
 
 import netserver.universe.Abs_ChunkNode;
@@ -78,6 +79,12 @@ public class UniverseChunk {
     
     public void removeUniverseEntity(Abs_ChunkNode n) {
         this.solarSystems.remove(n);
+    }
+    
+    public void broadcastChunkTo(HostedConnection player){
+    	for(Abs_ChunkNode n : this.solarSystems){
+    		((SolarSystem)n).broadcastSpawnTo(player);
+    	}
     }
     
     

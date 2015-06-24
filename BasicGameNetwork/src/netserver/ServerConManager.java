@@ -70,6 +70,7 @@ public class ServerConManager implements ConnectionListener {
                 ClientEnteredMsg msg = new ClientEnteredMsg("PlayerName", arg1.getId(), newPl.ship.getOrientedModuleArray(), newPl.getInventory().getModulesInBase(), new Vector3f(app.rnd.nextFloat() * 20f, 0, app.rnd.nextFloat() * 20f), Vector3f.ZERO);
                 msg.setReliable(true);
                 app.getServer().broadcast(msg);
+                app.getUniverse().broadcastUniverseTo(arg1);
                 
                 // send all other ships to the new player
                 for(NetPlayer pl : players) {

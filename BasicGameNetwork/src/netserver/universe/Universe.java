@@ -20,6 +20,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.network.HostedConnection;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -174,7 +175,6 @@ public class Universe {
     }
     
     public UniverseChunk getChunk(Vector3f pos) {
-    	System.out.println((int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + "/" + (int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + " - " + this.universeChunks[(int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter][(int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter].spaceStations.size());
     	return this.universeChunks[(int)(((pos.x - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter][(int)(((pos.z - (this.CHUNK_SIZE / 2)) / this.CHUNK_SIZE)) + this.universeCenter];
     }
     
@@ -202,6 +202,14 @@ public class Universe {
     			stations.add((SpaceStation)s);
     	
     	return stations;
+    }
+    
+    public void broadcastUniverseTo(HostedConnection player){
+        for(int i = 0; i < UNIVERSE_SIZE; i++) {
+            for(int j = 0; j < UNIVERSE_SIZE; j++) {
+                this.universeChunks[i][j].broadcastChunkTo(player);
+            }
+        }
     }
     
     public void toggleUniverseDebug() {
