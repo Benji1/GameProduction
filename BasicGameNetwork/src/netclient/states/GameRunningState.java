@@ -89,8 +89,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     public HashMap<Integer , GraphicObject> graphicObjects = new HashMap<Integer, GraphicObject>();
 
     // Debug stuff
-    public BitmapText textShipPos;
-    public BitmapText textNewChunk;
+    public BitmapText textMessages;
+    public BitmapText textPosition;
     
     public GameRunningState() {
     }
@@ -101,18 +101,18 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.localRootNode = new Node("GameRunningNode");
         
         // Debug text
-        this.textShipPos = new BitmapText(this.app.defaultFont, false);
-        this.textShipPos.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
-        this.textShipPos.setColor(ColorRGBA.Green);                             // font color
-        this.textShipPos.setText("POS");             // the text
-        this.textShipPos.setLocalTranslation(0, this.app.settings.getHeight(), 0); // position
+        this.textMessages = new BitmapText(this.app.defaultFont, false);
+        this.textMessages.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
+        this.textMessages.setColor(ColorRGBA.Green);                             // font color
+        this.textMessages.setText("MESSAGE BOARD");             // the text
+        this.textMessages.setLocalTranslation(0, this.app.settings.getHeight(), 0); // position
 
         
-        this.textNewChunk = new BitmapText(this.app.defaultFont, false);
-        this.textNewChunk.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
-        this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
-        this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
-        this.textNewChunk.setLocalTranslation(this.app.settings.getWidth() - 350, this.app.settings.getHeight(), 0); // position
+        this.textPosition = new BitmapText(this.app.defaultFont, false);
+        this.textPosition.setSize(this.app.defaultFont.getCharSet().getRenderedSize());      // font size
+        this.textPosition.setColor(ColorRGBA.Green);                             // font color
+        this.textPosition.setText("CHUNK UPDATES\n");             // the text
+        this.textPosition.setLocalTranslation(this.app.settings.getWidth() - 350, this.app.settings.getHeight(), 0); // position
         
         Box box = new Box(1f,1f,1f);
         Spatial wall = new Geometry("Box", box );
@@ -141,8 +141,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.app.getInputManager().setCursorVisible(false);
         this.app.getInputManager().addRawInputListener(this);
         
-        this.app.getGuiNode().attachChild(this.textShipPos);
-        this.app.getGuiNode().attachChild(this.textNewChunk);
+        this.app.getGuiNode().attachChild(this.textMessages);
+        this.app.getGuiNode().attachChild(this.textPosition);
     }
 
     public void initCamera() {        
@@ -241,17 +241,18 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         }
 
         
-        // update debug
-        if(this.playerShip != null)
-        	this.textShipPos.setText(this.playerShip.shipRoot.getLocalTranslation().toString());
+        // update debug    
+        if(this.playerShip != null) {
+	        String s = "PLAYERS ONLINE: " + (this.clientShips.size() + 1);
+	        
+	        s += "\nYOU: Sector " + (int)((this.playerShip.shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.playerShip.shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);
+	        
+	        for(int i = 0; i < this.clientShips.size(); i++)
+	        	s += "\n" + this.clientShips.get(i).name + ": Sector " + (int)((this.clientShips.get(i).shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.clientShips.get(i).shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);
+	        
+	        this.textPosition.setText(s);
+        }
         
-        String s = "Positions:";
-        
-        for(Entry<Integer, GraphicObject> o : this.graphicObjects.entrySet())
-        	s += "\n" + o.getValue().getName() + ": " + o.getValue().getLocalTranslation().toString();
-        
-        this.textNewChunk.setText(s);
-
         this.background.updateBackground();
         this.uemanager.update(tpf);
     }
@@ -264,8 +265,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.app.getInputManager().removeRawInputListener(this);
         this.app.getRootNode().detachChild(this.localRootNode);
         
-        this.app.getGuiNode().detachChild(this.textShipPos);
-        this.app.getGuiNode().detachChild(this.textNewChunk);
+        this.app.getGuiNode().detachChild(this.textMessages);
+        this.app.getGuiNode().detachChild(this.textPosition);
     }
     
     /**

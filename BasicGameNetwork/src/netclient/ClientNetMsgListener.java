@@ -74,8 +74,13 @@ public class ClientNetMsgListener implements MessageListener<Client> {
     @Override
     public void messageReceived(Client source, Message m) {
         if(m instanceof NetMsg) {
-            NetMsg msg = (NetMsg)m;
-            msgQueue.add(msg.getMessage());
+        	final NetMsg msg = (NetMsg)m;
+            this.app.enqueue(new Callable() {
+                public Object call() throws Exception {
+                	app.gameRunState.textMessages.setText(app.gameRunState.textMessages.getText() + "\n" + msg.getMessage());
+                    return null;
+                }
+            });
         } else if (m instanceof ClientEnteredMsg) {
             final ClientEnteredMsg msg = (ClientEnteredMsg)m;
             
@@ -285,16 +290,18 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
         	this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
-                	System.out.println(app.gameRunState.playerShip.id + ", " + msg.getId() + ", " + msg.getName());
                 	if(msg.getId() == app.gameRunState.playerShip.id) {
                 		app.gameRunState.playerShip.name = msg.getName();
                 		app.gameRunState.playerShip.info.setText(msg.getName());
-                		
+                		app.gameRunState.textMessages.setText(app.gameRunState.textMessages.getText() + "\n" + "Player " + msg.getName() + " entered the Universe.");
+                		msgQueue.add("Player " + msg.getName() + " entered the Universe.");
                 	} else {
 	                	for (ClientShip s : app.gameRunState.clientShips) {
 	                        if (s.id == msg.getId()) {
 	                            s.name = msg.getName();
 	                            s.info.setText(msg.getName());
+	                            app.gameRunState.textMessages.setText(app.gameRunState.textMessages.getText() + "\n" + "Player " + msg.getName() + " entered the Universe.");
+	                            msgQueue.add("Player " + msg.getName() + " entered the Universe.");
 	                        }
 	                    }
                 	}
@@ -327,7 +334,8 @@ public class ClientNetMsgListener implements MessageListener<Client> {
         // handle string msgs
         String msg = this.msgQueue.poll();
         if(msg != null) {
-            //Logger.getLogger(ClientNetMsgListener.class.getName()).log(Level.INFO, msg);
+        	System.out.println("NEW MSG");
+            this.app.gameRunState.textMessages.setText(this.app.gameRunState.textMessages.getText() + "\n" + msg);
         }
     }
 }

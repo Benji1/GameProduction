@@ -3,7 +3,7 @@ package netserver.universe;
 import netclient.WJSFClient;
 import netserver.WJSFServer;
 import netserver.universe.Universe;
-
+import netutil.NetMessages.*;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -65,8 +65,8 @@ public abstract class Abs_ChunkNode extends Node {
     
     public Abs_ChunkNode(WJSFServer app, String name, ChunkNodeType t, boolean isStatic, Vector3f posAbsolute) {
     	this(app, name, t, isStatic, 
-    			(int)(posAbsolute.x / Universe.CHUNK_SIZE), (int)(posAbsolute.z / Universe.CHUNK_SIZE),
-    			new Vector3f(posAbsolute.x + ((int)(posAbsolute.x / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1), posAbsolute.y, posAbsolute.x + ((int)(posAbsolute.z / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1)));
+    			(int)((posAbsolute.x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE), (int)((posAbsolute.z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE),
+    			new Vector3f(posAbsolute.x + ((int)((posAbsolute.x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1), posAbsolute.y, posAbsolute.x + ((int)((posAbsolute.z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1)));
     }
     
     protected Abs_ChunkNode() {}
@@ -123,8 +123,13 @@ public abstract class Abs_ChunkNode extends Node {
         this.app.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
         
         // check universe if we discovered a new chunk
-        if(this.discoveredNewChunk(this.chunkX, this.chunkZ))
+        if(this.discoveredNewChunk(this.chunkX, this.chunkZ)) {
             this.app.textNewChunk.setText(this.app.textNewChunk.getText() + this.name + " discovered Chunk: " + this.chunkX + "/" + this.chunkZ + "\n");
+            
+            NetMsg msg = new NetMsg(this.name + " discovered new Chunk " + this.chunkX + "/" + this.chunkZ);
+            msg.setReliable(true);
+            this.app.getServer().broadcast(msg);
+        }
     }
     
     private boolean discoveredNewChunk(int chunkX, int chunkZ) {

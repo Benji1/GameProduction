@@ -93,8 +93,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
     }
     
     @Override
-    public void simpleUpdate(float tpf) {
-    }
+    public void simpleUpdate(float tpf) {}
     
     @Override
     public void destroy() {
