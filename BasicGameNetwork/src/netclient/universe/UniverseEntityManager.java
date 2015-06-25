@@ -11,6 +11,7 @@ import com.jme3.math.ColorRGBA;
 public class UniverseEntityManager {
 	private List<UniverseEntity> entities;
 	private GameRunningState app;
+
 	
 	public UniverseEntityManager(GameRunningState gameRunningState){
 		this.app = gameRunningState;
@@ -25,6 +26,14 @@ public class UniverseEntityManager {
 	public void update(float tpf){
 		for (UniverseEntity u: entities){
 			u.update(tpf);
+		}
+	}
+	
+	public void updatePosition(int ID, float x, float y){
+		for (UniverseEntity u: entities){
+			if (u.ID == ID){
+				u.updatePosition(x, y);
+			}
 		}
 	}
 }

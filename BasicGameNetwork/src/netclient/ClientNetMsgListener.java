@@ -42,6 +42,7 @@ import netutil.NetMessages.SpawnLaserProjectileMsg;
 import netutil.NetMessages.SpawnSpaceStationMsg;
 import netutil.NetMessages.SpawnUniverseEntity;
 import netutil.NetMessages.ToggleEditorMsg;
+import netutil.NetMessages.UpdateUniverseEntity;
 
 public class ClientNetMsgListener implements MessageListener<Client> {
     
@@ -307,6 +308,15 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                 public Object call() throws Exception {
                 	app.gameRunState.uemanager.addEntity(msg.spawnX, msg.spawnY, msg.size, msg.texture, msg.color, msg.light, msg.ID);
 
+                    return null;
+                }
+            });
+        } else if (m instanceof UpdateUniverseEntity) {
+            final UpdateUniverseEntity msg = (UpdateUniverseEntity)m;
+            
+            this.app.enqueue(new Callable() {
+                public Object call() throws Exception {
+                	app.gameRunState.uemanager.updatePosition(msg.ID, msg.x, msg.y);
                     return null;
                 }
             });

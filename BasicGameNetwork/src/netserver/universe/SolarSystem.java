@@ -20,6 +20,8 @@ public class SolarSystem extends Abs_ChunkNode {
 	private static float MinRadius = 85f;
 	public float timescale = 100f;
 	public float sizescale = 1f;
+	private float NET_STEP = 0.2f;
+	private float networkTimer = 0.2f;
 	
 	public SolarSystem(WJSFServer app, Vector3f pos) {
 		super(app, CBNameGenerator.getName(), ChunkNodeType.SolarSystems, true, pos);
@@ -61,5 +63,12 @@ public class SolarSystem extends Abs_ChunkNode {
 		sun.update(tpf);
 		for (Planet p:planets)
 			p.update(tpf*timescale);
+		this.networkTimer -= tpf;
+		if (this.networkTimer <= 0){
+			this.networkTimer += this.NET_STEP;
+			this.app.getServer().broadcast(sun.getUpdateMessage());
+			for (Planet p:planets)
+				this.app.getServer().broadcast(p.getUpdateMessage());
+		}
 	}
 }
