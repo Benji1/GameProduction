@@ -39,6 +39,7 @@ public class Universe {
     public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
     public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
     public static final float Y_LAYER_SHIPS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "ShipLayer", float.class);
+    public static final float Y_LAYER_STATIONS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "SpaceStationLayer", float.class);
     public static final float Y_LAYER_UNIVERSE = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "UniverseLayer", float.class);
     
     
@@ -72,6 +73,9 @@ public class Universe {
                 this.universeChunks[i][j] = new UniverseChunk(i - this.universeCenter, j - this.universeCenter);
             }
         }
+        
+        // 0/0 is already known
+        this.universeChunks[this.universeCenter][this.universeCenter].visited = true;
         
         //this.initDebug();
         //this.systems = new ArrayList<SolarSystem>();
@@ -156,7 +160,7 @@ public class Universe {
 			this.universeChunks[n.getChunkX() + this.universeCenter][n.getChunkZ() + this.universeCenter].getListOfType(n.getType()).add(n);
 		}
     }
-    
+
     
     
     /**********************************

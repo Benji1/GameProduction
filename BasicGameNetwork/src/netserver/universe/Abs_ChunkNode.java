@@ -4,7 +4,9 @@ import netclient.WJSFClient;
 import netserver.WJSFServer;
 import netserver.universe.Universe;
 import netutil.NetMessages.*;
+
 import com.jme3.math.Vector3f;
+import com.jme3.network.Filters;
 import com.jme3.scene.Node;
 
 /**
@@ -66,7 +68,7 @@ public abstract class Abs_ChunkNode extends Node {
     public Abs_ChunkNode(WJSFServer app, String name, ChunkNodeType t, boolean isStatic, Vector3f posAbsolute) {
     	this(app, name, t, isStatic, 
     			(int)((posAbsolute.x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE), (int)((posAbsolute.z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE),
-    			new Vector3f(posAbsolute.x + ((int)((posAbsolute.x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1), posAbsolute.y, posAbsolute.x + ((int)((posAbsolute.z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1)));
+    			new Vector3f(posAbsolute.x + ((int)((posAbsolute.x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1), posAbsolute.y, posAbsolute.z + ((int)((posAbsolute.z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) * Universe.CHUNK_SIZE * -1)));
     }
     
     protected Abs_ChunkNode() {}
@@ -129,6 +131,32 @@ public abstract class Abs_ChunkNode extends Node {
             NetMsg msg = new NetMsg(this.name + " discovered new Chunk " + this.chunkX + "/" + this.chunkZ);
             msg.setReliable(true);
             this.app.getServer().broadcast(msg);
+            
+            if(this.app.rnd.nextFloat() < 0.1) {
+            	float posX = (this.chunkX * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() * Universe.CHUNK_SIZE - 20) - (Universe.CHUNK_SIZE / 2);
+            	float posZ = (this.chunkZ * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() * Universe.CHUNK_SIZE - 20) - (Universe.CHUNK_SIZE / 2);
+            	SolarSystem sys = new SolarSystem(app, new Vector3f(posX, Universe.Y_LAYER_UNIVERSE, posZ));
+            	
+            	sys.broadcastSpawn();
+            	
+            	NetMsg netmsg = new NetMsg(this.name + " discovered new SolarSystem " + sys.name + " in " + this.chunkX + "/" + this.chunkZ);
+            	netmsg.setReliable(true);
+                this.app.getServer().broadcast(netmsg);
+            }
+            
+            if(this.app.rnd.nextFloat() < 0.3) {
+            	float posX = (this.chunkX * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() * Universe.CHUNK_SIZE - 20) - (Universe.CHUNK_SIZE / 2);
+            	float posZ = (this.chunkZ * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() * Universe.CHUNK_SIZE - 20) - (Universe.CHUNK_SIZE / 2);
+            	SpaceStation ss = new SpaceStation(app, new Vector3f(posX, Universe.Y_LAYER_STATIONS, posZ));
+            	
+            	SpawnSpaceStationMsg syncStation = new SpawnSpaceStationMsg(ss.getId(), ss.getLocalTranslation());
+                syncStation.setReliable(true);
+                app.getServer().broadcast(syncStation);
+                
+                NetMsg netmsg = new NetMsg(this.name + " discovered new SpaceStation " + ss.name + " in " + this.chunkX + "/" + this.chunkZ);
+            	netmsg.setReliable(true);
+                this.app.getServer().broadcast(netmsg);
+            }
         }
     }
     

@@ -245,7 +245,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         if(this.playerShip != null) {
 	        String s = "PLAYERS ONLINE: " + (this.clientShips.size() + 1);
 	        
-	        s += "\nYOU: Sector " + (int)((this.playerShip.shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.playerShip.shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);
+	        s += "\nYOU: Sector " + (int)((this.playerShip.shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.playerShip.shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + " | " + this.playerShip.shipRoot.getLocalTranslation().toString();
 	        
 	        for(int i = 0; i < this.clientShips.size(); i++)
 	        	s += "\n" + this.clientShips.get(i).name + ": Sector " + (int)((this.clientShips.get(i).shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.clientShips.get(i).shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);

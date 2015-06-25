@@ -112,14 +112,6 @@ public class WJSFServer extends SimpleApplication {
         
         // init game
         this.initWorld();
-        
-        Box box = new Box(2f,2f,2f);
-        Spatial wall = new Geometry("Box", box );
-        Material mat_brick = new Material(this.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        mat_brick.setTexture("ColorMap", this.getAssetManager().loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
-        wall.setMaterial(mat_brick);
-        wall.setLocalTranslation(0,0,0);
-        this.rootNode.attachChild(wall);
     }
 
     private void initWorld() {
@@ -211,7 +203,7 @@ public class WJSFServer extends SimpleApplication {
         String s = "POS SHIPS:\n";
         
         for(NetPlayer pl : this.conManager.players)
-        	s += pl.ship.getName() + ": " + pl.ship.getLocalTranslation().toString() + "\n";
+        	s += pl.ship.getName() + ": " + pl.ship.cockpit.getLocalTranslation().toString() + "\n";
         
         this.textShipPos.setText(s);
     }

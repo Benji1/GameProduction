@@ -39,7 +39,8 @@
         "ChunkSize": 200,
         "YLayers": {
             "ShipLayer": 0,
-            "UniverseLayer": -10
+            "SpaceStationLayer": -8,
+            "UniverseLayer": -20
         }
     },
     "ConfigExamples": {
