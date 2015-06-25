@@ -87,7 +87,7 @@ public class ClientShip {
         info.scale(0.2f);
         info.setQueueBucket(RenderQueue.Bucket.Transparent);
         info.setText(name);
-        info.setLocalTranslation(0, 1, 0);
+        info.setLocalTranslation(0, 2, 0);
         this.shipRoot.attachChild(info);
         
         // build ship

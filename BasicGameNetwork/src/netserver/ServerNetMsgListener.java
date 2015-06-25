@@ -79,10 +79,12 @@ public class ServerNetMsgListener implements MessageListener<HostedConnection> {
 	                for (NetPlayer pl : app.getConManager().players) {
 	                    if (pl.con.getId() == client.getId()) {
 	                        pl.getShip().setName(msg.getName());
+	                        
+	                        PlayerNameMsg newMsg = new PlayerNameMsg(pl.con.getId(), msg.getName());
+	                        newMsg.setReliable(true);
+	    	                app.getServer().broadcast(newMsg);
 	                    }
 	                }
-	                
-	                app.getServer().broadcast(msg);
 	                
 	                return null;
 	            }

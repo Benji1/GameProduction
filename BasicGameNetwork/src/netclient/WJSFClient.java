@@ -102,7 +102,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 	    	try {
 	    		client.close();
 	    	} catch(Exception e) {
-	    		Logger.getLogger(WJSFServer.class.getName()).log(Level.SEVERE, null, e);
+	    		Logger.getLogger(WJSFClient.class.getName()).log(Level.SEVERE, null, e);
 	    	}
     	}
     	
@@ -111,7 +111,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 
 	@Override
 	public void clientConnected(Client arg0) {
-		Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
+		Logger.getLogger(WJSFClient.class.getName()).log(Level.INFO, arg0.toString(), arg0);
 		
 		this.stateManager.detach(this.mainMenuState);
                 this.gameRunState = new GameRunningState(this);
@@ -120,7 +120,7 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 
 	@Override
 	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
-                Logger.getLogger(WJSFServer.class.getName()).log(Level.INFO, arg0.toString(), arg0);
+                Logger.getLogger(WJSFClient.class.getName()).log(Level.INFO, arg0.toString(), arg0);
                 this.stateManager.detach(this.gameRunState);
                 
                 if (arg1 != null && arg1.reason != null && arg1.reason.equals(NetMessages.PLAYER_DIED_MSG)) {

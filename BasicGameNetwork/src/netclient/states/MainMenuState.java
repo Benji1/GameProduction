@@ -32,7 +32,7 @@ public class MainMenuState extends AbstractAppState implements ScreenController,
 	private ViewPort viewPort;
 	private Node guiNode;
 	
-	private Nifty nifty;
+	public Nifty nifty;
 	
 	
 	

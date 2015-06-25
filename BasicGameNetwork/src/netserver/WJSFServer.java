@@ -211,7 +211,7 @@ public class WJSFServer extends SimpleApplication {
         String s = "POS SHIPS:\n";
         
         for(NetPlayer pl : this.conManager.players)
-        	s += pl.ship.getLocalTranslation().toString() + "\n";
+        	s += pl.ship.getName() + ": " + pl.ship.getLocalTranslation().toString() + "\n";
         
         this.textShipPos.setText(s);
     }

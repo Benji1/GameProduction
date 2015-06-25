@@ -19,6 +19,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
+import de.lessvoid.nifty.controls.TextField;
 import netclient.otherGraphics.GItem;
 import netclient.otherGraphics.GLaserProjectile;
 import netclient.otherGraphics.GSpaceStation;
@@ -283,9 +284,11 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
         	this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
+                	System.out.println(app.gameRunState.playerShip.id + ", " + msg.getId() + ", " + msg.getName());
                 	if(msg.getId() == app.gameRunState.playerShip.id) {
                 		app.gameRunState.playerShip.name = msg.getName();
                 		app.gameRunState.playerShip.info.setText(msg.getName());
+                		
                 	} else {
 	                	for (ClientShip s : app.gameRunState.clientShips) {
 	                        if (s.id == msg.getId()) {
