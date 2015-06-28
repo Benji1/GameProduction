@@ -7,7 +7,7 @@ import com.jme3.math.Vector3f;
 public class PhysicsBody {
 	
 	public float mass;
-	private Vector3f velocity;
+	protected Vector3f velocity;
 	private Vector3f force1;
 	private Vector3f force2;
 	public Vector3f position;
@@ -15,21 +15,26 @@ public class PhysicsBody {
 	
 	public PhysicsBody(float mass, Vector3f position){
 		this.mass = mass;
-		this.position = position;
+		this.position = position;//.add(100,0,0);
+		this.velocity = Vector3f.ZERO;
 	}
 	
-	public void updateForce(List<PhysicsBody> bodies){
+	public void updateForce(CelestialBody[] planets){
 		this.force2 = force1;
 		this.force1 = Vector3f.ZERO;
-		for (PhysicsBody body: bodies){
+		for (PhysicsBody body: planets){
 			if (body == this)
 				continue;
 			Vector3f dis = body.position.subtract(this.position);
+			
 			float len = dis.length();
+			len = Math.max(len, 10f);
 			float force = Universe.G * (body.mass * this.mass) / (len*len);
 			Vector3f dir = dis.normalize();
-			this.force1.add(dir.mult(force));
+			this.force1 = this.force1.add(dir.mult(force));
 		}
+		
+		
 	}
 	
 	public void updatePosition(){

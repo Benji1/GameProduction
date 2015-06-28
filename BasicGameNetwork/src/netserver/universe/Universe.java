@@ -35,13 +35,19 @@ public class Universe {
     /**********************************
      ************ GLOBALS  ************
      **********************************/
-	public static final float P_DT = 0.05f;
-	public static final float G = 10.0f;
+	public static final float P_DT = 0.02f;
+	public static final float G = 0.03f;
+	public static float SUNMASS = 3000000f;
+	public static float SUNSIZE = 20f;
+	public static float PLANETMASS = 30f;
+	public static float PLANETSIZE = 1.5f;
+	public static float SYSTEMRAD = 50f;
     public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
     public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
     public static final float Y_LAYER_SHIPS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "ShipLayer", float.class);
     public static final float Y_LAYER_STATIONS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "SpaceStationLayer", float.class);
     public static final float Y_LAYER_UNIVERSE = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "UniverseLayer", float.class);
+    
     
     
     /**********************************
@@ -67,6 +73,7 @@ public class Universe {
     
     public Universe(WJSFServer app) {
         this.app = app;
+        Universe.scale(1f);
         
         this.universeChunks = new UniverseChunk[UNIVERSE_SIZE][UNIVERSE_SIZE];
         for(int i = 0; i < UNIVERSE_SIZE; i++) {
@@ -84,7 +91,13 @@ public class Universe {
     }
     
     
-    
+    public static void scale(float factor){
+    	SUNMASS *= factor;
+    	SUNSIZE *= factor;
+    	PLANETMASS *= factor;
+    	PLANETSIZE *= factor;
+    	SYSTEMRAD *= factor;
+    }
     
     
     /**********************************

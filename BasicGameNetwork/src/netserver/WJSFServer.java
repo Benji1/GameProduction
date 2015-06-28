@@ -18,6 +18,7 @@ import netutil.NetMessages;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
+import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -28,6 +29,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
 
 import netserver.items.EncapsulatingItem;
@@ -77,8 +79,13 @@ public class WJSFServer extends SimpleApplication {
     
     public static void main(String[] args) {
         NetMessages.initSerializables();
+        AppSettings settings = new AppSettings(true);
+        settings.setTitle("WJSF Server");
+        settings.setResolution(1600,860);
 
         WJSFServer app = new WJSFServer();
+        app.setSettings(settings);
+        //app.setShowSettings(false);
         
         app.start(JmeContext.Type.Display); // headless type for servers!
     }
@@ -117,6 +124,9 @@ public class WJSFServer extends SimpleApplication {
     private void initWorld() {
         this.u = new Universe(this);
         UniverseGenerator.debugSystem(this, u);
+        AmbientLight ambient = new AmbientLight();
+        ambient.setColor(ColorRGBA.White.mult(0.3f));
+        this.rootNode.addLight(ambient);
     }
     
     public void initCamera() {
@@ -124,8 +134,8 @@ public class WJSFServer extends SimpleApplication {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
         
-    	camNode.setLocalTranslation(new Vector3f(0, 1500 * (this.getViewPort().getCamera().getWidth() / 1600f), 0.1f));
-    	camNode.getCamera().setFrustumFar(1000);
+    	camNode.setLocalTranslation(new Vector3f(0, 800, 0.1f));
+    	camNode.getCamera().setFrustumFar(2000);
         camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
     
