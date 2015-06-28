@@ -35,7 +35,8 @@ public class Universe {
     /**********************************
      ************ GLOBALS  ************
      **********************************/
-
+	public static final float P_DT = 0.05f;
+	public static final float G = 10.0f;
     public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
     public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
     public static final float Y_LAYER_SHIPS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "ShipLayer", float.class);
