@@ -15,7 +15,7 @@ public class PhysicsBody {
 	
 	public PhysicsBody(float mass, Vector3f position){
 		this.mass = mass;
-		this.position = position.add(0,Universe.Y_LAYER_UNIVERSE,0);
+		this.position = position;
 		this.velocity = Vector3f.ZERO;
 	}
 	

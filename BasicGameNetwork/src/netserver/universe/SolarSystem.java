@@ -36,26 +36,6 @@ public class SolarSystem extends Abs_ChunkNode {
 		this.init();
 	}
 	
-	/*
-	private void init(){
-		sun = new Sun(app, this);
-		this.attachChild(sun);
-		int numPlanets = (int)(Math.random()*9+5);
-		//System.out.println(numPlanets);
-		this.radius = (float) (((Math.random()*(MaxRadius-MinRadius))+MinRadius)*numPlanets);
-		//this.radius = numPlanets*MaxRadius;
-		planets = new Planet[numPlanets];
-		float radRemain = this.radius - MinRadius / 3f;
-		for (int i = 0; i < planets.length; i++){
-			planets[i] = new Planet(app, this);
-			this.attachChild(planets[i]);
-			float distance = (float) ((radRemain/(float)(numPlanets-i))*((Math.random()*0.75f)+0.25f)) + this.radius-radRemain;
-			//System.out.println(distance);
-			radRemain += (radius - radRemain) - distance;
-			planets[i].setTransform(distance, (float) (Math.random()*360f));			
-		}
-	}*/
-	
 	private void init(){
 		float sunmass = (float) (Math.random()*0.4f+1f);
 		sunmass = sunmass*sunmass*Universe.SUNMASS;
@@ -83,7 +63,7 @@ public class SolarSystem extends Abs_ChunkNode {
 				while (Math.random()< mass/(Universe.PLANETMASS*(15+moonstop*15))){
 					float moonmass = (float) (Math.random()*0.4f+1f);
 					moonmass = moonmass*moonmass*Universe.MOONMASS;
-					float rad = planets[i].radius+0.2f;
+					float rad = planets[i].radius/Universe.PLANETSIZE*Universe.MOONDISTANCE;
 					float incline = (float) (Math.random()*Math.PI*2);
 					orbit = (float) (Math.random()*Math.PI*2);
 					x = (float) (rad * Math.sin(incline) * Math.cos(orbit));
@@ -99,11 +79,6 @@ public class SolarSystem extends Abs_ChunkNode {
 			
 			radRemain -= (radRemain/(numPlanets-i))*(Math.random()*0.4f+0.6f);	
 		}
-	}
-	
-	@Override
-	public void setLocalTranslation(Vector3f pos){
-		
 	}
 	
 	public void broadcastSpawn(){

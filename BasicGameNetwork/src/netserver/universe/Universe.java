@@ -40,9 +40,10 @@ public class Universe {
 	public static float SUNMASS = 27000000f;
 	public static float SUNSIZE = 10f;
 	public static float PLANETMASS = 1000f;
-	public static float PLANETSIZE = 0.6f;
+	public static float PLANETSIZE = 0.7f;
 	public static float MOONMASS = 1f;
 	public static float MOONSIZE = 0.5f;
+	public static float MOONDISTANCE = 0.85f;
 	public static float SYSTEMRAD = 70f;
     public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
     public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
@@ -99,6 +100,8 @@ public class Universe {
     	PLANETMASS *= factor;
     	PLANETSIZE *= factor;
     	SYSTEMRAD *= factor;
+    	MOONSIZE *= factor;
+    	MOONMASS *= factor;
     }
     
     

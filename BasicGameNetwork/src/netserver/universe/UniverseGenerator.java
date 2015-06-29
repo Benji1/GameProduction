@@ -10,7 +10,7 @@ public class UniverseGenerator {
 	
 	
 	public static void debugSystem(WJSFServer app, Universe u){
-		SolarSystem sys = new SolarSystem(app, new Vector3f(10050, Universe.Y_LAYER_UNIVERSE, -50));
+		SolarSystem sys = new SolarSystem(app, new Vector3f(50, Universe.Y_LAYER_UNIVERSE, -50));
 		SpaceStation s1 = new SpaceStation(app, new Vector3f(20, Universe.Y_LAYER_STATIONS, 20));
 	}
 	
