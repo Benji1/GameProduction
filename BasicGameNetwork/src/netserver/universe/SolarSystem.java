@@ -7,21 +7,16 @@ import com.jme3.math.Vector3f;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 
-import netclient.WJSFClient;
+
 import netserver.WJSFServer;
 import netserver.universe.Abs_ChunkNode;
 import netserver.universe.CBNameGenerator;
-import netserver.universe.Planet;
-import netserver.universe.Sun;
-import netserver.universe.Abs_ChunkNode.ChunkNodeType;
 
 public class SolarSystem extends Abs_ChunkNode {
 	private CelestialBody sun;
 	private CelestialBody[] planets;
 	private List<CelestialBody> bodies;
 	public float radius;
-	private static float MaxRadius = 200f;
-	private static float MinRadius = 200f;
 	public float timescale = 100f;
 	public float sizescale = 1f;
 	private float NET_STEP = 0.2f;

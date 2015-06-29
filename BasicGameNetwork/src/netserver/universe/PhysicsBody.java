@@ -28,7 +28,7 @@ public class PhysicsBody {
 			Vector3f dis = body.position.subtract(this.position);
 			
 			float len = dis.length();
-			len = Math.max(len, 0.1f);
+			len = Math.max(len, 0.25f);
 			float force = Universe.G * (body.mass * this.mass) / (len*len);
 			Vector3f dir = dis.normalize();
 			this.force1 = this.force1.add(dir.mult(force));

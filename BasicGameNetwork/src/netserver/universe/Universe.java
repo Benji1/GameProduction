@@ -44,7 +44,7 @@ public class Universe {
 	public static float MOONMASS = 1f;
 	public static float MOONSIZE = 0.4f;
 	public static float MOONDISTANCE = 0.9f;
-	public static float SYSTEMRAD = 70f;
+	public static float SYSTEMRAD = 90f;
     public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
     public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
     public static final float Y_LAYER_SHIPS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "ShipLayer", float.class);
@@ -67,6 +67,8 @@ public class Universe {
     // Debug Stuff
     private Node debugBoxes;
     private boolean isDebug = false;
+    
+    
     
     
     
