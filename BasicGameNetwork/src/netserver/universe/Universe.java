@@ -87,6 +87,13 @@ public class Universe {
         
         // 0/0 is already known
         this.universeChunks[this.universeCenter][this.universeCenter].visited = true;
+        this.universeChunks[this.universeCenter][this.universeCenter].generated = true;
+        
+        for(int i = -1; i < 1; i++) {
+        	for(int j = -1; j< 1; j++) {
+        		this.universeChunks[this.universeCenter + i][this.universeCenter + j].generated = true;
+        	}
+        }
         
         //this.initDebug();
         //this.systems = new ArrayList<SolarSystem>();

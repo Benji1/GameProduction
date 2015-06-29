@@ -41,9 +41,11 @@ import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.input.event.TouchEvent;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -82,6 +84,8 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     float camYOffset = 20f;  // Camera height
     
     boolean universeDebug = false;
+    public Node chunkAreaNode = new Node("ChunkAreas");
+    public int chunkX = 0, chunkZ = 0;
     
     public boolean nearStation = false;
     
@@ -114,13 +118,21 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         this.textPosition.setText("CHUNK UPDATES\n");             // the text
         this.textPosition.setLocalTranslation(this.app.settings.getWidth() - 350, this.app.settings.getHeight(), 0); // position
         
-        Box box = new Box(1f,1f,1f);
-        Spatial wall = new Geometry("Box", box );
-        Material mat_brick = new Material(this.app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        mat_brick.setTexture("ColorMap", this.app.getAssetManager().loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
-        wall.setMaterial(mat_brick);
-        wall.setLocalTranslation(0,0,0);
-        this.localRootNode.attachChild(wall);
+        // ChunkAreas
+        this.localRootNode.attachChild(this.chunkAreaNode);
+        for(int x = -1; x <= 1; x++) {
+        	for(int z = -1; z <= 1; z++) {
+		        Box box = new Box(Universe.CHUNK_SIZE / 2,0.01f,Universe.CHUNK_SIZE / 2);
+		        Spatial wall = new Geometry("Box", box );
+		        Material mat_brick = new Material(this.app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+		        mat_brick.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+		        mat_brick.setTexture("ColorMap", this.app.getAssetManager().loadTexture("textures/chunkarea.png"));
+		        wall.setMaterial(mat_brick);
+		        wall.setLocalTranslation(Universe.CHUNK_SIZE * x, 0, Universe.CHUNK_SIZE * z);
+		        wall.setQueueBucket(Bucket.Transparent);
+		        this.chunkAreaNode.attachChild(wall);
+        	}
+        }
         
         this.uemanager = new UniverseEntityManager(this);
     }
@@ -225,6 +237,13 @@ public class GameRunningState extends AbstractAppState implements ActionListener
     
     @Override
     public void update(float tpf) {
+    	if(this.playerShip != null) {
+	    	this.chunkX = (int)((this.playerShip.shipRoot.getLocalTranslation().x + ((this.playerShip.shipRoot.getLocalTranslation().x > 0) ? 1 : -1) * Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);
+	    	this.chunkZ = (int)((this.playerShip.shipRoot.getLocalTranslation().z + ((this.playerShip.shipRoot.getLocalTranslation().z > 0) ? 1 : -1) * Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);
+	    	
+	    	this.chunkAreaNode.setLocalTranslation(this.chunkX * Universe.CHUNK_SIZE, 0, this.chunkZ * Universe.CHUNK_SIZE);
+    	}
+    	
         this.msgManager.update(tpf);
         
         // f.ex. for adjusting thruster particles to current velocity
@@ -245,7 +264,7 @@ public class GameRunningState extends AbstractAppState implements ActionListener
         if(this.playerShip != null) {
 	        String s = "PLAYERS ONLINE: " + (this.clientShips.size() + 1);
 	        
-	        s += "\nYOU: Sector " + (int)((this.playerShip.shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.playerShip.shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + " | " + this.playerShip.shipRoot.getLocalTranslation().toString();
+	        s += "\nYOU: Sector " + this.chunkX + "/" + this.chunkZ + " | " + this.playerShip.shipRoot.getLocalTranslation().toString();
 	        
 	        for(int i = 0; i < this.clientShips.size(); i++)
 	        	s += "\n" + this.clientShips.get(i).name + ": Sector " + (int)((this.clientShips.get(i).shipRoot.getLocalTranslation().x - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE) + "/" + (int)((this.clientShips.get(i).shipRoot.getLocalTranslation().z - Universe.CHUNK_SIZE / 2) / Universe.CHUNK_SIZE);
