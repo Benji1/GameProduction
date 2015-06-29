@@ -90,6 +90,11 @@ public class CelestialBody extends PhysicsBody {
 	private Texture getTexture(){
 		int type = (int)(Math.random()*2+1);
 		System.out.println(mass);
+		if (mass < Universe.PLANETMASS){
+			this.texture = 1;
+			color = ColorRGBA.LightGray;
+			return app.getAssetManager().loadTexture("textures/planet_solid_1.png");		
+		}
 		if (mass < Universe.PLANETMASS*20){
 			this.texture = type;
 			return app.getAssetManager().loadTexture("textures/planet_solid_"+type+".png");
