@@ -125,7 +125,7 @@ public class WJSFServer extends SimpleApplication {
         this.u = new Universe(this);
         UniverseGenerator.debugSystem(this, u);
         AmbientLight ambient = new AmbientLight();
-        ambient.setColor(ColorRGBA.White.mult(0.3f));
+        ambient.setColor(ColorRGBA.White.mult(1f));
         this.rootNode.addLight(ambient);
     }
     
@@ -134,7 +134,7 @@ public class WJSFServer extends SimpleApplication {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         this.rootNode.attachChild(camNode);
         
-    	camNode.setLocalTranslation(new Vector3f(0, 800, 0.1f));
+    	camNode.setLocalTranslation(new Vector3f(0, 600, 0.1f));
     	camNode.getCamera().setFrustumFar(2000);
         camNode.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }

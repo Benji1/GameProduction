@@ -15,20 +15,20 @@ public class PhysicsBody {
 	
 	public PhysicsBody(float mass, Vector3f position){
 		this.mass = mass;
-		this.position = position;//.add(100,0,0);
+		this.position = position.add(0,Universe.Y_LAYER_UNIVERSE,0);
 		this.velocity = Vector3f.ZERO;
 	}
 	
-	public void updateForce(CelestialBody[] planets){
+	public void updateForce(List<CelestialBody> bodies){
 		this.force2 = force1;
 		this.force1 = Vector3f.ZERO;
-		for (PhysicsBody body: planets){
+		for (PhysicsBody body: bodies){
 			if (body == this)
 				continue;
 			Vector3f dis = body.position.subtract(this.position);
 			
 			float len = dis.length();
-			len = Math.max(len, 10f);
+			len = Math.max(len, 0.1f);
 			float force = Universe.G * (body.mass * this.mass) / (len*len);
 			Vector3f dir = dis.normalize();
 			this.force1 = this.force1.add(dir.mult(force));

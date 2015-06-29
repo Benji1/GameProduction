@@ -36,12 +36,14 @@ public class Universe {
      ************ GLOBALS  ************
      **********************************/
 	public static final float P_DT = 0.02f;
-	public static final float G = 0.03f;
-	public static float SUNMASS = 3000000f;
-	public static float SUNSIZE = 20f;
-	public static float PLANETMASS = 30f;
-	public static float PLANETSIZE = 1.5f;
-	public static float SYSTEMRAD = 50f;
+	public static final float G = 0.0003f;
+	public static float SUNMASS = 27000000f;
+	public static float SUNSIZE = 10f;
+	public static float PLANETMASS = 1000f;
+	public static float PLANETSIZE = 0.6f;
+	public static float MOONMASS = 1f;
+	public static float MOONSIZE = 0.5f;
+	public static float SYSTEMRAD = 70f;
     public static final float CHUNK_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "ChunkSize", float.class);
     public static final int UNIVERSE_SIZE = ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "UniverseSize", int.class);
     public static final float Y_LAYER_SHIPS = ServiceManager.getConfigReader().getFromMap((Map) ServiceManager.getConfigReader().getFromMap(ServiceManager.getConfigReader().getBaseMap("UniverseConfig"), "YLayers", Map.class), "ShipLayer", float.class);

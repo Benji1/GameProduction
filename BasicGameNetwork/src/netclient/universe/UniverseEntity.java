@@ -21,18 +21,21 @@ public class UniverseEntity extends Node {
 	float radius;
 	float lastX;
 	float lastY;
+	float lastZ;
 	float nextX;
 	float nextY;
+	float nextZ;
 	float interpolate = 0;
 	float interpolTimer = 0f;
 	
-	public UniverseEntity(float x, float y, float size, int texture, ColorRGBA color, boolean light, int ID, GameRunningState app){
+	public UniverseEntity(float x, float y, float z, float size, int texture, ColorRGBA color, boolean light, int ID, GameRunningState app){
 		this.app = app;
 		this.ID = ID;
 		this.radius = size;
 		this.setLocalTranslation(x, -50, y);
 		this.lastX = x;
 		this.lastY = y;
+		this.lastZ = z;
 		Sphere shape = new Sphere(32, 32, size);
 		shape.setTextureMode(Sphere.TextureMode.Projected);
 		model = new Geometry(this.ID+"_model", shape);
@@ -66,12 +69,14 @@ public class UniverseEntity extends Node {
 	public void update(float tpf){
 		this.model.rotate(0, 0, tpf/this.radius+tpf*0.1f);
 		this.interpolTimer += tpf;
-		this.setLocalTranslation(lastX +nextX*(interpolTimer/interpolate), -50, lastY +nextY*(interpolTimer/interpolate));
+		this.setLocalTranslation(lastX +nextX*(interpolTimer/interpolate), lastY +nextY*(interpolTimer/interpolate), lastZ +nextZ*(interpolTimer/interpolate));
 	}
 	
-	public void updatePosition(float x, float y){
+	public void updatePosition(float x, float y, float z){
 		this.lastX += nextX;
 		this.lastY += nextY;
+		this.lastZ += nextZ;
+		this.nextZ = z - lastZ;
 		this.nextX = x - lastX;
 		this.nextY = y - lastY;
 		this.interpolate = interpolTimer;

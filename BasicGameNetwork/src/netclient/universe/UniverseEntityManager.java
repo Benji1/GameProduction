@@ -18,9 +18,9 @@ public class UniverseEntityManager {
 		this.entities = new ArrayList<UniverseEntity>();
 	}
 	
-	public void addEntity(float x, float y, float size, int texture, ColorRGBA color, boolean light, int ID){
+	public void addEntity(float x, float y, float z, float size, int texture, ColorRGBA color, boolean light, int ID){
 		System.out.println("Entity #"+ID);
-		this.entities.add(new UniverseEntity(x,y,size,texture,color,light,ID, app));
+		this.entities.add(new UniverseEntity(x,y,z,size,texture,color,light,ID, app));
 	}
 	
 	public void update(float tpf){
@@ -29,10 +29,10 @@ public class UniverseEntityManager {
 		}
 	}
 	
-	public void updatePosition(int ID, float x, float y){
+	public void updatePosition(int ID, float x, float y, float z){
 		for (UniverseEntity u: entities){
 			if (u.ID == ID){
-				u.updatePosition(x, y);
+				u.updatePosition(x, y, z);
 			}
 		}
 	}

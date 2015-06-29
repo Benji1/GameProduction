@@ -425,6 +425,7 @@ public class NetMessages {
     public static class SpawnUniverseEntity extends AbstractMessage {
     	public float spawnX;
         public float spawnY;
+        public float spawnZ;
         public float size;
         public int texture;
         public ColorRGBA color;
@@ -433,9 +434,10 @@ public class NetMessages {
         
         public SpawnUniverseEntity() {}
         
-        public SpawnUniverseEntity(float x, float y, float size, int texture, ColorRGBA color, boolean light, int ID){
+        public SpawnUniverseEntity(float x, float y, float z, float size, int texture, ColorRGBA color, boolean light, int ID){
         	this.spawnX = x;
         	this.spawnY = y;
+        	this.spawnZ = z;
         	this.size = size;
         	this.texture = texture;
         	this.color = color;
@@ -448,13 +450,15 @@ public class NetMessages {
     public static class UpdateUniverseEntity extends AbstractMessage {
     	public float x;
     	public float y;
+    	public float z;
     	public int ID;
     	
     	public UpdateUniverseEntity() {}
     	
-    	public UpdateUniverseEntity(float x, float y, int ID){
+    	public UpdateUniverseEntity(float x, float y, float z, int ID){
     		this.x = x;
     		this.y = y;
+    		this.z = z;
     		this.ID = ID;
     	}
     }

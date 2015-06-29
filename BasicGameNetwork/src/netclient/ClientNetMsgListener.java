@@ -313,7 +313,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
             this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
-                	app.gameRunState.uemanager.addEntity(msg.spawnX, msg.spawnY, msg.size, msg.texture, msg.color, msg.light, msg.ID);
+                	app.gameRunState.uemanager.addEntity(msg.spawnX, msg.spawnY, msg.spawnZ, msg.size, msg.texture, msg.color, msg.light, msg.ID);
 
                     return null;
                 }
@@ -323,7 +323,7 @@ public class ClientNetMsgListener implements MessageListener<Client> {
             
             this.app.enqueue(new Callable() {
                 public Object call() throws Exception {
-                	app.gameRunState.uemanager.updatePosition(msg.ID, msg.x, msg.y);
+                	app.gameRunState.uemanager.updatePosition(msg.ID, msg.x, msg.y, msg.z);
                     return null;
                 }
             });

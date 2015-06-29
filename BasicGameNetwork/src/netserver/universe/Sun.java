@@ -52,7 +52,7 @@ public class Sun extends Node {
 		light.setPosition(this.getWorldTranslation());
 		app.getRootNode().addLight(light);
 	}
-	
+	/*
 	public NetMessages.SpawnUniverseEntity getSpawnMessage(){
 		return new NetMessages.SpawnUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, radius, 0, ColorRGBA.White, true, ID);
 	}
@@ -60,7 +60,7 @@ public class Sun extends Node {
 	public NetMessages.UpdateUniverseEntity getUpdateMessage(){
 		return new NetMessages.UpdateUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, ID);
 	}
-	
+	*/
 	public void update(float tpf){
 		light.setPosition(this.getWorldTranslation().add(new Vector3f(0,20,0)));
                 this.model.rotate(0, 0, tpf*0.1f);

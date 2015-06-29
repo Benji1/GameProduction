@@ -74,7 +74,7 @@ public class Planet extends Node {
 		float y = (float) (this.distance *system.sizescale * Math.sin(this.orbit) / this.ellypsiness);
 		this.setLocalTranslation(x, 0, y);
 		}
-	
+	/*
 	public NetMessages.SpawnUniverseEntity getSpawnMessage(){
 		return new NetMessages.SpawnUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, radius, texture, color, false, ID);
 	}
@@ -82,7 +82,7 @@ public class Planet extends Node {
 	public NetMessages.UpdateUniverseEntity getUpdateMessage(){
 		return new NetMessages.UpdateUniverseEntity(this.getWorldTranslation().x, this.getWorldTranslation().z, ID);
 	}
-	
+	*/
 	public void update(float tpf) {
         this.orbit += orbitspeed*tpf;
 		this.orbit%=360;

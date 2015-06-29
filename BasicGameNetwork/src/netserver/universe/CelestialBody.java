@@ -19,7 +19,7 @@ public class CelestialBody extends PhysicsBody {
 	Geometry model;
 	Node node;
 	int texture;
-	float radius;
+	public float radius;
 	ColorRGBA color;
 	String name;
 	private WJSFServer app;
@@ -61,8 +61,8 @@ public class CelestialBody extends PhysicsBody {
 	}
 	
 	private float getSize(){
-		if (this.mass < 50)
-			return mass/10f;
+		if (this.mass < Universe.PLANETMASS)
+			return mass/Universe.MOONMASS * Universe.MOONSIZE;
 		if (this.mass >= Universe.SUNMASS)
 			return (float) Math.sqrt(this.mass / Universe.SUNMASS) * Universe.SUNSIZE;
 		else {
@@ -74,9 +74,17 @@ public class CelestialBody extends PhysicsBody {
 	public void kickstart(CelestialBody ref){
 		Vector3f dis = this.position.subtract(ref.position);
 		Vector3f dir = new Vector3f(-dis.z,dis.y,dis.x);
+		if (ref.velocity.length() != 0){
+			float x = (float) Math.random();
+			float y = (float) Math.random();
+			dir = new Vector3f(x,y,(-dis.x *x - dis.y *y) / dis.z);
+		}
 		dir = dir.normalize();
 		float vel = (float) Math.sqrt((Universe.G * (ref.mass + this.mass))/Math.abs(dis.length()));
-		this.velocity = dir.mult(vel*0.8f);
+		if(ref.velocity.length() == 0)
+			this.velocity = (dir.mult(vel*1f));
+		else
+			this.velocity = (dir.mult(vel)).add(ref.velocity);
 	}
 	
 	private Texture getTexture(){
@@ -100,7 +108,7 @@ public class CelestialBody extends PhysicsBody {
 	}
 	
 	public NetMessages.SpawnUniverseEntity getSpawnMessage(){
-		return new NetMessages.SpawnUniverseEntity(this.node.getWorldTranslation().x, this.node.getWorldTranslation().z, radius, texture, color, false, ID);
+		return new NetMessages.SpawnUniverseEntity(this.node.getWorldTranslation().x, this.node.getWorldTranslation().y, this.node.getWorldTranslation().z, radius, texture, color, this.texture == 0, ID);
 	}
 	
 	@Override
@@ -111,7 +119,7 @@ public class CelestialBody extends PhysicsBody {
 	}
 
 	public Message getUpdateMessage() {
-		return new NetMessages.UpdateUniverseEntity(this.node.getWorldTranslation().x, this.node.getWorldTranslation().z, ID);
+		return new NetMessages.UpdateUniverseEntity(this.node.getWorldTranslation().x, this.node.getWorldTranslation().y, this.node.getWorldTranslation().z, ID);
 	}
 	
 }
