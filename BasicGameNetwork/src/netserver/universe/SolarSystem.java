@@ -32,7 +32,7 @@ public class SolarSystem extends Abs_ChunkNode {
 		super(app, CBNameGenerator.getName(), ChunkNodeType.SolarSystems, true, pos);
 		this.setLocalTranslation(pos);
 		this.bodies = new ArrayList<CelestialBody>();
-		System.out.println(this.getLocalTranslation());
+		this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "\nSolarSystem: " + this.getChunkX() + "/" + this.getChunkZ() + " - " + this.getLocalTranslation().toString() + " - " + this.getWorldTranslation().toString());
 		this.init();
 	}
 	

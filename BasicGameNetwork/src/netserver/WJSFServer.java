@@ -151,7 +151,7 @@ public class WJSFServer extends SimpleApplication {
         this.textNewChunk.setSize(this.guiFont.getCharSet().getRenderedSize());      // font size
         this.textNewChunk.setColor(ColorRGBA.Green);                             // font color
         this.textNewChunk.setText("CHUNK UPDATES\n");             // the text
-        this.textNewChunk.setLocalTranslation(this.settings.getWidth() - 350, this.settings.getHeight(), 0); // position
+        this.textNewChunk.setLocalTranslation(this.settings.getWidth() - 400, this.settings.getHeight(), 0); // position
         this.getGuiNode().attachChild(this.textNewChunk);
     }
     

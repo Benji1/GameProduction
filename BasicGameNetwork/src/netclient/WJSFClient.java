@@ -119,15 +119,15 @@ public class WJSFClient extends SimpleApplication implements ClientStateListener
 
 	@Override
 	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
-                Logger.getLogger(WJSFClient.class.getName()).log(Level.INFO, arg0.toString(), arg0);
-                this.stateManager.detach(this.gameRunState);
-                
-                if (arg1 != null && arg1.reason != null && arg1.reason.equals(NetMessages.PLAYER_DIED_MSG)) {
-                    this.endGameMenuState.reset();
-                    this.stateManager.attach(this.endGameMenuState);
-                } else {
-                    this.stateManager.attach(this.mainMenuState);
-                }
+        Logger.getLogger(WJSFClient.class.getName()).log(Level.INFO, arg0.toString(), arg0);
+        this.stateManager.detach(this.gameRunState);
+        
+        if (arg1 != null && arg1.reason != null && arg1.reason.equals(NetMessages.PLAYER_DIED_MSG)) {
+            this.endGameMenuState.reset();
+            this.stateManager.attach(this.endGameMenuState);
+        } else {
+            this.stateManager.attach(this.mainMenuState);
+        }
 	}
 	
     public void CreateBGSound()
