@@ -19,7 +19,7 @@ public abstract class Abs_ChunkNode extends Node {
      ************ GLOBALS  ************
      **********************************/
 	
-	public enum ChunkNodeType { PlayerShips, Computerships, SolarSystems, SpaceStations }
+	public enum ChunkNodeType { PlayerShips, Computerships, SolarSystems, SpaceStations, Meteors }
 	
 	
 	
