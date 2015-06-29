@@ -140,36 +140,63 @@ public abstract class Abs_ChunkNode extends Node {
     }
 
     private void newChunkDiscovered() {
+    	// NEW CHUNK
     	this.app.textNewChunk.setText(this.app.textNewChunk.getText() + "\n" + this.name + " discovered Chunk: " + this.chunkX + "/" + this.chunkZ);
         
         NetMsg msg = new NetMsg(this.name + " discovered new Chunk " + this.chunkX + "/" + this.chunkZ);
         msg.setReliable(true);
         this.app.getServer().broadcast(msg);
         
-        if(this.app.rnd.nextFloat() < 0.1) {
-        	float posX = (this.chunkX * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
-        	float posZ = (this.chunkZ * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
-        	SolarSystem sys = new SolarSystem(app, new Vector3f(posX, Universe.Y_LAYER_UNIVERSE, posZ));
-        	
-        	sys.broadcastSpawn();
-        	
-        	NetMsg netmsg = new NetMsg(this.name + " discovered new SolarSystem " + sys.name + " in " + this.chunkX + "/" + this.chunkZ);
-        	netmsg.setReliable(true);
-            this.app.getServer().broadcast(netmsg);
-        }
-        
-        if(this.app.rnd.nextFloat() < 0.3) {
-        	float posX = (this.chunkX * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
-        	float posZ = (this.chunkZ * Universe.CHUNK_SIZE) - (Universe.CHUNK_SIZE / 2) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
-        	SpaceStation ss = new SpaceStation(app, new Vector3f(posX, Universe.Y_LAYER_STATIONS, posZ));
-        	
-        	SpawnSpaceStationMsg syncStation = new SpawnSpaceStationMsg(ss.getId(), ss.getLocalTranslation());
-            syncStation.setReliable(true);
-            app.getServer().broadcast(syncStation);
-            
-            NetMsg netmsg = new NetMsg(this.name + " discovered new SpaceStation " + ss.name + " in " + this.chunkX + "/" + this.chunkZ);
-        	netmsg.setReliable(true);
-            this.app.getServer().broadcast(netmsg);
+        // go through neighboring chunks and create solarsystems
+        for(int x = -1; x < 1; x++) {
+        	for(int z = -1; z < 1; z++) {
+        		if(this.app.getUniverse().getChunk(chunkX + x, chunkZ + z).generated == true)
+        			return;
+        		
+        		this.app.getUniverse().getChunk(chunkX + x, chunkZ + z).generated = true;
+        		
+        		// allow solar systems only if there is not one nearby
+            	Boolean found = false;
+                for(int i = -1; i < 1; i++) {
+                	for(int j = -1; j < 1; j++) {
+                		if(this.app.getUniverse().getChunk(chunkX + i, chunkZ + j).solarSystems.size() > 0) {
+                			found = true;
+                			break;
+                		}
+                	}
+                }
+                
+                if(found)
+                	continue;
+        		
+        		// NEW SOLARSYSTEM
+                if(this.app.rnd.nextFloat() < 0.2) {
+                	float posX = ((this.chunkX + x) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
+                	float posZ = ((this.chunkZ + z) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
+                	SolarSystem sys = new SolarSystem(app, new Vector3f(posX, Universe.Y_LAYER_UNIVERSE, posZ));
+                	
+                	sys.broadcastSpawn();
+                	
+                	NetMsg netmsg = new NetMsg(this.name + " discovered new SolarSystem " + sys.name + " in " + (this.chunkX + x) + "/" + (this.chunkZ + z));
+                	netmsg.setReliable(true);
+                    this.app.getServer().broadcast(netmsg);
+                }
+                
+                // NEW SPACESTATION
+                if(this.app.rnd.nextFloat() < 0.3) {
+                	float posX = ((this.chunkX + x) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
+                	float posZ = ((this.chunkZ + z) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
+                	SpaceStation ss = new SpaceStation(app, new Vector3f(posX, Universe.Y_LAYER_STATIONS, posZ));
+                	
+                	SpawnSpaceStationMsg syncStation = new SpawnSpaceStationMsg(ss.getId(), ss.getLocalTranslation());
+                    syncStation.setReliable(true);
+                    app.getServer().broadcast(syncStation);
+                    
+                    NetMsg netmsg = new NetMsg(this.name + " discovered new SpaceStation " + ss.name + " in " + (this.chunkX + x) + "/" + (this.chunkZ + z));
+                	netmsg.setReliable(true);
+                    this.app.getServer().broadcast(netmsg);
+                }
+        	}
         }
     }
     

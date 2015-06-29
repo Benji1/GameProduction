@@ -33,7 +33,7 @@ public class UniverseChunk {
     public final int coordsZ;
 
     public Boolean visited = false;
-    
+    public Boolean generated = false;
     
     
     
