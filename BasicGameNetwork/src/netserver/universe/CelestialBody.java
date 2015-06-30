@@ -82,7 +82,7 @@ public class CelestialBody extends PhysicsBody {
 		dir = dir.normalize();
 		float vel = (float) Math.sqrt((Universe.G * (ref.mass + this.mass))/Math.abs(dis.length()));
 		if(ref.velocity.length() == 0)
-			this.velocity = (dir.mult(vel*1f));
+			this.velocity = (dir.mult(vel*1.0f));
 		else
 			this.velocity = (dir.mult(vel)).add(ref.velocity);
 	}

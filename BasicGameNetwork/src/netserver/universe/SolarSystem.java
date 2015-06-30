@@ -74,6 +74,9 @@ public class SolarSystem extends Abs_ChunkNode {
 			
 			radRemain -= (radRemain/(numPlanets-i))*(Math.random()*0.4f+0.6f);	
 		}
+		for (CelestialBody p: bodies){
+			p.updateForce(bodies);
+		}
 	}
 	
 	public void broadcastSpawn(){
@@ -92,10 +95,6 @@ public class SolarSystem extends Abs_ChunkNode {
 		this.physicsTimer -= tpf;
 		while (this.physicsTimer <= 0){
 			this.physicsTimer += Universe.P_DT;
-			
-			for (CelestialBody p: bodies){
-				p.updateForce(bodies);
-			}
 			for (CelestialBody p: bodies){
 				p.updatePosition();
 			}
