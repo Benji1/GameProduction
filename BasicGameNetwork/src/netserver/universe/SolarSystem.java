@@ -37,7 +37,7 @@ public class SolarSystem extends Abs_ChunkNode {
 		float sunmass = (float) (Math.random()*0.4f+1f);
 		sunmass = sunmass*sunmass*Universe.SUNMASS;
 		sun = new CelestialBody(sunmass, this.getWorldTranslation(), app);
-		int numPlanets = (int)(Math.random()*5+6);
+		int numPlanets = (int)(Math.random()*5+5);
 		//System.out.println(numPlanets);
 		this.radius = (float) (Math.sqrt(sunmass/Universe.SUNMASS) * Universe.SYSTEMRAD * numPlanets);
 		//this.radius = numPlanets*MaxRadius;
@@ -57,7 +57,7 @@ public class SolarSystem extends Abs_ChunkNode {
 			bodies.add(planets[i]);
 			if (radRemain < 0.7f){
 				int moonstop = 0;
-				while (Math.random()< mass/(Universe.PLANETMASS*(15+moonstop*15))){
+				while (Math.random()< mass/((Universe.PLANETMASS)*(10+moonstop*20))){
 					float moonmass = (float) (Math.random()*0.4f+1f);
 					moonmass = moonmass*moonmass*Universe.MOONMASS;
 					float rad = planets[i].radius/Universe.PLANETSIZE*Universe.MOONDISTANCE;
