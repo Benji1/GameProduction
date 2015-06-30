@@ -175,7 +175,7 @@ public abstract class Abs_ChunkNode extends Node {
                 	float posZ = ((this.chunkZ + z) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
                 	SolarSystem sys = new SolarSystem(app, new Vector3f(posX, Universe.Y_LAYER_UNIVERSE, posZ));
                 	
-                	sys.broadcastSpawn();
+                	//sys.broadcastSpawn();
                 	
                 	NetMsg netmsg = new NetMsg(this.name + " discovered new SolarSystem " + sys.name + " in " + (this.chunkX + x) + "/" + (this.chunkZ + z));
                 	netmsg.setReliable(true);

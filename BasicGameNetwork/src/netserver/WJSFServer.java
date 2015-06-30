@@ -12,6 +12,7 @@ import netserver.physics.PhysicsWorld;
 import netserver.services.ServiceManager;
 import netserver.services.updater.UpdateableManager;
 import netserver.shipdesigns.TestShipDesigns;
+import netserver.universe.Abs_ChunkNode.ChunkNodeType;
 import netserver.universe.Universe;
 import netserver.universe.UniverseGenerator;
 import netutil.NetMessages;
@@ -213,7 +214,7 @@ public class WJSFServer extends SimpleApplication {
         String s = "POS SHIPS:\n";
         
         for(NetPlayer pl : this.conManager.players)
-        	s += pl.ship.getName() + ": " + pl.ship.cockpit.getLocalTranslation().toString() + "\n";
+        	s += pl.ship.getName() + ": " + pl.getShip().getChunkX() + "/" + pl.getShip().getChunkZ() + " | " + pl.ship.cockpit.getLocalTranslation().toString() + " | " + this.u.getChunk(pl.getShip().getChunkX(), pl.getShip().getChunkZ()).getListOfType(ChunkNodeType.SolarSystems).size() + "\n";
         
         this.textShipPos.setText(s);
     }

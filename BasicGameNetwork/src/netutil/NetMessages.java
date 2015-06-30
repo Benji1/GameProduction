@@ -54,6 +54,7 @@ public class NetMessages {
         Serializer.registerClass(ShieldHitParticleMsg.class);
         Serializer.registerClass(PlayerNameMsg.class);
         Serializer.registerClass(SpawnUniverseEntity.class);
+        Serializer.registerClass(RemoveUniverseEntity.class);
         Serializer.registerClass(UpdateUniverseEntity.class);
     }
 
@@ -419,6 +420,16 @@ public class NetMessages {
         
         public String getName() {return this.name;}
         public int getId() {return this.id;}
+    }
+    
+    @Serializable
+    public static class RemoveUniverseEntity extends AbstractMessage {
+    	private int ID;
+    	
+    	public RemoveUniverseEntity() {}
+    	public RemoveUniverseEntity(int ID) {this.ID = ID;}
+    	
+    	public int getID() {return this.ID;}
     }
     
     @Serializable

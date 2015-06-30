@@ -35,6 +35,7 @@ import netutil.NetMessages.ModuleDestroyedMsg;
 import netutil.NetMessages.NearStationMsg;
 import netutil.NetMessages.PlayerNameMsg;
 import netutil.NetMessages.PosAndRotMsg;
+import netutil.NetMessages.RemoveUniverseEntity;
 import netutil.NetMessages.ShieldHitParticleMsg;
 import netutil.NetMessages.ShipChangedMsg;
 import netutil.NetMessages.SpawnItemMsg;
@@ -315,6 +316,15 @@ public class ClientNetMsgListener implements MessageListener<Client> {
                 public Object call() throws Exception {
                 	app.gameRunState.uemanager.addEntity(msg.spawnX, msg.spawnY, msg.spawnZ, msg.size, msg.texture, msg.color, msg.light, msg.ID);
 
+                    return null;
+                }
+            });
+        } else if (m instanceof RemoveUniverseEntity) {
+            final RemoveUniverseEntity msg = (RemoveUniverseEntity)m;
+            
+            this.app.enqueue(new Callable() {
+                public Object call() throws Exception {
+                	app.gameRunState.uemanager.removeEntitiy(msg.getID());
                     return null;
                 }
             });

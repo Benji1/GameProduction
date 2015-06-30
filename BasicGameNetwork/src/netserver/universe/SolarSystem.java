@@ -86,9 +86,13 @@ public class SolarSystem extends Abs_ChunkNode {
 	}
 	
 	public void broadcastSpawnTo(HostedConnection player){
-		this.app.getServer().broadcast(Filters.in(player), sun.getSpawnMessage());
 		for (CelestialBody p:bodies)
 			this.app.getServer().broadcast(Filters.in(player), p.getSpawnMessage());
+	}
+	
+	public void sendRemoveMsg(HostedConnection player) {
+		for (CelestialBody p:bodies)
+			this.app.getServer().broadcast(Filters.in(player), p.getRemoveMessage());
 	}
 	
 	public void update(float tpf){

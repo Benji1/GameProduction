@@ -116,6 +116,10 @@ public class CelestialBody extends PhysicsBody {
 		return new NetMessages.SpawnUniverseEntity(this.node.getWorldTranslation().x, this.node.getWorldTranslation().y, this.node.getWorldTranslation().z, radius, texture, color, this.texture == 0, ID);
 	}
 	
+	public NetMessages.RemoveUniverseEntity getRemoveMessage() {
+		return new NetMessages.RemoveUniverseEntity(this.ID);
+	}
+	
 	@Override
 	public void updatePosition(){
 		super.updatePosition();

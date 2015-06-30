@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import netclient.WJSFClient;
+import netserver.BasicShip;
 import netserver.WJSFServer;
 import netserver.services.ServiceManager;
 import netserver.services.config.ConfigReader;
@@ -184,7 +185,43 @@ public class Universe {
     
     public void changedChunkForEntity(Abs_ChunkNode n, int movedX, int movedZ) {
 		if(movedX != 0 || movedZ != 0) {
-			this.universeChunks[n.getChunkX() + this.universeCenter - movedX][n.getChunkZ() + this.universeCenter - movedZ].getListOfType(n.getType()).remove(n);
+			if(n.getType() == ChunkNodeType.PlayerShips) {
+				// update x
+				if(movedX != 0) {
+					for(int z = -1; z <= 1; z++) {
+						// remove old x
+						List<Abs_ChunkNode> list = this.universeChunks[n.getChunkX() + this.universeCenter - movedX - movedX][n.getChunkZ() + this.universeCenter + z].getListOfType(ChunkNodeType.SolarSystems);
+						for(Abs_ChunkNode s : list) {
+							((SolarSystem)s).sendRemoveMsg(((BasicShip)n).getPlayer().con);
+						}
+						
+						// add new x
+						List<Abs_ChunkNode> list2 = this.universeChunks[n.getChunkX() + this.universeCenter + movedX][n.getChunkZ() + this.universeCenter + z].getListOfType(ChunkNodeType.SolarSystems);
+						for(Abs_ChunkNode s : list2) {
+							((SolarSystem)s).broadcastSpawnTo(((BasicShip)n).getPlayer().con);
+						}
+					}
+				}
+				
+				// update z
+				if(movedZ != 0) {
+					for(int x = -1; x <= 1; x++) {
+						// remove old z
+						List<Abs_ChunkNode> list = this.universeChunks[n.getChunkX() + this.universeCenter + x][n.getChunkZ() + this.universeCenter - movedZ - movedZ].getListOfType(ChunkNodeType.SolarSystems);
+						for(Abs_ChunkNode s : list) {
+							((SolarSystem)s).sendRemoveMsg(((BasicShip)n).getPlayer().con);
+						}
+						
+						// add new z
+						List<Abs_ChunkNode> list2 = this.universeChunks[n.getChunkX() + this.universeCenter + x][n.getChunkZ() + this.universeCenter + movedZ].getListOfType(ChunkNodeType.SolarSystems);
+						for(Abs_ChunkNode s : list2) {
+							((SolarSystem)s).broadcastSpawnTo(((BasicShip)n).getPlayer().con);
+						}
+					}
+				}
+			}
+			
+			this.universeChunks[n.getChunkX() + this.universeCenter + movedX][n.getChunkZ() + this.universeCenter + movedZ].getListOfType(n.getType()).remove(n);
 			this.universeChunks[n.getChunkX() + this.universeCenter][n.getChunkZ() + this.universeCenter].getListOfType(n.getType()).add(n);
 		}
     }
