@@ -1,6 +1,7 @@
 package netserver.universe;
 
 import netclient.WJSFClient;
+import netserver.BasicShip;
 import netserver.WJSFServer;
 import netserver.universe.Universe;
 import netutil.NetMessages.*;
@@ -126,7 +127,7 @@ public abstract class Abs_ChunkNode extends Node {
         this.app.getUniverse().changedChunkForEntity(this, this.chunkXLast, this.chunkZLast);
         
         // check universe if we discovered a new chunk
-        if(this.checkForNewChunk(this.chunkX, this.chunkZ)) {
+        if(this.checkForNewChunk(this.chunkX, this.chunkZ) && this.getType() == ChunkNodeType.PlayerShips) {
             this.newChunkDiscovered();
         }
     }
@@ -174,6 +175,8 @@ public abstract class Abs_ChunkNode extends Node {
                 	float posX = ((this.chunkX + x) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
                 	float posZ = ((this.chunkZ + z) * Universe.CHUNK_SIZE) + (this.app.rnd.nextFloat() - 0.5f) * Universe.CHUNK_SIZE;
                 	SolarSystem sys = new SolarSystem(app, new Vector3f(posX, Universe.Y_LAYER_UNIVERSE, posZ));
+                	
+                	sys.broadcastSpawnTo(((BasicShip)this).getPlayer().con);
                 	
                 	//sys.broadcastSpawn();
                 	

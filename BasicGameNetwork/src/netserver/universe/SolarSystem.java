@@ -8,6 +8,8 @@ import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 
 
+
+import netserver.BasicShip;
 import netserver.WJSFServer;
 import netserver.universe.Abs_ChunkNode;
 import netserver.universe.CBNameGenerator;
@@ -114,8 +116,16 @@ public class SolarSystem extends Abs_ChunkNode {
 		this.networkTimer -= tpf;
 		if (this.networkTimer <= 0){
 			this.networkTimer += this.NET_STEP;
-			for (CelestialBody p:bodies)
-				this.app.getServer().broadcast(p.getUpdateMessage());
+			
+			for (CelestialBody p:bodies) {
+				for(int x = -1; x <= 1; x++) {
+					for(int z = -1; z <= 1; z++) {
+						for(Abs_ChunkNode s : this.app.getUniverse().getChunk(this.getChunkX() + x, this.getChunkZ() + z).getListOfType(ChunkNodeType.PlayerShips)) {
+							this.app.getServer().broadcast(Filters.in(((BasicShip)s).getPlayer().con), p.getUpdateMessage());
+						}
+					}
+				}
+			}
 		}
 	}
 }

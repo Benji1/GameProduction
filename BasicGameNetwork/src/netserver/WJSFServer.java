@@ -214,7 +214,7 @@ public class WJSFServer extends SimpleApplication {
         String s = "POS SHIPS:\n";
         
         for(NetPlayer pl : this.conManager.players)
-        	s += pl.ship.getName() + ": " + pl.getShip().getChunkX() + "/" + pl.getShip().getChunkZ() + " | " + pl.ship.cockpit.getLocalTranslation().toString() + " | " + this.u.getChunk(pl.getShip().getChunkX(), pl.getShip().getChunkZ()).getListOfType(ChunkNodeType.SolarSystems).size() + "\n";
+        	s += pl.ship.getName() + ": " + pl.getShip().getChunkX() + "/" + pl.getShip().getChunkZ() + " | " + pl.ship.cockpit.getLocalTranslation().toString() + " | " + this.u.getChunk(pl.getShip().getChunkX(), pl.getShip().getChunkZ()).getListOfType(ChunkNodeType.SolarSystems).size() + " | " + this.u.getChunk(pl.getShip().getChunkX(), pl.getShip().getChunkZ()).getListOfType(ChunkNodeType.PlayerShips).size() + "\n";
         
         this.textShipPos.setText(s);
     }

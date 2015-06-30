@@ -221,7 +221,7 @@ public class Universe {
 				}
 			}
 			
-			this.universeChunks[n.getChunkX() + this.universeCenter + movedX][n.getChunkZ() + this.universeCenter + movedZ].getListOfType(n.getType()).remove(n);
+			this.universeChunks[n.getChunkX() + this.universeCenter - movedX][n.getChunkZ() + this.universeCenter - movedZ].getListOfType(n.getType()).remove(n);
 			this.universeChunks[n.getChunkX() + this.universeCenter][n.getChunkZ() + this.universeCenter].getListOfType(n.getType()).add(n);
 		}
     }
